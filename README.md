@@ -2,6 +2,9 @@
 
 Desktop editor for dictionary files in a LEO-style format.
 
+Live site:
+- https://victorsenia.github.io/dictionary-editor/
+
 ## Tech Stack
 - Electron
 - React
@@ -85,9 +88,9 @@ git push origin v1.0.0
 
 Where to download it from GitHub:
 - Releases page:
-  - `../../releases`
+  - `https://github.com/victorsenia/dictionary-editor/releases`
 - Latest release:
-  - `../../releases/latest`
+  - `https://github.com/victorsenia/dictionary-editor/releases/latest`
 - Asset is listed under **Assets** as:
   - `dictionary-editor-single.html`
 
