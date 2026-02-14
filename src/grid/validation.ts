@@ -1,9 +1,11 @@
 import type { CellClassParams } from "ag-grid-community";
-import type { DictionaryConfig, DictionaryRow } from "../models/dictionary";
+import { ROW_TYPE_TOPIC, ROW_TYPE_WORD, type DictionaryConfig, type DictionaryRow } from "../models/dictionary";
+import { TRANSLATION_COLUMN_PREFIX, COLUMN_ID_WORD } from "../constants/grid";
 
 export type CellValidationResult = {
   isValid: boolean;
-  reason: string;
+  reasonKey: string;
+  reasonValues?: Record<string, string>;
 };
 
 function asText(value: unknown): string {
@@ -18,51 +20,55 @@ export function validateCell(
   config: DictionaryConfig,
   row: DictionaryRow
 ): CellValidationResult {
-  if (row.type === "topic") {
-    return { isValid: true, reason: "" };
+  if (row.type === ROW_TYPE_TOPIC) {
+    return { isValid: true, reasonKey: "" };
   }
 
   const text = asText(params.value);
   const colId = params.column.getColId();
 
-  if (colId.startsWith("to-")) {
-    const language = colId.slice(3);
+  if (colId.startsWith(TRANSLATION_COLUMN_PREFIX)) {
+    const language = colId.slice(TRANSLATION_COLUMN_PREFIX.length);
     const translations = row.valuesTo[language] ?? [];
 
     for (const translation of translations) {
       if (translation.includes(config.delimiter)) {
         return {
           isValid: false,
-          reason: `Translation contains forbidden column delimiter "${config.delimiter}"`
+          reasonKey: "validation.translationContainsColumnDelimiter",
+          reasonValues: { delimiter: config.delimiter }
         };
       }
     }
 
-    return { isValid: true, reason: "" };
+    return { isValid: true, reasonKey: "" };
   }
 
   if (text.includes(config.delimiter)) {
     return {
       isValid: false,
-      reason: `Contains forbidden column delimiter "${config.delimiter}"`
+      reasonKey: "validation.containsColumnDelimiter",
+      reasonValues: { delimiter: config.delimiter }
     };
   }
 
-  if (row.type === "word" && colId === "word") {
+  if (row.type === ROW_TYPE_WORD && colId === COLUMN_ID_WORD) {
     if (text.includes(config.additionalInformationDelimiter)) {
       return {
         isValid: false,
-        reason: `Contains forbidden additional information delimiter "${config.additionalInformationDelimiter}"`
+        reasonKey: "validation.containsAdditionalInformationDelimiter",
+        reasonValues: { delimiter: config.additionalInformationDelimiter }
       };
     }
 
     if (text.includes(config.topicFlag)) {
       return {
         isValid: false,
-        reason: `Contains forbidden topic flag "${config.topicFlag}"`
+        reasonKey: "validation.containsTopicFlag",
+        reasonValues: { topicFlag: config.topicFlag }
       };
     }
   }
 
-  return { isValid: true, reason: "" };
+  return { isValid: true, reasonKey: "" };
 }

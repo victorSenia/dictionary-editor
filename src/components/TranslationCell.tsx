@@ -1,4 +1,6 @@
 import type { ICellRendererParams } from "ag-grid-community";
+import { useTranslation } from "react-i18next";
+import { ROW_TYPE_WORD } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
 
 type TranslationCellProps = {
@@ -18,7 +20,9 @@ export default function TranslationCell({
   onAdd,
   onRemove
 }: TranslationCellProps) {
-  if (!params.data || params.data.type !== "word") {
+  const { t } = useTranslation();
+
+  if (!params.data || params.data.type !== ROW_TYPE_WORD) {
     return <></>;
   }
 
@@ -29,9 +33,9 @@ export default function TranslationCell({
     <div className="translation-stack">
       {values.map((value, valueIndex) => (
         <div key={`${params.data?.id}-${language}-${valueIndex}`} className="translation-item">
-          <input
-            type="text"
+          <textarea
             className="translation-value-input"
+            rows={1}
             value={value}
             onClick={(event) => event.stopPropagation()}
             onChange={(event) => onUpdate(params.data!.id, language, valueIndex, event.target.value)}
@@ -41,8 +45,8 @@ export default function TranslationCell({
               <button
                 type="button"
                 className="translation-item-btn translation-item-btn-edit"
-                aria-label="Move up"
-                title="Move up"
+                aria-label={t("translation.moveUp")}
+                title={t("translation.moveUp")}
                 disabled={valueIndex === 0}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -56,8 +60,8 @@ export default function TranslationCell({
               <button
                 type="button"
                 className="translation-item-btn translation-item-btn-edit"
-                aria-label="Move down"
-                title="Move down"
+                aria-label={t("translation.moveDown")}
+                title={t("translation.moveDown")}
                 disabled={valueIndex === values.length - 1}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -70,8 +74,8 @@ export default function TranslationCell({
             <button
               type="button"
               className="translation-item-btn translation-item-btn-danger"
-              aria-label="Remove translation"
-              title="Remove translation"
+              aria-label={t("translation.remove")}
+              title={t("translation.remove")}
               onClick={(event) => {
                 event.stopPropagation();
                 onRemove(params.data!.id, language, valueIndex);
@@ -85,8 +89,8 @@ export default function TranslationCell({
       <button
         type="button"
         className="translation-item-btn translation-item-btn-new"
-        aria-label="Add translation"
-        title="Add translation"
+        aria-label={t("translation.add")}
+        title={t("translation.add")}
         onClick={(event) => {
           event.stopPropagation();
           onAdd(params.data!.id, language);

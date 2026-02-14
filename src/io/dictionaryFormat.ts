@@ -1,4 +1,5 @@
 import {
+  ROW_TYPE_TOPIC,
   createEmptyWordRow,
   createTopicRow,
   DEFAULT_CONFIG,
@@ -200,7 +201,7 @@ function serializeWordRow(config: DictionaryConfig, row: DictionaryRow): string 
   const translationDelimiter = resolveToken(config.translationDelimiter);
   const topicFlag = resolveToken(config.topicFlag);
 
-  if (row.type === "topic") {
+  if (row.type === ROW_TYPE_TOPIC) {
     return `${topicFlag}${row.label}`;
   }
 

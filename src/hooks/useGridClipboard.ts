@@ -1,9 +1,17 @@
 import { useCallback, type Dispatch, type RefObject, type SetStateAction } from "react";
 import type { CellKeyDownEvent } from "ag-grid-community";
 import type { AgGridReact } from "ag-grid-react";
-import { createEmptyWordRow, type DictionaryConfig } from "../models/dictionary";
+import { ROW_TYPE_TOPIC, createEmptyWordRow, type DictionaryConfig } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
+import type { LastActionState } from "../types/lastAction";
 import { parseTranslationValue } from "../utils/dictionaryHelpers";
+import { createRowId } from "../utils/rowId";
+import {
+  COLUMN_ID_ADDITIONAL_INFO,
+  COLUMN_ID_ARTICLE,
+  COLUMN_ID_WORD,
+  TRANSLATION_COLUMN_PREFIX
+} from "../constants/grid";
 
 async function copyTextToClipboard(text: string): Promise<boolean> {
   try {
@@ -35,13 +43,13 @@ type Args = {
   gridRef: RefObject<AgGridReact<GridRow>>;
   config: DictionaryConfig;
   setRows: Dispatch<SetStateAction<GridRow[]>>;
-  setLastAction: Dispatch<SetStateAction<string>>;
+  setLastAction: Dispatch<SetStateAction<LastActionState>>;
 };
 
 export function useGridClipboard({ gridRef, config, setRows, setLastAction }: Args) {
   const buildRowCopyText = useCallback(
     (row: GridRow): string => {
-      if (row.type === "topic") {
+      if (row.type === ROW_TYPE_TOPIC) {
         return row.label;
       }
 
@@ -75,7 +83,7 @@ export function useGridClipboard({ gridRef, config, setRows, setLastAction }: Ar
 
           if (lines.length > 0) {
             void copyTextToClipboard(lines.join("\n"));
-            setLastAction("Copy Selected");
+            setLastAction({ key: "action.copySelected" });
           }
           return;
         }
@@ -86,16 +94,16 @@ export function useGridClipboard({ gridRef, config, setRows, setLastAction }: Ar
         }
         const colId = event.column.getColId();
         let value = "";
-        if (rowData.type === "topic") {
+        if (rowData.type === ROW_TYPE_TOPIC) {
           value = rowData.label;
-        } else if (colId === "word") {
+        } else if (colId === COLUMN_ID_WORD) {
           value = rowData.valueFrom;
-        } else if (colId === "article") {
+        } else if (colId === COLUMN_ID_ARTICLE) {
           value = rowData.article;
-        } else if (colId === "additional-info") {
+        } else if (colId === COLUMN_ID_ADDITIONAL_INFO) {
           value = rowData.additionalInformation;
-        } else if (colId.startsWith("to-")) {
-          const lang = colId.slice(3);
+        } else if (colId.startsWith(TRANSLATION_COLUMN_PREFIX)) {
+          const lang = colId.slice(TRANSLATION_COLUMN_PREFIX.length);
           value = (rowData.valuesTo[lang] ?? []).join(`${config.translationDelimiter} `);
         } else {
           value = buildRowCopyText(rowData);
@@ -103,7 +111,7 @@ export function useGridClipboard({ gridRef, config, setRows, setLastAction }: Ar
 
         if (value !== "") {
           void copyTextToClipboard(value);
-          setLastAction("Copy");
+          setLastAction({ key: "action.copy" });
         }
         return;
       }
@@ -117,7 +125,7 @@ export function useGridClipboard({ gridRef, config, setRows, setLastAction }: Ar
       const focusedId = event.data?.id;
 
       const createRowFromPaste = (raw: string): GridRow => {
-        const id = `word-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const id = createRowId("word");
 
         if (raw.includes("\t")) {
           const cols = raw.split("\t");
@@ -133,14 +141,14 @@ export function useGridClipboard({ gridRef, config, setRows, setLastAction }: Ar
         }
 
         const row = createEmptyWordRow(config);
-        if (colId === "article") {
+        if (colId === COLUMN_ID_ARTICLE) {
           row.article = raw;
-        } else if (colId === "word") {
+        } else if (colId === COLUMN_ID_WORD) {
           row.valueFrom = raw;
-        } else if (colId === "additional-info") {
+        } else if (colId === COLUMN_ID_ADDITIONAL_INFO) {
           row.additionalInformation = raw;
-        } else if (colId.startsWith("to-")) {
-          const lang = colId.slice(3);
+        } else if (colId.startsWith(TRANSLATION_COLUMN_PREFIX)) {
+          const lang = colId.slice(TRANSLATION_COLUMN_PREFIX.length);
           row.valuesTo[lang] = parseTranslationValue(raw, config.translationDelimiter);
         } else {
           row.valueFrom = raw;
@@ -152,7 +160,7 @@ export function useGridClipboard({ gridRef, config, setRows, setLastAction }: Ar
       void (async () => {
         const text = await readTextFromClipboard();
         if (!text) {
-          setLastAction("Paste failed");
+          setLastAction({ key: "action.pasteFailed" });
           return;
         }
 
@@ -183,7 +191,7 @@ export function useGridClipboard({ gridRef, config, setRows, setLastAction }: Ar
           next.splice(insertIndex, 0, ...insertRows);
           return next;
         });
-        setLastAction("Paste Insert");
+        setLastAction({ key: "action.pasteInsert" });
       })();
     },
     [buildRowCopyText, config, gridRef, setLastAction, setRows]

@@ -1,5 +1,12 @@
 import { contextBridge, ipcRenderer } from "electron";
+import type {
+  AutosaveReadResult,
+  AutosaveWriteResult,
+  OpenFileResult,
+  SaveFileResult
+} from "./ipcTypes";
 
+// Keep preload self-contained: sandboxed preload loader may fail on local requires.
 const IPC_CHANNELS = {
   OPEN_FILE: "file:open",
   SAVE_FILE: "file:save",
@@ -9,16 +16,12 @@ const IPC_CHANNELS = {
 } as const;
 
 type AllowedChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS];
-type OpenFileResult = { path: string; content: string } | null;
-type SaveFileResult = { path: string } | null;
-type AutosaveReadResult = { path: string; content: string } | null;
-type AutosaveWriteResult = { path: string };
-
+const BLOCKED_IPC_CHANNEL_ERROR = "Blocked IPC channel";
 const ALLOWED_CHANNELS = new Set<AllowedChannel>(Object.values(IPC_CHANNELS));
 
 function invoke<T>(channel: AllowedChannel, ...args: unknown[]): Promise<T> {
   if (!ALLOWED_CHANNELS.has(channel)) {
-    throw new Error("Blocked IPC channel");
+    throw new Error(BLOCKED_IPC_CHANNEL_ERROR);
   }
   return ipcRenderer.invoke(channel, ...args) as Promise<T>;
 }

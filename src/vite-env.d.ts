@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface Window {
-  electronAPI: {
+  electronAPI?: {
     openFile: () => Promise<{ path: string; content: string } | null>;
     saveFile: (path: string, content: string) => Promise<{ path: string } | null>;
     saveFileAs: (content: string) => Promise<{ path: string } | null>;

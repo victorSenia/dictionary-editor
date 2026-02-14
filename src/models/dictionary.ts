@@ -1,10 +1,13 @@
+export const ROW_TYPE_TOPIC = "topic" as const;
+export const ROW_TYPE_WORD = "word" as const;
+
 export type TopicRow = {
-  type: "topic";
+  type: typeof ROW_TYPE_TOPIC;
   label: string;
 };
 
 export type WordRow = {
-  type: "word";
+  type: typeof ROW_TYPE_WORD;
   valueFrom: string;
   valuesTo: Record<string, string[]>;
   article: string;
@@ -39,7 +42,7 @@ export const DEFAULT_CONFIG: DictionaryConfig = {
 };
 
 export function isTopicRow(row: DictionaryRow): row is TopicRow {
-  return row.type === "topic";
+  return row.type === ROW_TYPE_TOPIC;
 }
 
 export function createEmptyWordRow(config: DictionaryConfig): WordRow {
@@ -50,7 +53,7 @@ export function createEmptyWordRow(config: DictionaryConfig): WordRow {
   }
 
   return {
-    type: "word",
+    type: ROW_TYPE_WORD,
     valueFrom: "",
     valuesTo,
     article: "",
@@ -61,7 +64,7 @@ export function createEmptyWordRow(config: DictionaryConfig): WordRow {
 
 export function createTopicRow(label: string): TopicRow {
   return {
-    type: "topic",
+    type: ROW_TYPE_TOPIC,
     label
   };
 }

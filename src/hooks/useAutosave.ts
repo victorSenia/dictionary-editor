@@ -1,13 +1,10 @@
 import { useEffect, type Dispatch, type SetStateAction } from "react";
-import type { DictionaryConfig, DictionaryRow } from "../models/dictionary";
+import type { DictionaryConfig } from "../models/dictionary";
+import { hasElectronApi, readAutosaveUniversal, writeAutosaveUniversal } from "../io/fileAccess";
+import { parseAutosavePayload, type AutosavePayload } from "../io/autosavePayload";
 import type { GridRow } from "../types/grid";
+import type { LastActionState } from "../types/lastAction";
 import { withIds, withoutIds } from "../utils/dictionaryHelpers";
-
-type AutosavePayload = {
-  config: DictionaryConfig;
-  rows: DictionaryRow[];
-  filePath: string | null;
-};
 
 type UseAutosaveArgs = {
   enabled: boolean;
@@ -18,27 +15,8 @@ type UseAutosaveArgs = {
   setConfig: Dispatch<SetStateAction<DictionaryConfig>>;
   setRows: Dispatch<SetStateAction<GridRow[]>>;
   setFilePath: Dispatch<SetStateAction<string | null>>;
-  setLastAction: Dispatch<SetStateAction<string>>;
+  setLastAction: Dispatch<SetStateAction<LastActionState>>;
 };
-
-function parseAutosavePayload(content: string): AutosavePayload | null {
-  try {
-    const parsed = JSON.parse(content) as Partial<AutosavePayload>;
-    if (!parsed || typeof parsed !== "object") {
-      return null;
-    }
-    if (!parsed.config || !Array.isArray(parsed.rows)) {
-      return null;
-    }
-    return {
-      config: parsed.config as DictionaryConfig,
-      rows: parsed.rows as DictionaryRow[],
-      filePath: typeof parsed.filePath === "string" ? parsed.filePath : null
-    };
-  } catch {
-    return null;
-  }
-}
 
 export function useAutosave({
   enabled,
@@ -55,11 +33,14 @@ export function useAutosave({
     if (!enabled) {
       return;
     }
+    if (!hasElectronApi()) {
+      return;
+    }
 
     let disposed = false;
 
     const restoreAutosave = async () => {
-      const restored = await window.electronAPI.readAutosave(null);
+      const restored = await readAutosaveUniversal(null);
       if (!restored?.content || disposed) {
         return;
       }
@@ -69,7 +50,7 @@ export function useAutosave({
         setConfig(payload.config);
         setRows(withIds(payload.rows));
         setFilePath(payload.filePath);
-        setLastAction("Autosave Restored");
+        setLastAction({ key: "action.autosaveRestored" });
       }
     };
 
@@ -84,6 +65,9 @@ export function useAutosave({
     if (!enabled) {
       return;
     }
+    if (!hasElectronApi()) {
+      return;
+    }
 
     const payload: AutosavePayload = {
       config,
@@ -92,7 +76,7 @@ export function useAutosave({
     };
 
     const timer = setTimeout(() => {
-      void window.electronAPI.writeAutosave(filePath, JSON.stringify(payload));
+      void writeAutosaveUniversal(filePath, JSON.stringify(payload));
     }, debounceMs);
 
     return () => clearTimeout(timer);
