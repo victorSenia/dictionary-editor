@@ -1,0 +1,42 @@
+# dependencies
+node_modules/
+
+# build outputs
+dist/
+dist-electron/
+release/
+.cache/
+.ai/
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# env files
+.env
+.env.*
+!.env.example
+
+# editor/system
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# TypeScript
+*.tsbuildinfo
+
+# autosave sidecars
+*.autosave.json
+
+# local test transpile output
+.tmp-test/
+
+# coverage reports
+coverage/
+
+# local npm cache
+.npm/

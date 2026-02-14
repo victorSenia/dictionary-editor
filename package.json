@@ -1,0 +1,66 @@
+{
+  "name": "dictionary-editor",
+  "version": "1.0.0",
+  "description": "Electron + React + TypeScript + Vite starter",
+  "main": "dist-electron/main.js",
+  "author": "",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "npx --no-install concurrently -k \"npm:dev:renderer\" \"npm:dev:electron\"",
+    "dev:renderer": "npx --no-install vite",
+    "dev:electron": "npx --no-install wait-on tcp:5173 && npx --no-install tsc -p tsconfig.electron.json && npx --no-install cross-env VITE_DEV_SERVER_URL=http://localhost:5173 npx --no-install electron .",
+    "build": "npm run build:renderer && npm run build:electron",
+    "build:renderer": "npx --no-install vite build",
+    "build:electron": "npx --no-install tsc -p tsconfig.electron.json",
+    "test:parser-not-working": "npx --no-install tsc -p tsconfig.test-run.json && node .tmp-test/tests/dictionaryFormat.not-working.spec.js",
+    "dist": "npm run build && npx --no-install cross-env ELECTRON_BUILDER_CACHE=.cache/electron-builder ELECTRON_CACHE=.cache/electron npx --no-install electron-builder"
+  },
+  "build": {
+    "appId": "org.leo.dictionary.editor",
+    "productName": "Dictionary Editor",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "dist/renderer/**",
+      "dist-electron/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "dependencies": {
+    "ag-grid-community": "^33.0.4",
+    "ag-grid-react": "^33.0.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "wait-on": "^8.0.1"
+  }
+}
