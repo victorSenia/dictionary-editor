@@ -22,6 +22,7 @@ type UseDocumentActionsArgs = {
   setCurrentFilePath: Dispatch<SetStateAction<string | null>>;
   setShowArticleColumn: Dispatch<SetStateAction<boolean>>;
   setLastAction: Dispatch<SetStateAction<LastActionState>>;
+  onOpened?: () => void;
 };
 
 export function useDocumentActions({
@@ -33,7 +34,8 @@ export function useDocumentActions({
   setRows,
   setCurrentFilePath,
   setShowArticleColumn,
-  setLastAction
+  setLastAction,
+  onOpened
 }: UseDocumentActionsArgs) {
   const handleOpen = useCallback(async () => {
     const opened = await openFileUniversal();
@@ -63,9 +65,11 @@ export function useDocumentActions({
     }
     setCurrentFilePath(opened.path);
     setLastAction({ key: "action.open" });
+    onOpened?.();
   }, [
     autosaveEnabled,
     config,
+    onOpened,
     setConfig,
     setCurrentFilePath,
     setLastAction,

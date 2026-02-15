@@ -15,18 +15,15 @@ import RowEndActions from "./components/RowEndActions";
 import SettingsPanel from "./components/SettingsPanel";
 import Toolbar from "./components/Toolbar";
 import {
-  createEmptyWordRow,
-  createTopicRow,
   DEFAULT_CONFIG,
   ROW_TYPE_TOPIC,
-  ROW_TYPE_WORD,
   type DictionaryConfig,
   type DictionaryRow
 } from "./models/dictionary";
 import {
   hasElectronApi,
 } from "./io/fileAccess";
-import { validateCell } from "./grid/validation";
+import { isRowInvalid, validateCell } from "./grid/validation";
 import { useAutosave } from "./hooks/useAutosave";
 import { useDocumentActions } from "./hooks/useDocumentActions";
 import { useGridClipboard } from "./hooks/useGridClipboard";
@@ -37,7 +34,7 @@ import { useRowSelectionDrag } from "./hooks/useRowSelectionDrag";
 import { useTranslationColumns } from "./hooks/useTranslationColumns";
 import type { LastActionState } from "./types/lastAction";
 import type { GridRow } from "./types/grid";
-import { mapWordRowLanguages } from "./utils/dictionaryHelpers";
+import { applyLanguageTransitionToRows, type RenamePair } from "./utils/languageTransition";
 import {
   DEFAULT_PAGE_SIZE,
   PAGE_SIZE_OPTIONS,
@@ -71,24 +68,19 @@ function App() {
   const { t, i18n } = useTranslation();
   const gridRef = useRef<AgGridReact<GridRow>>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [showOnlyInvalid, setShowOnlyInvalid] = useState<boolean>(false);
   const [showArticleColumn, setShowArticleColumn] = useState<boolean>(true);
   const [lastAction, setLastAction] = useState<LastActionState>(null);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
   const [currentFilePath, setCurrentFilePath] = useState<string | null>(null);
   const [config, setConfig] = useState<DictionaryConfig>(DEFAULT_CONFIG);
   const [rows, setRows] = useState<GridRow[]>([]);
+  const [headerEditResetToken, setHeaderEditResetToken] = useState<number>(0);
   const isElectronMode = hasElectronApi();
 
-  const applyLanguagesTo = useCallback((languagesTo: string[]) => {
+  const applyLanguagesTo = useCallback((languagesTo: string[], renamePairs: RenamePair[] = []) => {
     setConfig((prev) => ({ ...prev, languagesTo }));
-    setRows((prev) =>
-      prev.map((row) => {
-        if (row.type !== ROW_TYPE_WORD) {
-          return row;
-        }
-        return { ...row, valuesTo: mapWordRowLanguages(row, languagesTo) };
-      })
-    );
+    setRows((prev): GridRow[] => applyLanguageTransitionToRows(prev, languagesTo, renamePairs));
   }, []);
 
   const handleToggleSettings = useCallback(() => {
@@ -127,14 +119,21 @@ function App() {
     setRows,
     setCurrentFilePath,
     setShowArticleColumn,
-    setLastAction
+    setLastAction,
+    onOpened: () => {
+      setShowOnlyInvalid(false);
+      setHeaderEditResetToken((prev) => prev + 1);
+      gridRef.current?.api?.setFilterModel(null);
+    }
   });
 
   const getRowId = useCallback((params: GetRowIdParams<GridRow>) => params.data?.id ?? "", []);
 
   const { translationColumns, onColumnHeaderClicked: handleColumnHeaderClicked } = useTranslationColumns({
     config,
-    setConfig,
+    rows,
+    headerEditResetToken,
+    applyLanguagesTo,
     setRows,
     setLastAction
   });
@@ -145,6 +144,10 @@ function App() {
     setLastAction,
     t
   });
+  const displayedRows = useMemo<GridRow[]>(
+    () => (showOnlyInvalid ? rows.filter((row) => isRowInvalid(row, config)) : rows),
+    [config, rows, showOnlyInvalid]
+  );
   const {
     onCellMouseDown: handleCellMouseDown,
     onCellMouseOver: handleCellMouseOver,
@@ -176,7 +179,17 @@ function App() {
       editable: true,
       resizable: true,
       sortable: false,
-      filter: false,
+      filter: "agTextColumnFilter",
+      floatingFilter: true,
+      suppressFloatingFilterButton: true,
+      suppressHeaderMenuButton: true,
+      suppressHeaderFilterButton: true,
+      filterParams: {
+        filterOptions: ["contains"],
+        defaultOption: "contains",
+        maxNumConditions: 1,
+        numAlwaysVisibleConditions: 1
+      },
       tooltipValueGetter: (params) => {
         const result = getCellValidation(params as CellClassParams<GridRow>, config);
         if (result.isValid || !result.reasonKey) {
@@ -242,6 +255,7 @@ function App() {
     <div className="app-shell">
       <Toolbar
         isSettingsOpen={isSettingsOpen}
+        showOnlyInvalid={showOnlyInvalid}
         language={i18n.resolvedLanguage ?? i18n.language ?? "en"}
         showSaveAs={isElectronMode}
         onLanguageChange={handleLanguageChange}
@@ -249,6 +263,7 @@ function App() {
         onSave={handleSave}
         onSaveAs={handleSaveAs}
         onToggleSettings={handleToggleSettings}
+        onToggleShowOnlyInvalid={() => setShowOnlyInvalid((prev) => !prev)}
         onDeleteSelected={handleDeleteSelected}
       />
 
@@ -257,7 +272,7 @@ function App() {
           <div className="ag-theme-alpine grid-host">
             <AgGridReact<GridRow>
               ref={gridRef}
-              rowData={rows}
+              rowData={displayedRows}
               getRowId={getRowId}
               columnDefs={columnDefs}
               defaultColDef={defaultColDef}
@@ -281,7 +296,12 @@ function App() {
                 minWidth: SELECTION_COLUMN_WIDTH,
                 maxWidth: SELECTION_COLUMN_WIDTH,
                 resizable: false,
-                suppressSizeToFit: true
+                suppressSizeToFit: true,
+                cellStyle: {
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }
               }}
               suppressClipboardPaste={false}
               rowClassRules={{

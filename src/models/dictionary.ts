@@ -12,7 +12,6 @@ export type WordRow = {
   valuesTo: Record<string, string[]>;
   article: string;
   additionalInformation: string;
-  topic: string;
 };
 
 export type DictionaryRow = TopicRow | WordRow;
@@ -41,10 +40,6 @@ export const DEFAULT_CONFIG: DictionaryConfig = {
   rootTopic: ""
 };
 
-export function isTopicRow(row: DictionaryRow): row is TopicRow {
-  return row.type === ROW_TYPE_TOPIC;
-}
-
 export function createEmptyWordRow(config: DictionaryConfig): WordRow {
   const valuesTo: Record<string, string[]> = {};
 
@@ -57,8 +52,7 @@ export function createEmptyWordRow(config: DictionaryConfig): WordRow {
     valueFrom: "",
     valuesTo,
     article: "",
-    additionalInformation: "",
-    topic: config.rootTopic
+    additionalInformation: ""
   };
 }
 

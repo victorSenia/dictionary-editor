@@ -181,12 +181,55 @@ body,
   justify-content: center;
 }
 
+.ag-theme-alpine .ag-floating-filter-button,
+.ag-theme-alpine .ag-header-cell-filter-button,
+.ag-theme-alpine .ag-header-cell-menu-button,
+.ag-theme-alpine .ag-filter-condition-operator {
+  display: none !important;
+}
+
+.ag-theme-alpine .ag-floating-filter-input .ag-input-wrapper {
+  position: relative;
+}
+
+.ag-theme-alpine .ag-floating-filter-input .ag-input-wrapper::before {
+  content: "\2315";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.ag-theme-alpine .ag-floating-filter-input input.ag-input-field-input {
+  font-size: 14px;
+  padding-left: 24px !important;
+}
+
 .translation-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 6px;
   width: 100%;
+}
+
+.translation-header-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+}
+
+.translation-header-editing {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 3px;
 }
 
 .translation-header-actions {
@@ -238,6 +281,21 @@ body,
   border-radius: 6px;
   padding: 4px 6px;
   font-size: 12px;
+}
+
+.translation-header-input-invalid {
+  border-color: #dc2626 !important;
+  background: #fef2f2;
+}
+
+.translation-header-error {
+  margin: 0;
+  width: 100%;
+  font-size: 11px;
+  color: #b91c1c;
+  font-weight: 600;
+  white-space: normal;
+  line-height: 1.2;
 }
 
 .translation-stack {
@@ -309,7 +367,6 @@ body,
   background: transparent;
   color: inherit;
   font: inherit;
-  font-weight: inherit;
   padding: 2px 6px;
   box-sizing: border-box;
 }
@@ -457,6 +514,12 @@ body,
   gap: 4px;
 }
 
+.settings-list-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .settings-list-item {
   display: flex;
   align-items: center;
@@ -467,3 +530,18 @@ body,
   flex: 1 1 auto;
   min-width: 0;
 }
+
+.settings-list-input-invalid {
+  border-color: #dc2626 !important;
+  background: #fef2f2;
+}
+
+.settings-field-error {
+  margin: 0;
+  padding-left: 2px;
+  font-size: 12px;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+

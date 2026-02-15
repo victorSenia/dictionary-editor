@@ -14,7 +14,8 @@ export const resources = {
         showSettings: "Show Settings",
         hideSettings: "Hide Settings",
         removeSelectedRows: "Remove Selected Rows",
-        language: "Language"
+        language: "Language",
+        showOnlyInvalid: "Show Only Invalid"
       },
       settings: {
         title: "Settings",
@@ -24,6 +25,8 @@ export const resources = {
         addLanguage: "Add language",
         addArticle: "Add article",
         removeItem: "Remove item",
+        languageErrorEmpty: "Language cannot be empty",
+        languageErrorExists: "Language \"{{language}}\" already exists",
         languageFrom: "Source language",
         languagesTo: "Target languages (comma-separated)",
         articles: "Articles (comma-separated)",
@@ -83,10 +86,13 @@ export const resources = {
         containsColumnDelimiter: "Contains forbidden column delimiter \"{{delimiter}}\"",
         containsAdditionalInformationDelimiter:
           "Contains forbidden additional information delimiter \"{{delimiter}}\"",
-        containsTopicFlag: "Contains forbidden topic flag \"{{topicFlag}}\""
+        containsTopicFlag: "Contains forbidden topic flag \"{{topicFlag}}\"",
+        emptyTranslationNotAllowed: "Empty translation is not allowed",
+        articleNotInConfig: "Article \"{{article}}\" is not in configured articles"
       },
       translation: {
         renameColumn: "Rename column",
+        renameFailed: "Rename failed",
         deleteColumn: "Delete column",
         saveRename: "Save",
         cancelRename: "Cancel",
@@ -136,7 +142,8 @@ export const resources = {
         showSettings: "Einstellungen anzeigen",
         hideSettings: "Einstellungen ausblenden",
         removeSelectedRows: "Ausgewählte Zeilen entfernen",
-        language: "Sprache"
+        language: "Sprache",
+        showOnlyInvalid: "Nur Ungültige anzeigen"
       },
       settings: {
         title: "Einstellungen",
@@ -147,6 +154,8 @@ export const resources = {
         addLanguage: "Sprache hinzufügen",
         addArticle: "Artikel hinzufügen",
         removeItem: "Element entfernen",
+        languageErrorEmpty: "Language cannot be empty",
+        languageErrorExists: "Language \"{{language}}\" already exists",
         languageFrom: "Ausgangssprache",
         languagesTo: "Zielsprachen (kommagetrennt)",
         articles: "Artikel (kommagetrennt)",
@@ -206,10 +215,13 @@ export const resources = {
         containsColumnDelimiter: "Enthält unerlaubtes Spaltentrennzeichen \"{{delimiter}}\"",
         containsAdditionalInformationDelimiter:
           "Enthält unerlaubtes Zusatzinfo-Trennzeichen \"{{delimiter}}\"",
-        containsTopicFlag: "Enthält unerlaubtes Themen-Präfix \"{{topicFlag}}\""
+        containsTopicFlag: "Enthält unerlaubtes Themen-Präfix \"{{topicFlag}}\"",
+        emptyTranslationNotAllowed: "Leere Übersetzung ist nicht erlaubt",
+        articleNotInConfig: "Artikel \"{{article}}\" ist nicht in den konfigurierten Artikeln"
       },
       translation: {
         renameColumn: "Spalte umbenennen",
+        renameFailed: "Umbenennung fehlgeschlagen",
         deleteColumn: "Spalte löschen",
         saveRename: "Speichern",
         cancelRename: "Abbrechen",
@@ -259,7 +271,8 @@ export const resources = {
         showSettings: "Показати налаштування",
         hideSettings: "Сховати налаштування",
         removeSelectedRows: "Видалити вибрані рядки",
-        language: "Мова"
+        language: "Мова",
+        showOnlyInvalid: "Показати лише невалідні"
       },
       settings: {
         title: "Налаштування",
@@ -270,6 +283,8 @@ export const resources = {
         addLanguage: "Додати мову",
         addArticle: "Додати артикль",
         removeItem: "Видалити елемент",
+        languageErrorEmpty: "Language cannot be empty",
+        languageErrorExists: "Language \"{{language}}\" already exists",
         languageFrom: "Мова джерела",
         languagesTo: "Мови перекладу (через кому)",
         articles: "Артиклі (через кому)",
@@ -329,10 +344,13 @@ export const resources = {
         containsColumnDelimiter: "Містить заборонений роздільник стовпців \"{{delimiter}}\"",
         containsAdditionalInformationDelimiter:
           "Містить заборонений роздільник додаткової інформації \"{{delimiter}}\"",
-        containsTopicFlag: "Містить заборонений префікс теми \"{{topicFlag}}\""
+        containsTopicFlag: "Містить заборонений префікс теми \"{{topicFlag}}\"",
+        emptyTranslationNotAllowed: "Порожній переклад не дозволено",
+        articleNotInConfig: "Артикль \"{{article}}\" відсутній у налаштованих артиклях"
       },
       translation: {
         renameColumn: "Перейменувати стовпець",
+        renameFailed: "Не вдалося перейменувати",
         deleteColumn: "Видалити стовпець",
         saveRename: "Зберегти",
         cancelRename: "Скасувати",
@@ -370,3 +388,4 @@ export const resources = {
 } as const;
 
 export type AppLanguage = keyof typeof resources;
+

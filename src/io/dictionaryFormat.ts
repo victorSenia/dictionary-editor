@@ -158,10 +158,6 @@ export function parseFile(content: string, fallbackConfig: DictionaryConfig = DE
   return { config, rows };
 }
 
-function joinList(values: string[]): string {
-  return values.join(CONFIG_LIST_SEPARATOR);
-}
-
 function encodeConfigValue(value: string): string {
   return encodeURIComponent(value).split("%20").join("+");
 }

@@ -93,7 +93,7 @@ export function useGridClipboard({ gridRef, config, setRows, setLastAction }: Ar
           return;
         }
         const colId = event.column.getColId();
-        let value = "";
+        let value: string;
         if (rowData.type === ROW_TYPE_TOPIC) {
           value = rowData.label;
         } else if (colId === COLUMN_ID_WORD) {

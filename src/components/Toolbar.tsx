@@ -3,6 +3,7 @@ import { SUPPORTED_LANGUAGES } from "../i18n";
 
 type ToolbarProps = {
   isSettingsOpen: boolean;
+  showOnlyInvalid: boolean;
   language: string;
   showSaveAs: boolean;
   onLanguageChange: (language: string) => void;
@@ -10,11 +11,13 @@ type ToolbarProps = {
   onSave: () => void;
   onSaveAs: () => void;
   onToggleSettings: () => void;
+  onToggleShowOnlyInvalid: () => void;
   onDeleteSelected: () => void;
 };
 
 function Toolbar({
   isSettingsOpen,
+  showOnlyInvalid,
   language,
   showSaveAs,
   onLanguageChange,
@@ -22,6 +25,7 @@ function Toolbar({
   onSave,
   onSaveAs,
   onToggleSettings,
+  onToggleShowOnlyInvalid,
   onDeleteSelected
 }: ToolbarProps) {
   const { t } = useTranslation();
@@ -41,11 +45,11 @@ function Toolbar({
       ) : null}
       <button
         type="button"
-        className={`toggle-button ${isSettingsOpen ? "active" : ""}`}
-        onClick={onToggleSettings}
-        aria-pressed={isSettingsOpen}
+        className={`toggle-button ${showOnlyInvalid ? "active" : ""}`}
+        onClick={onToggleShowOnlyInvalid}
+        aria-pressed={showOnlyInvalid}
       >
-        {isSettingsOpen ? t("toolbar.hideSettings") : t("toolbar.showSettings")}
+        {t("toolbar.showOnlyInvalid")}
       </button>
       <button type="button" className="danger-button" onClick={onDeleteSelected}>
         {t("toolbar.removeSelectedRows")}
@@ -60,6 +64,14 @@ function Toolbar({
           ))}
         </select>
       </label>
+      <button
+        type="button"
+        className={`toggle-button ${isSettingsOpen ? "active" : ""}`}
+        onClick={onToggleSettings}
+        aria-pressed={isSettingsOpen}
+      >
+        {isSettingsOpen ? t("toolbar.hideSettings") : t("toolbar.showSettings")}
+      </button>
     </header>
   );
 }

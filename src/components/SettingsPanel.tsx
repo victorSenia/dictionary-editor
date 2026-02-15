@@ -1,12 +1,14 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type KeyboardEvent, type SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 import type { DictionaryConfig } from "../models/dictionary";
+import { createNextLanguageKey } from "../utils/dictionaryHelpers";
+import type { RenamePair } from "../utils/languageTransition";
 
 type SettingsPanelProps = {
   isOpen: boolean;
   config: DictionaryConfig;
   setConfig: Dispatch<SetStateAction<DictionaryConfig>>;
-  applyLanguagesTo: (languagesTo: string[]) => void;
+  applyLanguagesTo: (languagesTo: string[], renamePairs?: RenamePair[]) => void;
   showArticleColumn: boolean;
   setShowArticleColumn: Dispatch<SetStateAction<boolean>>;
 };
@@ -18,6 +20,9 @@ type EditableListProps = {
   removeAriaLabel: string;
   canRemove?: boolean;
   onChangeAt: (index: number, value: string) => void;
+  onBlurAt?: (index: number) => void;
+  onKeyDownAt?: (index: number, event: KeyboardEvent<HTMLInputElement>) => void;
+  getItemErrorAt?: (index: number) => string | null;
   onAdd: () => void;
   onRemoveAt: (index: number) => void;
 };
@@ -29,29 +34,40 @@ function EditableList({
   removeAriaLabel,
   canRemove = true,
   onChangeAt,
+  onBlurAt,
+  onKeyDownAt,
+  getItemErrorAt,
   onAdd,
   onRemoveAt
 }: EditableListProps) {
   return (
     <div className="settings-list">
       {items.map((item, index) => (
-        <div key={`${itemKeyPrefix}-${index}`} className="settings-list-item">
-          <input
-            className="settings-list-input"
-            type="text"
-            value={item}
-            onChange={(event) => onChangeAt(index, event.target.value)}
-          />
-          <button
-            type="button"
-            className="translation-item-btn translation-item-btn-danger"
-            aria-label={removeAriaLabel}
-            title={removeAriaLabel}
-            disabled={!canRemove}
-            onClick={() => onRemoveAt(index)}
-          >
-            {"\u00D7"}
-          </button>
+        <div key={`${itemKeyPrefix}-${index}`} className="settings-list-row">
+          <div className="settings-list-item">
+            <input
+              className={`settings-list-input ${getItemErrorAt?.(index) ? "settings-list-input-invalid" : ""}`}
+              type="text"
+              value={item}
+              onChange={(event) => onChangeAt(index, event.target.value)}
+              onBlur={() => onBlurAt?.(index)}
+              onKeyDown={(event) => onKeyDownAt?.(index, event)}
+              aria-invalid={!!getItemErrorAt?.(index)}
+            />
+            <button
+              type="button"
+              className="translation-item-btn translation-item-btn-danger"
+              aria-label={removeAriaLabel}
+              title={removeAriaLabel}
+              disabled={!canRemove}
+              onClick={() => onRemoveAt(index)}
+            >
+              {"\u00D7"}
+            </button>
+          </div>
+          {getItemErrorAt?.(index) ? (
+            <p className="settings-field-error">{getItemErrorAt(index)}</p>
+          ) : null}
         </div>
       ))}
       <button
@@ -77,27 +93,108 @@ function SettingsPanel({
 }: SettingsPanelProps) {
   const { t } = useTranslation();
   const canRemoveLanguage = config.languagesTo.length > 1;
+  const [languageDrafts, setLanguageDrafts] = useState<string[]>(config.languagesTo);
+  const [languageErrors, setLanguageErrors] = useState<Record<number, string>>({});
 
-  const updateLanguageAt = (index: number, value: string) => {
-    if (value.trim() === "") {
+  useEffect(() => {
+    setLanguageDrafts(config.languagesTo);
+    setLanguageErrors({});
+  }, [config.languagesTo]);
+
+  const commitLanguageAt = (index: number) => {
+    const draft = languageDrafts[index] ?? "";
+    const nextValue = draft.trim();
+    const currentValue = config.languagesTo[index] ?? "";
+
+    if (nextValue === "") {
+      setLanguageErrors((prev) => ({ ...prev, [index]: t("settings.languageErrorEmpty") }));
       return;
     }
+    if (config.languagesTo.some((language, currentIndex) => currentIndex !== index && language === nextValue)) {
+      setLanguageErrors((prev) => ({
+        ...prev,
+        [index]: t("settings.languageErrorExists", { language: nextValue })
+      }));
+      return;
+    }
+
+    setLanguageErrors((prev) => {
+      if (!Object.prototype.hasOwnProperty.call(prev, index)) {
+        return prev;
+      }
+      const next = { ...prev };
+      delete next[index];
+      return next;
+    });
+    if (nextValue === currentValue) {
+      return;
+    }
+
     const next = [...config.languagesTo];
-    next[index] = value.trim();
-    applyLanguagesTo(next);
+    const fromLanguage = next[index];
+    next[index] = nextValue;
+    const renamePairs = fromLanguage && fromLanguage !== next[index]
+      ? [{ from: fromLanguage, to: next[index] }]
+      : [];
+    applyLanguagesTo(next, renamePairs);
+  };
+
+  const updateLanguageDraftAt = (index: number, value: string) => {
+    setLanguageErrors((prev) => {
+      if (!Object.prototype.hasOwnProperty.call(prev, index)) {
+        return prev;
+      }
+      const next = { ...prev };
+      delete next[index];
+      return next;
+    });
+    setLanguageDrafts((prev) => {
+      const next = [...prev];
+      next[index] = value;
+      return next;
+    });
+  };
+
+  const handleLanguageKeyDownAt = (index: number, event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      commitLanguageAt(index);
+      return;
+    }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setLanguageErrors((prev) => {
+        if (!Object.prototype.hasOwnProperty.call(prev, index)) {
+          return prev;
+        }
+        const next = { ...prev };
+        delete next[index];
+        return next;
+      });
+      setLanguageDrafts((prev) => {
+        const next = [...prev];
+        next[index] = config.languagesTo[index] ?? "";
+        return next;
+      });
+    }
   };
 
   const addLanguage = () => {
-    let index = config.languagesTo.length + 1;
-    let candidate = `lang${index}`;
-    while (config.languagesTo.includes(candidate)) {
-      index += 1;
-      candidate = `lang${index}`;
-    }
+    const candidate = createNextLanguageKey(config.languagesTo);
     applyLanguagesTo([...config.languagesTo, candidate]);
   };
 
   const removeLanguageAt = (index: number) => {
+    setLanguageErrors((prev) => {
+      const next = { ...prev };
+      delete next[index];
+      const shifted: Record<number, string> = {};
+      for (const [rawKey, message] of Object.entries(next)) {
+        const key = Number.parseInt(rawKey, 10);
+        shifted[key > index ? key - 1 : key] = message;
+      }
+      return shifted;
+    });
     if (!canRemoveLanguage) {
       return;
     }
@@ -157,12 +254,15 @@ function SettingsPanel({
       <label>
         <span>{t("settings.languagesTo")}</span>
         <EditableList
-          items={config.languagesTo}
+          items={languageDrafts}
           itemKeyPrefix="lang"
           addAriaLabel={t("settings.addLanguage")}
           removeAriaLabel={t("settings.removeItem")}
           canRemove={canRemoveLanguage}
-          onChangeAt={updateLanguageAt}
+          onChangeAt={updateLanguageDraftAt}
+          onBlurAt={commitLanguageAt}
+          onKeyDownAt={handleLanguageKeyDownAt}
+          getItemErrorAt={(index) => languageErrors[index] ?? null}
           onAdd={addLanguage}
           onRemoveAt={removeLanguageAt}
         />

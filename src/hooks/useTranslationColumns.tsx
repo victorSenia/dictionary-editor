@@ -5,18 +5,28 @@ import { ROW_TYPE_WORD, type DictionaryConfig } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
 import type { LastActionState } from "../types/lastAction";
 import { createNextLanguageKey } from "../utils/dictionaryHelpers";
+import type { RenamePair } from "../utils/languageTransition";
 import TranslationHeader from "../components/TranslationHeader";
 import TranslationCell from "../components/TranslationCell";
 import { COLUMN_ID_ADD_END, TRANSLATION_COLUMN_PREFIX } from "../constants/grid";
 
 type Args = {
   config: DictionaryConfig;
-  setConfig: Dispatch<SetStateAction<DictionaryConfig>>;
+  rows: GridRow[];
+  headerEditResetToken: number;
+  applyLanguagesTo: (languagesTo: string[], renamePairs?: RenamePair[]) => void;
   setRows: Dispatch<SetStateAction<GridRow[]>>;
   setLastAction: Dispatch<SetStateAction<LastActionState>>;
 };
 
-export function useTranslationColumns({ config, setConfig, setRows, setLastAction }: Args) {
+export function useTranslationColumns({
+  config,
+  rows,
+  headerEditResetToken,
+  applyLanguagesTo,
+  setRows,
+  setLastAction
+}: Args) {
   const { t } = useTranslation();
 
   const updateTranslationValues = useCallback(
@@ -45,27 +55,6 @@ export function useTranslationColumns({ config, setConfig, setRows, setLastActio
     [setRows]
   );
 
-  const applyLanguagesTo = useCallback(
-    (languagesTo: string[]) => {
-      setConfig((prev) => ({ ...prev, languagesTo }));
-      setRows((prev) =>
-        prev.map((row) => {
-          if (row.type !== ROW_TYPE_WORD) {
-            return row;
-          }
-
-          const valuesTo: Record<string, string[]> = {};
-          for (const language of languagesTo) {
-            valuesTo[language] = row.valuesTo[language] ?? [];
-          }
-
-          return { ...row, valuesTo };
-        })
-      );
-    },
-    [setConfig, setRows]
-  );
-
   const addTranslationColumn = useCallback(
     (insertAt: number) => {
       const nextLanguage = createNextLanguageKey(config.languagesTo);
@@ -86,62 +75,39 @@ export function useTranslationColumns({ config, setConfig, setRows, setLastActio
         return false;
       }
 
-      setConfig((prev) => ({ ...prev, languagesTo }));
-      setRows((prev): GridRow[] =>
-        prev.map((row): GridRow => {
-          if (row.type !== ROW_TYPE_WORD) {
-            return row;
-          }
-
-          const valuesTo = { ...row.valuesTo };
-          delete valuesTo[language];
-          return { ...row, valuesTo };
-        })
-      );
+      applyLanguagesTo(languagesTo);
       setLastAction({ key: "action.removeTranslationColumn" });
       return true;
     },
-    [config.languagesTo, setConfig, setLastAction, setRows]
+    [applyLanguagesTo, config.languagesTo, setLastAction]
   );
 
   const renameTranslationColumn = useCallback(
-    (fromLanguage: string, toLanguage: string): boolean => {
+    (fromLanguage: string, toLanguage: string): { ok: boolean; error?: string } => {
       const nextLanguage = toLanguage.trim();
       if (nextLanguage === "" || nextLanguage === fromLanguage) {
         setLastAction({ key: "action.renameTranslationColumn" });
-        return true;
+        return { ok: true };
       }
       if (!config.languagesTo.includes(fromLanguage)) {
+        const error = t("action.languageNotFound", { language: fromLanguage });
         setLastAction({ key: "action.languageNotFound", values: { language: fromLanguage } });
-        return false;
+        return { ok: false, error };
       }
       if (config.languagesTo.includes(nextLanguage)) {
+        const error = t("action.languageExists", { language: nextLanguage });
         setLastAction({ key: "action.languageExists", values: { language: nextLanguage } });
-        return false;
+        return { ok: false, error };
       }
-
       const languagesTo = config.languagesTo.map((language) =>
         language === fromLanguage ? nextLanguage : language
       );
+      applyLanguagesTo(languagesTo, [{ from: fromLanguage, to: nextLanguage }]);
 
-      setConfig((prev) => ({ ...prev, languagesTo }));
-      setRows((prev): GridRow[] =>
-        prev.map((row): GridRow => {
-          if (row.type !== ROW_TYPE_WORD) {
-            return row;
-          }
-
-          const movedValues = row.valuesTo[fromLanguage] ?? [];
-          const valuesTo = { ...row.valuesTo };
-          delete valuesTo[fromLanguage];
-          valuesTo[nextLanguage] = movedValues;
-          return { ...row, valuesTo };
-        })
-      );
       setLastAction({ key: "action.renameTranslationColumn" });
-      return true;
+      return { ok: true };
     },
-    [config.languagesTo, setConfig, setLastAction, setRows]
+    [applyLanguagesTo, config.languagesTo, rows, setLastAction, t]
   );
 
   const moveTranslationItem = useCallback(
@@ -226,11 +192,12 @@ export function useTranslationColumns({ config, setConfig, setRows, setLastActio
       colId: `${TRANSLATION_COLUMN_PREFIX}${language}`,
       headerComponent: TranslationHeader,
       headerComponentParams: {
+        resetToken: headerEditResetToken,
         onRename: renameTranslationColumn,
         onDelete: removeTranslationColumn
       },
       sortable: false,
-      filter: false,
+      filter: "agTextColumnFilter",
       editable: false,
       autoHeight: true,
       wrapText: true,
@@ -255,6 +222,7 @@ export function useTranslationColumns({ config, setConfig, setRows, setLastActio
     addTranslationItem,
     config.languagesTo,
     config.translationDelimiter,
+    headerEditResetToken,
     moveTranslationItem,
     removeTranslationColumn,
     removeTranslationItem,
