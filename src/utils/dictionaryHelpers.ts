@@ -1,5 +1,5 @@
-import type { DictionaryRow } from "../models/dictionary";
-import type { GridRow } from "../types/grid";
+import type { DictionaryRow } from "../models/dictionary.ts";
+import type { GridRow } from "../types/grid.ts";
 
 export function parseTranslationValue(raw: string, delimiter: string): string[] {
   return raw

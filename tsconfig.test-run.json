@@ -5,12 +5,11 @@
     "moduleResolution": "Node",
     "strict": true,
     "esModuleInterop": true,
+    "types": ["node"],
     "skipLibCheck": true,
     "outDir": ".tmp-test"
   },
   "include": [
-    "src/io/dictionaryFormat.ts",
-    "src/models/dictionary.ts",
-    "tests/dictionaryFormat.not-working.spec.ts"
+    "tests/**/*.test.ts"
   ]
 }

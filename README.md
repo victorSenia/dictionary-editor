@@ -103,3 +103,4 @@ Installer artifacts are generated in `dist/`.
 - `npm run build:renderer:single-file`
 - `npm run build:renderer:all`
 - `npm run build:electron`
+- `npm test`

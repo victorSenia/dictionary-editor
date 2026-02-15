@@ -5,7 +5,7 @@ import {
   DEFAULT_CONFIG,
   type DictionaryConfig,
   type DictionaryRow
-} from "../models/dictionary";
+} from "../models/dictionary.ts";
 
 const CONFIG_PREFIX = "org.leo.dictionary.config.entity.ParseWords";
 const CONFIG_PARTS_COUNT = 10;

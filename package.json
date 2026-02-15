@@ -15,7 +15,8 @@
     "build:renderer:single-file": "npx --no-install vite build --mode singlefile",
     "build:renderer:all": "npm run build:renderer && npm run build:renderer:single-file",
     "build:electron": "npx --no-install tsc -p tsconfig.electron.json",
-    "test:parser-not-working": "npx --no-install tsc -p tsconfig.test-run.json && node .tmp-test/tests/dictionaryFormat.not-working.spec.js",
+    "test": "npm run test:unit",
+    "test:unit": "node --test \"tests/**/*.test.ts\"",
     "dist": "npm run build && npx --no-install cross-env ELECTRON_BUILDER_CACHE=.cache/electron-builder ELECTRON_CACHE=.cache/electron npx --no-install electron-builder"
   },
   "build": {
