@@ -1,4 +1,8 @@
-import { useCallback, type Dispatch, type SetStateAction } from "react";
+import { useCallback, useState, type Dispatch, type RefObject, type SetStateAction } from "react";
+import type { AgGridReact } from "ag-grid-react";
+import type { DictionaryConfig } from "../models/dictionary";
+import type { LastActionState } from "../types/lastAction";
+import type { GridRow } from "../types/grid";
 import { exportFile, parseFile } from "../io/dictionaryFormat";
 import {
   openFileUniversal,
@@ -7,36 +11,42 @@ import {
   saveFileUniversal
 } from "../io/fileAccess";
 import { parseAutosavePayload } from "../io/autosavePayload";
-import type { DictionaryConfig } from "../models/dictionary";
-import type { LastActionState } from "../types/lastAction";
-import type { GridRow } from "../types/grid";
 import { withIds, withoutIds } from "../utils/dictionaryHelpers";
 
-type UseDocumentActionsArgs = {
+type Args = {
+  gridRef: RefObject<AgGridReact<GridRow>>;
   autosaveEnabled: boolean;
   config: DictionaryConfig;
   rows: GridRow[];
-  currentFilePath: string | null;
   setConfig: Dispatch<SetStateAction<DictionaryConfig>>;
   setRows: Dispatch<SetStateAction<GridRow[]>>;
-  setCurrentFilePath: Dispatch<SetStateAction<string | null>>;
   setShowArticleColumn: Dispatch<SetStateAction<boolean>>;
+  setShowOnlyInvalid: Dispatch<SetStateAction<boolean>>;
   setLastAction: Dispatch<SetStateAction<LastActionState>>;
-  onOpened?: () => void;
+  markResetOnNextChange: () => void;
 };
 
-export function useDocumentActions({
+export function useDocumentWorkflow({
+  gridRef,
   autosaveEnabled,
   config,
   rows,
-  currentFilePath,
   setConfig,
   setRows,
-  setCurrentFilePath,
   setShowArticleColumn,
+  setShowOnlyInvalid,
   setLastAction,
-  onOpened
-}: UseDocumentActionsArgs) {
+  markResetOnNextChange
+}: Args) {
+  const [currentFilePath, setCurrentFilePath] = useState<string | null>(null);
+  const [headerEditResetToken, setHeaderEditResetToken] = useState<number>(0);
+  const onOpened = useCallback(() => {
+    markResetOnNextChange();
+    setShowOnlyInvalid(false);
+    setHeaderEditResetToken((prev) => prev + 1);
+    gridRef.current?.api?.setFilterModel(null);
+  }, [gridRef, markResetOnNextChange, setShowOnlyInvalid]);
+
   const handleOpen = useCallback(async () => {
     const opened = await openFileUniversal();
     if (!opened) {
@@ -65,16 +75,15 @@ export function useDocumentActions({
     }
     setCurrentFilePath(opened.path);
     setLastAction({ key: "action.open" });
-    onOpened?.();
+    onOpened();
   }, [
     autosaveEnabled,
     config,
     onOpened,
     setConfig,
-    setCurrentFilePath,
-    setLastAction,
     setRows,
-    setShowArticleColumn
+    setShowArticleColumn,
+    setLastAction
   ]);
 
   const handleSaveAs = useCallback(async () => {
@@ -84,7 +93,7 @@ export function useDocumentActions({
       setCurrentFilePath(saved.path);
       setLastAction({ key: "action.saveAs" });
     }
-  }, [config, currentFilePath, rows, setCurrentFilePath, setLastAction]);
+  }, [config, currentFilePath, rows, setLastAction]);
 
   const handleSave = useCallback(async () => {
     const content = exportFile(config, withoutIds(rows));
@@ -93,12 +102,20 @@ export function useDocumentActions({
       setLastAction({ key: "action.save" });
       return;
     }
+
     const saved = await saveFileAsUniversal(content, currentFilePath);
     if (saved) {
       setCurrentFilePath(saved.path);
       setLastAction({ key: "action.save" });
     }
-  }, [config, currentFilePath, rows, setCurrentFilePath, setLastAction]);
+  }, [config, currentFilePath, rows, setLastAction]);
 
-  return { handleOpen, handleSaveAs, handleSave };
+  return {
+    currentFilePath,
+    setCurrentFilePath,
+    headerEditResetToken,
+    handleOpen,
+    handleSaveAs,
+    handleSave
+  };
 }

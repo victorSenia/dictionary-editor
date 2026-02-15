@@ -92,7 +92,17 @@ function parseWordLine(line: string, config: DictionaryConfig): DictionaryRow {
   let matchedArticle: string | null = null;
   let longestMatch = -1;
   for (const article of knownArticles) {
-    if (sourceCell.startsWith(article) && article.length > longestMatch) {
+    if (!sourceCell.startsWith(article)) {
+      continue;
+    }
+
+    const candidateTail = sourceCell.slice(article.length).trimStart();
+    const [candidateWordPart] = candidateTail.split(additionalInformationDelimiter, 2);
+    if ((candidateWordPart ?? "").trim() === "") {
+      continue;
+    }
+
+    if (article.length > longestMatch) {
       matchedArticle = article;
       longestMatch = article.length;
     }

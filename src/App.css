@@ -42,6 +42,22 @@ body,
   background: #f1f5f9;
 }
 
+.toolbar button:disabled,
+.toolbar select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f8fafc !important;
+  color: #64748b !important;
+}
+
+.toolbar-icon-button {
+  min-width: 38px;
+  padding: 8px 10px !important;
+  font-size: 18px !important;
+  line-height: 1;
+  font-weight: 700;
+}
+
 .danger-button {
   border-color: #fca5a5 !important;
   background: #fef2f2 !important;
@@ -167,6 +183,14 @@ body,
 .ag-theme-alpine .ag-cell {
   padding-left: 4px;
   padding-right: 4px;
+}
+
+.ag-theme-alpine .ag-row-even .ag-cell {
+  background: #ffffff;
+}
+
+.ag-theme-alpine .ag-row-odd .ag-cell {
+  background: #e6edf7;
 }
 
 .ag-theme-alpine .ag-cell-value {
@@ -437,6 +461,11 @@ body,
 .ag-theme-alpine .ag-cell.invalid-cell {
   box-shadow: inset 0 0 0 2px #dc2626 !important;
   background: #fee2e2 !important;
+}
+
+.ag-theme-alpine .ag-cell.custom-cell-selected {
+  background: #dbeafe !important;
+  box-shadow: inset 0 0 0 1px #3b82f6 !important;
 }
 
 .status {

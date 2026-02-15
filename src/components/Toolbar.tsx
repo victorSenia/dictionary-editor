@@ -6,10 +6,15 @@ type ToolbarProps = {
   showOnlyInvalid: boolean;
   language: string;
   showSaveAs: boolean;
+  canCancel: boolean;
+  canReapply: boolean;
+  deleteSelectedDisabled: boolean;
   onLanguageChange: (language: string) => void;
   onOpen: () => void;
   onSave: () => void;
   onSaveAs: () => void;
+  onCancel: () => void;
+  onReapply: () => void;
   onToggleSettings: () => void;
   onToggleShowOnlyInvalid: () => void;
   onDeleteSelected: () => void;
@@ -20,10 +25,15 @@ function Toolbar({
   showOnlyInvalid,
   language,
   showSaveAs,
+  canCancel,
+  canReapply,
+  deleteSelectedDisabled,
   onLanguageChange,
   onOpen,
   onSave,
   onSaveAs,
+  onCancel,
+  onReapply,
   onToggleSettings,
   onToggleShowOnlyInvalid,
   onDeleteSelected
@@ -45,13 +55,33 @@ function Toolbar({
       ) : null}
       <button
         type="button"
+        className="toolbar-icon-button"
+        onClick={onCancel}
+        disabled={!canCancel}
+        title={t("toolbar.cancel")}
+        aria-label={t("toolbar.cancel")}
+      >
+        {"\u21B6"}
+      </button>
+      <button
+        type="button"
+        className="toolbar-icon-button"
+        onClick={onReapply}
+        disabled={!canReapply}
+        title={t("toolbar.reapply")}
+        aria-label={t("toolbar.reapply")}
+      >
+        {"\u21B7"}
+      </button>
+      <button
+        type="button"
         className={`toggle-button ${showOnlyInvalid ? "active" : ""}`}
         onClick={onToggleShowOnlyInvalid}
         aria-pressed={showOnlyInvalid}
       >
         {t("toolbar.showOnlyInvalid")}
       </button>
-      <button type="button" className="danger-button" onClick={onDeleteSelected}>
+      <button type="button" className="danger-button" onClick={onDeleteSelected} disabled={deleteSelectedDisabled}>
         {t("toolbar.removeSelectedRows")}
       </button>
       <label className="page-size-label">

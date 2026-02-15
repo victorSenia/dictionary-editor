@@ -76,6 +76,13 @@ function validateWordCellByColId(
   }
 
   if (colId === COLUMN_ID_WORD) {
+    if (text.trim() === "") {
+      return {
+        isValid: false,
+        reasonKey: "validation.emptyWordNotAllowed"
+      };
+    }
+
     if (text.includes(config.additionalInformationDelimiter)) {
       return {
         isValid: false,
@@ -109,6 +116,12 @@ export function validateCell(
   row: DictionaryRow
 ): CellValidationResult {
   if (row.type === ROW_TYPE_TOPIC) {
+    if (row.label.trim() === "") {
+      return {
+        isValid: false,
+        reasonKey: "validation.emptyTopicNotAllowed"
+      };
+    }
     return { isValid: true, reasonKey: "" };
   }
 
@@ -118,6 +131,10 @@ export function validateCell(
 }
 
 export function isRowInvalid(row: DictionaryRow, config: DictionaryConfig): boolean {
+  if (row.type === ROW_TYPE_TOPIC) {
+    return row.label.trim() === "";
+  }
+
   if (row.type !== ROW_TYPE_WORD) {
     return false;
   }
