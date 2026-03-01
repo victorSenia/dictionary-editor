@@ -10,6 +10,7 @@ type Args = {
 
 export function useEditorDocumentState({ showOnlyInvalid }: Args) {
   const [showArticleColumn, setShowArticleColumn] = useState<boolean>(true);
+  const [showAdditionalInformationColumn, setShowAdditionalInformationColumn] = useState<boolean>(true);
   const [config, setConfig] = useState<DictionaryConfig>(DEFAULT_CONFIG);
   const [rows, setRows] = useState<GridRow[]>([]);
 
@@ -26,6 +27,8 @@ export function useEditorDocumentState({ showOnlyInvalid }: Args) {
   return {
     showArticleColumn,
     setShowArticleColumn,
+    showAdditionalInformationColumn,
+    setShowAdditionalInformationColumn,
     config,
     setConfig,
     rows,

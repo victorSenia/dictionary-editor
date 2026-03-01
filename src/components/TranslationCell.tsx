@@ -2,6 +2,7 @@ import type { ICellRendererParams } from "ag-grid-community";
 import { useTranslation } from "react-i18next";
 import { ROW_TYPE_WORD } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
+import DeferredTextField from "./DeferredTextField";
 
 type TranslationCellProps = {
   params: ICellRendererParams<GridRow>;
@@ -27,18 +28,35 @@ export default function TranslationCell({
   }
 
   const values = params.data.valuesTo[language] ?? [];
+  const valuesSignature = values.join("\u001F");
   const showReorder = values.length > 1;
+  const refreshRowHeights = () => params.api.resetRowHeights();
+  const refreshCell = () => {
+    params.api.refreshCells({
+      rowNodes: [params.node],
+      columns: [params.column],
+      force: true
+    });
+  };
 
   return (
-    <div className="translation-stack">
+      <div className="translation-stack">
       {values.map((value, valueIndex) => (
-        <div key={`${params.data?.id}-${language}-${valueIndex}`} className="translation-item">
-          <textarea
+        <div
+          key={`${params.data?.id}-${language}-${valueIndex}-${valuesSignature}`}
+          className="translation-item"
+        >
+          <DeferredTextField
+            kind="textarea"
             className="translation-value-input"
             rows={1}
             value={value}
-            onClick={(event) => event.stopPropagation()}
-            onChange={(event) => onUpdate(params.data!.id, language, valueIndex, event.target.value)}
+            onHeightChange={refreshRowHeights}
+            onCommit={(nextValue) => {
+              onUpdate(params.data!.id, language, valueIndex, nextValue);
+              refreshRowHeights();
+              queueMicrotask(refreshCell);
+            }}
           />
           <span className="translation-item-actions">
             {showReorder ? (
@@ -51,6 +69,7 @@ export default function TranslationCell({
                 onClick={(event) => {
                   event.stopPropagation();
                   onMove(params.data!.id, language, valueIndex, valueIndex - 1);
+                  queueMicrotask(refreshCell);
                 }}
               >
                 {"\u2191"}
@@ -66,6 +85,7 @@ export default function TranslationCell({
                 onClick={(event) => {
                   event.stopPropagation();
                   onMove(params.data!.id, language, valueIndex, valueIndex + 1);
+                  queueMicrotask(refreshCell);
                 }}
               >
                 {"\u2193"}
@@ -79,6 +99,7 @@ export default function TranslationCell({
               onClick={(event) => {
                 event.stopPropagation();
                 onRemove(params.data!.id, language, valueIndex);
+                queueMicrotask(refreshCell);
               }}
             >
               {"\u00D7"}
@@ -94,6 +115,7 @@ export default function TranslationCell({
         onClick={(event) => {
           event.stopPropagation();
           onAdd(params.data!.id, language);
+          queueMicrotask(refreshCell);
         }}
       >
         +

@@ -11,6 +11,8 @@ type SettingsPanelProps = {
   applyLanguagesTo: (languagesTo: string[], renamePairs?: RenamePair[]) => void;
   showArticleColumn: boolean;
   setShowArticleColumn: Dispatch<SetStateAction<boolean>>;
+  showAdditionalInformationColumn: boolean;
+  setShowAdditionalInformationColumn: Dispatch<SetStateAction<boolean>>;
 };
 
 type EditableListProps = {
@@ -89,7 +91,9 @@ function SettingsPanel({
   setConfig,
   applyLanguagesTo,
   showArticleColumn,
-  setShowArticleColumn
+  setShowArticleColumn,
+  showAdditionalInformationColumn,
+  setShowAdditionalInformationColumn
 }: SettingsPanelProps) {
   const { t } = useTranslation();
   const canRemoveLanguage = config.languagesTo.length > 1;
@@ -220,6 +224,7 @@ function SettingsPanel({
       articles: prev.articles.filter((_item, current) => current !== index)
     }));
   };
+  const hasConfiguredArticles = config.articles.some((article) => article.trim().length > 0);
 
   return (
     <aside
@@ -237,9 +242,19 @@ function SettingsPanel({
           />
           <span>{t("settings.showArticleColumn")}</span>
         </label>
-        {!showArticleColumn ? (
+        {!showArticleColumn && hasConfiguredArticles ? (
           <p className="settings-helper-note">{t("settings.showArticleColumnHint")}</p>
         ) : null}
+      </div>
+      <div className="settings-inline-checkbox-wrap">
+        <label className="settings-inline-checkbox">
+          <input
+            type="checkbox"
+            checked={showAdditionalInformationColumn}
+            onChange={(event) => setShowAdditionalInformationColumn(event.target.checked)}
+          />
+          <span>{t("settings.showAdditionalInformationColumn")}</span>
+        </label>
       </div>
       <label>
         <span>{t("settings.languageFrom")}</span>

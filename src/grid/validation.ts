@@ -152,7 +152,7 @@ export function isRowInvalid(row: DictionaryRow, config: DictionaryConfig): bool
     return true;
   }
 
-  return Object.keys(row.valuesTo).some((language) => {
+  return config.languagesTo.some((language) => {
     const colId = `${TRANSLATION_COLUMN_PREFIX}${language}`;
     return !validateWordCellByColId(row, colId, "", config).isValid;
   });

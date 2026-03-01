@@ -1,6 +1,6 @@
 import { useCallback, useState, type Dispatch, type RefObject, type SetStateAction } from "react";
 import type { AgGridReact } from "ag-grid-react";
-import type { DictionaryConfig } from "../models/dictionary";
+import { DEFAULT_CONFIG, type DictionaryConfig } from "../models/dictionary";
 import type { LastActionState } from "../types/lastAction";
 import type { GridRow } from "../types/grid";
 import { exportFile, parseFile } from "../io/dictionaryFormat";
@@ -21,6 +21,7 @@ type Args = {
   setConfig: Dispatch<SetStateAction<DictionaryConfig>>;
   setRows: Dispatch<SetStateAction<GridRow[]>>;
   setShowArticleColumn: Dispatch<SetStateAction<boolean>>;
+  setShowAdditionalInformationColumn: Dispatch<SetStateAction<boolean>>;
   setShowOnlyInvalid: Dispatch<SetStateAction<boolean>>;
   setLastAction: Dispatch<SetStateAction<LastActionState>>;
   markResetOnNextChange: () => void;
@@ -34,6 +35,7 @@ export function useDocumentWorkflow({
   setConfig,
   setRows,
   setShowArticleColumn,
+  setShowAdditionalInformationColumn,
   setShowOnlyInvalid,
   setLastAction,
   markResetOnNextChange
@@ -46,6 +48,23 @@ export function useDocumentWorkflow({
     setHeaderEditResetToken((prev) => prev + 1);
     gridRef.current?.api?.setFilterModel(null);
   }, [gridRef, markResetOnNextChange, setShowOnlyInvalid]);
+
+  const handleNew = useCallback(() => {
+    setConfig(DEFAULT_CONFIG);
+    setRows([]);
+    setShowArticleColumn(true);
+    setShowAdditionalInformationColumn(true);
+    setCurrentFilePath(null);
+    setLastAction({ key: "action.new" });
+    onOpened();
+  }, [
+    onOpened,
+    setConfig,
+    setRows,
+    setShowAdditionalInformationColumn,
+    setShowArticleColumn,
+    setLastAction
+  ]);
 
   const handleOpen = useCallback(async () => {
     const opened = await openFileUniversal();
@@ -70,7 +89,7 @@ export function useDocumentWorkflow({
 
     setConfig(nextConfig);
     setRows(withIds(nextRows));
-    if (nextConfig.articles.some((article) => article.length > 0)) {
+    if (nextConfig.articles.some((article) => article.trim().length > 0)) {
       setShowArticleColumn(true);
     }
     setCurrentFilePath(opened.path);
@@ -114,6 +133,7 @@ export function useDocumentWorkflow({
     currentFilePath,
     setCurrentFilePath,
     headerEditResetToken,
+    handleNew,
     handleOpen,
     handleSaveAs,
     handleSave

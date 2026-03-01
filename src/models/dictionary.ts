@@ -31,7 +31,7 @@ export type DictionaryConfig = {
 export const DEFAULT_CONFIG: DictionaryConfig = {
   languageFrom: "de",
   languagesTo: ["en"],
-  articles: ["die ", "das ", "der "],
+  articles: [],
   delimiter: "|",
   additionalInformationDelimiter: ";",
   translationDelimiter: ";",

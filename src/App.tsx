@@ -55,6 +55,8 @@ function App() {
   const {
     showArticleColumn,
     setShowArticleColumn,
+    showAdditionalInformationColumn,
+    setShowAdditionalInformationColumn,
     config,
     setConfig,
     rows,
@@ -72,9 +74,11 @@ function App() {
     rows,
     config,
     showArticleColumn,
+    showAdditionalInformationColumn,
     setRows,
     setConfig,
     setShowArticleColumn,
+    setShowAdditionalInformationColumn,
     onCancelApplied: () => setLastAction({ key: "action.cancel" }),
     onReapplyApplied: () => setLastAction({ key: "action.reapply" })
   });
@@ -91,6 +95,7 @@ function App() {
     currentFilePath,
     setCurrentFilePath,
     headerEditResetToken,
+    handleNew,
     handleOpen,
     handleSaveAs,
     handleSave
@@ -102,6 +107,7 @@ function App() {
     setConfig,
     setRows,
     setShowArticleColumn,
+    setShowAdditionalInformationColumn,
     setShowOnlyInvalid,
     setLastAction,
     markResetOnNextChange
@@ -111,7 +117,6 @@ function App() {
 
   const { translationColumns, onColumnHeaderClicked: handleColumnHeaderClicked } = useTranslationColumns({
     config,
-    rows,
     headerEditResetToken,
     applyLanguagesTo,
     setRows,
@@ -119,6 +124,7 @@ function App() {
   });
   const { columnDefs } = useGridColumns({
     showArticleColumn,
+    showAdditionalInformationColumn,
     translationColumns,
     setRows,
     setLastAction,
@@ -136,6 +142,7 @@ function App() {
     deleteRowsWithSelectedCells: handleDeleteRowsWithSelectedCells
   } = useGridSelectionAndRowDrag({
     gridRef,
+    rows,
     setRows,
     setLastAction
   });
@@ -159,10 +166,12 @@ function App() {
     setFilePath: setCurrentFilePath,
     setLastAction
   });
-  const { handleGridSizeChanged, handleFirstDataRendered } = useGridLayout({
+  const { handleGridSizeChanged, handleFirstDataRendered, handleDisplayedColumnsChanged } = useGridLayout({
     gridRef,
     isSettingsOpen,
-    languageColumnsCount: config.languagesTo.length
+    languageColumnsCount: config.languagesTo.length,
+    showArticleColumn,
+    showAdditionalInformationColumn
   });
   const gridProps = useGridViewModel({
     gridRef,
@@ -176,6 +185,7 @@ function App() {
     onCellKeyDown: handleCellKeyDown,
     onGridSizeChanged: handleGridSizeChanged,
     onFirstDataRendered: handleFirstDataRendered,
+    onDisplayedColumnsChanged: handleDisplayedColumnsChanged,
     onPaginationChanged: handlePaginationChanged,
     onRowDragMove: handleRowDragMove,
     onRowDragEnd: handleRowDragEnd,
@@ -199,6 +209,7 @@ function App() {
         canReapply={canReapply}
         deleteSelectedDisabled={!hasSelectedCells}
         onLanguageChange={handleLanguageChange}
+        onNew={handleNew}
         onOpen={handleOpen}
         onSave={handleSave}
         onSaveAs={handleSaveAs}
@@ -225,6 +236,8 @@ function App() {
           applyLanguagesTo={applyLanguagesTo}
           showArticleColumn={showArticleColumn}
           setShowArticleColumn={setShowArticleColumn}
+          showAdditionalInformationColumn={showAdditionalInformationColumn}
+          setShowAdditionalInformationColumn={setShowAdditionalInformationColumn}
         />
       </div>
     </div>

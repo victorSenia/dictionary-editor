@@ -2,6 +2,11 @@ import type { DictionaryRow } from "../models/dictionary.ts";
 import type { GridRow } from "../types/grid.ts";
 
 export function parseTranslationValue(raw: string, delimiter: string): string[] {
+  if (delimiter === "") {
+    const value = raw.trim();
+    return value.length > 0 ? [value] : [];
+  }
+
   return raw
     .split(delimiter)
     .map((value) => value.trim())

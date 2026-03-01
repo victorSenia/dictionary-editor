@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { ROW_TYPE_WORD, type DictionaryConfig } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
 import type { LastActionState } from "../types/lastAction";
-import { createNextLanguageKey } from "../utils/dictionaryHelpers";
+import { createNextLanguageKey, parseTranslationValue } from "../utils/dictionaryHelpers";
 import type { RenamePair } from "../utils/languageTransition";
 import TranslationHeader from "../components/TranslationHeader";
 import TranslationCell from "../components/TranslationCell";
@@ -12,7 +12,6 @@ import { COLUMN_ID_ADD_END, TRANSLATION_COLUMN_PREFIX } from "../constants/grid"
 
 type Args = {
   config: DictionaryConfig;
-  rows: GridRow[];
   headerEditResetToken: number;
   applyLanguagesTo: (languagesTo: string[], renamePairs?: RenamePair[]) => void;
   setRows: Dispatch<SetStateAction<GridRow[]>>;
@@ -21,7 +20,6 @@ type Args = {
 
 export function useTranslationColumns({
   config,
-  rows,
   headerEditResetToken,
   applyLanguagesTo,
   setRows,
@@ -107,7 +105,7 @@ export function useTranslationColumns({
       setLastAction({ key: "action.renameTranslationColumn" });
       return { ok: true };
     },
-    [applyLanguagesTo, config.languagesTo, rows, setLastAction, t]
+    [applyLanguagesTo, config.languagesTo, setLastAction, t]
   );
 
   const moveTranslationItem = useCallback(
@@ -135,12 +133,21 @@ export function useTranslationColumns({
         if (index < 0 || index >= current.length) {
           return null;
         }
-        current[index] = value;
+
+        const delimiter = config.translationDelimiter;
+        const shouldSplit = delimiter !== "" && value.includes(delimiter);
+        if (!shouldSplit) {
+          current[index] = value;
+          return current;
+        }
+
+        const splitValues = parseTranslationValue(value, delimiter);
+        current.splice(index, 1, ...(splitValues.length > 0 ? splitValues : [""]));
         return current;
       });
       setLastAction({ key: "action.editTranslation" });
     },
-    [setLastAction, updateTranslationValues]
+    [config.translationDelimiter, setLastAction, updateTranslationValues]
   );
 
   const addTranslationItem = useCallback(
@@ -200,6 +207,7 @@ export function useTranslationColumns({
       filter: "agTextColumnFilter",
       editable: false,
       autoHeight: true,
+      cellStyle: { display: "grid", alignItems: "center" },
       wrapText: true,
       valueGetter: (params: ValueGetterParams<GridRow>) => {
         if (!params.data || params.data.type !== ROW_TYPE_WORD) {

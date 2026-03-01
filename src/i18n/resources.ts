@@ -6,6 +6,7 @@ export const resources = {
       },
       toolbar: {
         aria: "Editor toolbar",
+        new: "New",
         open: "Open",
         save: "Save",
         saveAs: "Save As",
@@ -24,6 +25,7 @@ export const resources = {
         aria: "Settings panel",
         showArticleColumn: "Show article column",
         showArticleColumnHint: "If disabled, it is recommended to remove articles from config.",
+        showAdditionalInformationColumn: "Show additional info column",
         addLanguage: "Add language",
         addArticle: "Add article",
         removeItem: "Remove item",
@@ -56,6 +58,7 @@ export const resources = {
         none: "None"
       },
       action: {
+        new: "New",
         open: "Open",
         import: "Import",
         save: "Save",
@@ -141,6 +144,7 @@ export const resources = {
       },
       toolbar: {
         aria: "Editor-Symbolleiste",
+        new: "Neu",
         open: "Öffnen",
         save: "Speichern",
         saveAs: "Speichern unter",
@@ -160,6 +164,7 @@ export const resources = {
         showArticleColumn: "Artikelspalte anzeigen",
         showArticleColumnHint:
           "Wenn deaktiviert, wird empfohlen, Artikel aus der Konfiguration zu entfernen.",
+        showAdditionalInformationColumn: "Zusatzinfo-Spalte anzeigen",
         addLanguage: "Sprache hinzufügen",
         addArticle: "Artikel hinzufügen",
         removeItem: "Element entfernen",
@@ -192,6 +197,7 @@ export const resources = {
         none: "Keine"
       },
       action: {
+        new: "Neu",
         open: "Öffnen",
         import: "Importieren",
         save: "Speichern",
@@ -277,6 +283,7 @@ export const resources = {
       },
       toolbar: {
         aria: "Панель інструментів редактора",
+        new: "Новий",
         open: "Відкрити",
         save: "Зберегти",
         saveAs: "Зберегти як",
@@ -296,6 +303,7 @@ export const resources = {
         showArticleColumn: "Показувати стовпець артикля",
         showArticleColumnHint:
           "Якщо вимкнено, рекомендовано видалити артиклі з конфігурації.",
+        showAdditionalInformationColumn: "Показувати стовпець дод. інформації",
         addLanguage: "Додати мову",
         addArticle: "Додати артикль",
         removeItem: "Видалити елемент",
@@ -328,6 +336,7 @@ export const resources = {
         none: "Немає"
       },
       action: {
+        new: "Новий",
         open: "Відкрити",
         import: "Імпорт",
         save: "Зберегти",

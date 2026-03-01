@@ -1,15 +1,14 @@
 import {
   useCallback,
   useMemo,
-  type ChangeEvent,
   type Dispatch,
-  type MouseEvent,
   type SetStateAction
 } from "react";
 import type { ColDef, ICellRendererParams, ValueGetterParams } from "ag-grid-community";
 import { ROW_TYPE_TOPIC, ROW_TYPE_WORD } from "../models/dictionary";
 import type { LastActionState } from "../types/lastAction";
 import type { GridRow } from "../types/grid";
+import DeferredTextField from "../components/DeferredTextField";
 import {
   ARTICLE_COLUMN_MAX_WIDTH,
   ARTICLE_COLUMN_MIN_WIDTH,
@@ -25,6 +24,7 @@ import {
 
 type Args = {
   showArticleColumn: boolean;
+  showAdditionalInformationColumn: boolean;
   translationColumns: ColDef<GridRow>[];
   setRows: Dispatch<SetStateAction<GridRow[]>>;
   setLastAction: Dispatch<SetStateAction<LastActionState>>;
@@ -33,6 +33,7 @@ type Args = {
 
 export function useGridColumns({
   showArticleColumn,
+  showAdditionalInformationColumn,
   translationColumns,
   setRows,
   setLastAction,
@@ -43,18 +44,6 @@ export function useGridColumns({
       setRows((prev) => prev.map((row) => (row.id === rowId ? transform(row) : row)));
     },
     [setRows]
-  );
-
-  const createInlineEditorHandlers = useCallback(
-    (onValueChange: (nextValue: string) => void) => ({
-      onClick: (event: MouseEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        event.stopPropagation();
-      },
-      onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        onValueChange(event.target.value);
-      }
-    }),
-    []
   );
 
   const renderInsertRowCell = useCallback(
@@ -85,19 +74,19 @@ export function useGridColumns({
   const renderTopicLabelEditor = useCallback(
     (rowId: string, value: string) => {
       return (
-        <input
-          type="text"
+        <DeferredTextField
+          kind="input"
           className="inline-topic-input"
           value={value}
-          {...createInlineEditorHandlers((nextValue) => {
+          onCommit={(nextValue) => {
             updateRowById(rowId, (row) =>
               row.type === ROW_TYPE_TOPIC ? { ...row, label: nextValue } : row
             );
-          })}
+          }}
         />
       );
     },
-    [createInlineEditorHandlers, updateRowById]
+    [updateRowById]
   );
 
   const renderArticleCell = useCallback(
@@ -114,11 +103,11 @@ export function useGridColumns({
       const value = params.data.article;
 
       return (
-        <input
-          type="text"
+        <DeferredTextField
+          kind="input"
           className="inline-cell-input"
           value={value}
-          {...createInlineEditorHandlers((nextValue) => {
+          onCommit={(nextValue) => {
             updateRowById(rowId, (row) => {
               if (row.type === ROW_TYPE_TOPIC) {
                 return { ...row, label: nextValue };
@@ -128,11 +117,11 @@ export function useGridColumns({
               }
               return { ...row, article: nextValue };
             });
-          })}
+          }}
         />
       );
     },
-    [createInlineEditorHandlers, renderTopicLabelEditor, updateRowById]
+    [renderTopicLabelEditor, updateRowById]
   );
 
   const renderWordCell = useCallback(
@@ -154,20 +143,23 @@ export function useGridColumns({
       }
 
       const rowId = params.data.id;
+      const refreshRowHeights = () => params.api.resetRowHeights();
       return (
-        <textarea
+        <DeferredTextField
+          kind="textarea"
           className="inline-cell-textarea"
           rows={1}
           value={params.data.valueFrom}
-          {...createInlineEditorHandlers((nextValue) => {
+          onHeightChange={refreshRowHeights}
+          onCommit={(nextValue) => {
             updateRowById(rowId, (row) =>
               row.type === ROW_TYPE_WORD ? { ...row, valueFrom: nextValue } : row
             );
-          })}
+          }}
         />
       );
     },
-    [createInlineEditorHandlers, renderTopicLabelEditor, showArticleColumn, updateRowById]
+    [renderTopicLabelEditor, showArticleColumn, updateRowById]
   );
 
   const renderAdditionalInfoCell = useCallback(
@@ -177,20 +169,23 @@ export function useGridColumns({
       }
 
       const rowId = params.data.id;
+      const refreshRowHeights = () => params.api.resetRowHeights();
       return (
-        <textarea
+        <DeferredTextField
+          kind="textarea"
           className="inline-cell-textarea"
           rows={1}
           value={params.data.additionalInformation}
-          {...createInlineEditorHandlers((nextValue) => {
+          onHeightChange={refreshRowHeights}
+          onCommit={(nextValue) => {
             updateRowById(rowId, (row) =>
               row.type === ROW_TYPE_WORD ? { ...row, additionalInformation: nextValue } : row
             );
-          })}
+          }}
         />
       );
     },
-    [createInlineEditorHandlers, updateRowById]
+    [updateRowById]
   );
 
   const columnDefs = useMemo<ColDef<GridRow>[]>(() => {
@@ -243,6 +238,8 @@ export function useGridColumns({
         headerName: t("grid.word"),
         colId: COLUMN_ID_WORD,
         editable: false,
+        autoHeight: true,
+        cellStyle: { display: "grid", alignItems: "center" },
         cellRenderer: renderWordCell,
         colSpan: (params) => {
           if (showArticleColumn || !params.data || params.data.type !== ROW_TYPE_TOPIC) {
@@ -268,10 +265,13 @@ export function useGridColumns({
             : params.data.valueFrom;
         }
       },
-      {
+      ...(showAdditionalInformationColumn
+        ? [{
         headerName: t("grid.additionalInfo"),
         colId: COLUMN_ID_ADDITIONAL_INFO,
         editable: false,
+        autoHeight: true,
+        cellStyle: { display: "grid", alignItems: "center" },
         cellRenderer: renderAdditionalInfoCell,
         valueGetter: (params: ValueGetterParams<GridRow>) => {
           if (!params.data || params.data.type !== ROW_TYPE_WORD) {
@@ -279,7 +279,8 @@ export function useGridColumns({
           }
           return params.data.additionalInformation;
         }
-      }
+      }]
+        : [])
     ];
 
     if (showArticleColumn) {
@@ -310,6 +311,7 @@ export function useGridColumns({
     renderInsertRowCell,
     renderWordCell,
     showArticleColumn,
+    showAdditionalInformationColumn,
     t,
     translationColumns
   ]);

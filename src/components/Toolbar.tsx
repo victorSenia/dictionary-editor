@@ -10,6 +10,7 @@ type ToolbarProps = {
   canReapply: boolean;
   deleteSelectedDisabled: boolean;
   onLanguageChange: (language: string) => void;
+  onNew: () => void;
   onOpen: () => void;
   onSave: () => void;
   onSaveAs: () => void;
@@ -29,6 +30,7 @@ function Toolbar({
   canReapply,
   deleteSelectedDisabled,
   onLanguageChange,
+  onNew,
   onOpen,
   onSave,
   onSaveAs,
@@ -42,6 +44,9 @@ function Toolbar({
 
   return (
     <header className="toolbar" role="toolbar" aria-label={t("toolbar.aria")}>
+      <button type="button" onClick={onNew}>
+        {t("toolbar.new")}
+      </button>
       <button type="button" onClick={onOpen}>
         {t("toolbar.open")}
       </button>

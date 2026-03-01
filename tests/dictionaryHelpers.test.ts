@@ -13,6 +13,11 @@ test("parseTranslationValue trims values and drops empty parts", () => {
   assert.deepEqual(values, ["one", "two", "three"]);
 });
 
+test("parseTranslationValue keeps single trimmed value when delimiter is empty", () => {
+  const values = parseTranslationValue("  one ; two  ", "");
+  assert.deepEqual(values, ["one ; two"]);
+});
+
 test("createNextLanguageKey finds first available langN key", () => {
   const next = createNextLanguageKey(["lang1", "lang2", "lang4"]);
   assert.equal(next, "lang3");

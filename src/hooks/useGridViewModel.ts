@@ -24,6 +24,7 @@ type Args = {
   onCellKeyDown: NonNullable<AgGridReactProps<GridRow>["onCellKeyDown"]>;
   onGridSizeChanged: NonNullable<AgGridReactProps<GridRow>["onGridSizeChanged"]>;
   onFirstDataRendered: NonNullable<AgGridReactProps<GridRow>["onFirstDataRendered"]>;
+  onDisplayedColumnsChanged: NonNullable<AgGridReactProps<GridRow>["onDisplayedColumnsChanged"]>;
   onPaginationChanged: NonNullable<AgGridReactProps<GridRow>["onPaginationChanged"]>;
   onRowDragMove: NonNullable<AgGridReactProps<GridRow>["onRowDragMove"]>;
   onRowDragEnd: NonNullable<AgGridReactProps<GridRow>["onRowDragEnd"]>;
@@ -58,6 +59,7 @@ export function useGridViewModel({
   onCellKeyDown,
   onGridSizeChanged,
   onFirstDataRendered,
+  onDisplayedColumnsChanged,
   onPaginationChanged,
   onRowDragMove,
   onRowDragEnd,
@@ -169,6 +171,7 @@ export function useGridViewModel({
       onCellKeyDown,
       onGridSizeChanged,
       onFirstDataRendered,
+      onDisplayedColumnsChanged,
       onPaginationChanged,
       onRowDragMove,
       onRowDragEnd
@@ -184,6 +187,7 @@ export function useGridViewModel({
       onCellMouseOver,
       onColumnHeaderClicked,
       onColumnMoved,
+      onDisplayedColumnsChanged,
       onFirstDataRendered,
       onGridSizeChanged,
       onPaginationChanged,

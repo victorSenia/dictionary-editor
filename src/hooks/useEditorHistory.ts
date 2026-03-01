@@ -6,15 +6,18 @@ type EditorSnapshot = {
   rows: GridRow[];
   config: DictionaryConfig;
   showArticleColumn: boolean;
+  showAdditionalInformationColumn: boolean;
 };
 
 type Args = {
   rows: GridRow[];
   config: DictionaryConfig;
   showArticleColumn: boolean;
+  showAdditionalInformationColumn: boolean;
   setRows: Dispatch<SetStateAction<GridRow[]>>;
   setConfig: Dispatch<SetStateAction<DictionaryConfig>>;
   setShowArticleColumn: Dispatch<SetStateAction<boolean>>;
+  setShowAdditionalInformationColumn: Dispatch<SetStateAction<boolean>>;
   onCancelApplied?: () => void;
   onReapplyApplied?: () => void;
 };
@@ -40,7 +43,8 @@ function cloneSnapshot(snapshot: EditorSnapshot): EditorSnapshot {
       languagesTo: [...snapshot.config.languagesTo],
       articles: [...snapshot.config.articles]
     },
-    showArticleColumn: snapshot.showArticleColumn
+    showArticleColumn: snapshot.showArticleColumn,
+    showAdditionalInformationColumn: snapshot.showAdditionalInformationColumn
   };
 }
 
@@ -52,9 +56,11 @@ export function useEditorHistory({
   rows,
   config,
   showArticleColumn,
+  showAdditionalInformationColumn,
   setRows,
   setConfig,
   setShowArticleColumn,
+  setShowAdditionalInformationColumn,
   onCancelApplied,
   onReapplyApplied
 }: Args) {
@@ -65,7 +71,8 @@ export function useEditorHistory({
   const lastSnapshotRef = useRef<EditorSnapshot>({
     rows: [],
     config,
-    showArticleColumn
+    showArticleColumn,
+    showAdditionalInformationColumn
   });
   const lastSerializedRef = useRef<string>(serializeSnapshot(lastSnapshotRef.current));
 
@@ -74,9 +81,10 @@ export function useEditorHistory({
       cloneSnapshot({
         rows,
         config,
-        showArticleColumn
+        showArticleColumn,
+        showAdditionalInformationColumn
       }),
-    [config, rows, showArticleColumn]
+    [config, rows, showArticleColumn, showAdditionalInformationColumn]
   );
 
   const applySnapshot = useCallback(
@@ -88,8 +96,9 @@ export function useEditorHistory({
       setRows(cloned.rows);
       setConfig(cloned.config);
       setShowArticleColumn(cloned.showArticleColumn);
+      setShowAdditionalInformationColumn(cloned.showAdditionalInformationColumn);
     },
-    [setConfig, setRows, setShowArticleColumn]
+    [setConfig, setRows, setShowAdditionalInformationColumn, setShowArticleColumn]
   );
 
   useEffect(() => {

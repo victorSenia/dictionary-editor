@@ -46,6 +46,16 @@ test("isRowInvalid accepts a valid row", () => {
   assert.equal(isRowInvalid(makeWordRow(), CONFIG), false);
 });
 
+test("isRowInvalid ignores removed translation languages not present in config", () => {
+  const row = makeWordRow({
+    valuesTo: {
+      en: ["house"],
+      fr: ["ma|ison"]
+    }
+  });
+  assert.equal(isRowInvalid(row, CONFIG), false);
+});
+
 test("validateCell returns specific reason for word delimiter violations", () => {
   const row = makeWordRow();
   const result = validateCell(
