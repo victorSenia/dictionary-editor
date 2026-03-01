@@ -23,16 +23,16 @@
       title: "설정",
       aria: "설정 패널",
       showArticleColumn: "관사 열 표시",
-      showArticleColumnHint: "비활성화된 경우 구성에서 기사를 제거하는 것이 좋습니다.",
+      showArticleColumnHint: "비활성화된 경우 구성에서 관사를 제거하는 것이 좋습니다.",
       showAdditionalInformationColumn: "추가 정보 열 표시",
       addLanguage: "언어 추가",
-      addArticle: "기사 추가",
+      addArticle: "관사 추가",
       removeItem: "항목 삭제",
       languageErrorEmpty: "언어는 비워둘 수 없습니다.",
       languageErrorExists: "언어 \"{{language}}\"이(가) 이미 존재합니다.",
       languageFrom: "소스 언어",
       languagesTo: "대상 언어(쉼표로 구분)",
-      articles: "기사(쉼표로 구분)",
+      articles: "관사(쉼표로 구분)",
       delimiter: "열 구분 기호",
       additionalInformationDelimiter: "추가 정보 구분 기호",
       translationDelimiter: "번역 구분 기호",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "빈 주제는 허용되지 않습니다.",
       emptyWordNotAllowed: "빈 단어는 허용되지 않습니다.",
       emptyTranslationNotAllowed: "빈 번역은 허용되지 않습니다.",
-      articleNotInConfig: "기사 \"{{article}}\"이(가) 구성된 기사에 없습니다."
+      articleNotInConfig: "관사 \"{{article}}\"이(가) 구성된 관사에 없습니다."
     },
     translation: {
       renameColumn: "열 이름 바꾸기",

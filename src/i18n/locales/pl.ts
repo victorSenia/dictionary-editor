@@ -23,16 +23,16 @@
       title: "Ustawienia",
       aria: "Panel ustawień",
       showArticleColumn: "Pokaż kolumnę rodzajnika",
-      showArticleColumnHint: "Jeśli wyłączone, zaleca się usunięcie artykułów z konfiguracji.",
+      showArticleColumnHint: "Jeśli wyłączone, zaleca się usunięcie rodzajników z konfiguracji.",
       showAdditionalInformationColumn: "Pokaż kolumnę dodatkowych informacji",
       addLanguage: "Dodaj język",
-      addArticle: "Dodaj artykuł",
+      addArticle: "Dodaj rodzajnik",
       removeItem: "Usuń element",
       languageErrorEmpty: "Język nie może być pusty",
       languageErrorExists: "Język „{{language}}” już istnieje",
       languageFrom: "Język źródłowy",
       languagesTo: "Języki docelowe (oddzielone przecinkami)",
-      articles: "Artykuły (oddzielone przecinkami)",
+      articles: "Rodzajniki (oddzielone przecinkami)",
       delimiter: "Ogranicznik kolumny",
       additionalInformationDelimiter: "Dodatkowy ogranicznik informacji",
       translationDelimiter: "Ogranicznik tłumaczenia",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "Pusty temat nie jest dozwolony",
       emptyWordNotAllowed: "Puste słowo jest niedozwolone",
       emptyTranslationNotAllowed: "Puste tłumaczenie jest niedozwolone",
-      articleNotInConfig: "Artykułu „{{article}}” nie ma w skonfigurowanych artykułach"
+      articleNotInConfig: "Rodzajnika „{{article}}” nie ma w skonfigurowanych rodzajnikach"
     },
     translation: {
       renameColumn: "Zmień nazwę kolumny",

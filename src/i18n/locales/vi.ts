@@ -23,16 +23,16 @@
       title: "Cài đặt",
       aria: "Bảng cài đặt",
       showArticleColumn: "Hiển thị cột mạo từ",
-      showArticleColumnHint: "Nếu bị tắt, bạn nên xóa bài viết khỏi config.",
+      showArticleColumnHint: "Nếu bị tắt, bạn nên xóa mạo từ khỏi cấu hình.",
       showAdditionalInformationColumn: "Hiển thị cột thông tin bổ sung",
       addLanguage: "Thêm ngôn ngữ",
-      addArticle: "Thêm bài viết",
+      addArticle: "Thêm mạo từ",
       removeItem: "Xóa mục",
       languageErrorEmpty: "Ngôn ngữ không thể trống",
       languageErrorExists: "Ngôn ngữ \"{{language}}\" đã tồn tại",
       languageFrom: "Ngôn ngữ nguồn",
       languagesTo: "Ngôn ngữ đích (được phân tách bằng dấu phẩy)",
-      articles: "Bài viết (được phân tách bằng dấu phẩy)",
+      articles: "Mạo từ (phân tách bằng dấu phẩy)",
       delimiter: "Dấu phân cách cột",
       additionalInformationDelimiter: "Dấu phân cách thông tin bổ sung",
       translationDelimiter: "Dấu phân cách dịch",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "Chủ đề trống không được phép",
       emptyWordNotAllowed: "Từ trống không được phép",
       emptyTranslationNotAllowed: "Không được phép dịch trống",
-      articleNotInConfig: "Bài viết \"{{article}}\" không có trong bài viết được định cấu hình"
+      articleNotInConfig: "Mạo từ \"{{article}}\" không có trong các mạo từ được cấu hình"
     },
     translation: {
       renameColumn: "Đổi tên cột",

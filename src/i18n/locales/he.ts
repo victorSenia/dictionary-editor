@@ -23,16 +23,16 @@
       title: "הגדרות",
       aria: "חלונית הגדרות",
       showArticleColumn: "הצג עמודת תווית יידוע",
-      showArticleColumnHint: "אם מושבת, מומלץ להסיר מאמרים מהתצורה.",
+      showArticleColumnHint: "אם מושבת, מומלץ להסיר ארטיקלים מהתצורה.",
       showAdditionalInformationColumn: "הצג עמודת מידע נוסף",
       addLanguage: "הוסף שפה",
-      addArticle: "הוסף מאמר",
+      addArticle: "הוסף ארטיקל",
       removeItem: "הסר פריט",
       languageErrorEmpty: "השפה לא יכולה להיות ריקה",
       languageErrorExists: "השפה \"{{language}}\" כבר קיימת",
       languageFrom: "שפת המקור",
       languagesTo: "שפות יעד (מופרדות בפסיק)",
-      articles: "מאמרים (מופרדים בפסיק)",
+      articles: "ארטיקלים (מופרדים בפסיקים)",
       delimiter: "מפריד עמודות",
       additionalInformationDelimiter: "מפריד מידע נוסף",
       translationDelimiter: "תוחם תרגום",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "אסור לנושא ריק",
       emptyWordNotAllowed: "אסור להשתמש במילה ריקה",
       emptyTranslationNotAllowed: "תרגום ריק אסור",
-      articleNotInConfig: "המאמר \"{{article}}\" אינו נמצא במאמרים מוגדרים"
+      articleNotInConfig: "הארטיקל \"{{article}}\" אינו נמצא בארטיקלים שהוגדרו"
     },
     translation: {
       renameColumn: "שנה את שם העמודה",

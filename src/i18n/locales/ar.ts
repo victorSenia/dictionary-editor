@@ -23,16 +23,16 @@
       title: "إعدادات",
       aria: "لوحة الإعدادات",
       showArticleColumn: "إظهار عمود أداة التعريف",
-      showArticleColumnHint: "إذا تم تعطيله، فمن المستحسن إزالة المقالات من التكوين.",
+      showArticleColumnHint: "إذا تم تعطيله، فمن المستحسن إزالة أدوات التعريف من التكوين.",
       showAdditionalInformationColumn: "إظهار عمود المعلومات الإضافية",
       addLanguage: "أضف لغة",
-      addArticle: "أضف مقالة",
+      addArticle: "أضف أداة تعريف",
       removeItem: "إزالة العنصر",
       languageErrorEmpty: "لا يمكن أن تكون اللغة فارغة",
       languageErrorExists: "اللغة \"{{language}}\" موجودة بالفعل",
       languageFrom: "لغة المصدر",
       languagesTo: "اللغات المستهدفة (مفصولة بفواصل)",
-      articles: "المقالات (مفصولة بفواصل)",
+      articles: "أدوات التعريف (مفصولة بفواصل)",
       delimiter: "محدد العمود",
       additionalInformationDelimiter: "محدد معلومات إضافية",
       translationDelimiter: "محدد الترجمة",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "غير مسموح بالموضوع الفارغ",
       emptyWordNotAllowed: "الكلمة الفارغة غير مسموح بها",
       emptyTranslationNotAllowed: "الترجمة الفارغة غير مسموح بها",
-      articleNotInConfig: "المقالة \"{{article}}\" ليست في المقالات التي تم تكوينها"
+      articleNotInConfig: "أداة التعريف \"{{article}}\" ليست ضمن أدوات التعريف المكوّنة"
     },
     translation: {
       renameColumn: "إعادة تسمية العمود",

@@ -23,16 +23,16 @@
       title: "सेटिंग्स",
       aria: "सेटिंग्स पैनल",
       showArticleColumn: "उपपद कॉलम दिखाएँ",
-      showArticleColumnHint: "यदि अक्षम है, तो कॉन्फ़िगरेशन से लेखों को हटाने की अनुशंसा की जाती है।",
+      showArticleColumnHint: "यदि अक्षम है, तो कॉन्फ़िगरेशन से आर्टिकल हटाने की अनुशंसा की जाती है।",
       showAdditionalInformationColumn: "अतिरिक्त जानकारी कॉलम दिखाएँ",
       addLanguage: "भाषा जोड़ें",
-      addArticle: "आलेख जोड़ें",
+      addArticle: "आर्टिकल जोड़ें",
       removeItem: "वस्तु निकालें",
       languageErrorEmpty: "भाषा खाली नहीं हो सकती",
       languageErrorExists: "भाषा \"{{language}}\" पहले से मौजूद है",
       languageFrom: "स्रोत भाषा",
       languagesTo: "लक्ष्य भाषाएँ (अल्पविराम से अलग)",
-      articles: "लेख (अल्पविराम से अलग)",
+      articles: "आर्टिकल (कॉमा से अलग)",
       delimiter: "कॉलम सीमांकक",
       additionalInformationDelimiter: "अतिरिक्त जानकारी सीमांकक",
       translationDelimiter: "अनुवाद सीमांकक",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "खाली विषय की अनुमति नहीं है",
       emptyWordNotAllowed: "खाली शब्द की अनुमति नहीं है",
       emptyTranslationNotAllowed: "खाली अनुवाद की अनुमति नहीं है",
-      articleNotInConfig: "आलेख \"{{article}}\" कॉन्फ़िगर आलेखों में नहीं है"
+      articleNotInConfig: "आर्टिकल \"{{article}}\" कॉन्फ़िगर किए गए आर्टिकल में नहीं है"
     },
     translation: {
       renameColumn: "कॉलम का नाम बदलें",

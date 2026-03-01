@@ -23,16 +23,16 @@
       title: "設定",
       aria: "設定パネル",
       showArticleColumn: "冠詞列を表示",
-      showArticleColumnHint: "無効にした場合は、構成から記事を削除することをお勧めします。",
+      showArticleColumnHint: "無効にした場合は、構成から冠詞を削除することをお勧めします。",
       showAdditionalInformationColumn: "追加情報列を表示",
       addLanguage: "言語を追加する",
-      addArticle: "記事を追加",
+      addArticle: "冠詞を追加",
       removeItem: "アイテムを削除する",
       languageErrorEmpty: "言語を空にすることはできません",
       languageErrorExists: "言語「{{language}}」はすでに存在します",
       languageFrom: "ソース言語",
       languagesTo: "ターゲット言語 (カンマ区切り)",
-      articles: "記事 (カンマ区切り)",
+      articles: "冠詞（カンマ区切り）",
       delimiter: "列区切り文字",
       additionalInformationDelimiter: "追加情報の区切り文字",
       translationDelimiter: "翻訳区切り文字",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "空のトピックは許可されません",
       emptyWordNotAllowed: "空の単語は許可されません",
       emptyTranslationNotAllowed: "空の翻訳は許可されません",
-      articleNotInConfig: "記事「{{article}}」は設定された記事にありません"
+      articleNotInConfig: "冠詞「{{article}}」は設定された冠詞にありません"
     },
     translation: {
       renameColumn: "列名の変更",

@@ -23,16 +23,16 @@
       title: "设置",
       aria: "设置面板",
       showArticleColumn: "显示冠词列",
-      showArticleColumnHint: "如果禁用，建议从配置中删除文章。",
+      showArticleColumnHint: "如果禁用，建议从配置中删除冠词。",
       showAdditionalInformationColumn: "显示附加信息列",
       addLanguage: "添加语言",
-      addArticle: "添加文章",
+      addArticle: "添加冠词",
       removeItem: "删除项目",
       languageErrorEmpty: "语言不能为空",
       languageErrorExists: "语言“{{language}}”已存在",
       languageFrom: "源语言",
       languagesTo: "目标语言（以逗号分隔）",
-      articles: "文章（以逗号分隔）",
+      articles: "冠词（用逗号分隔）",
       delimiter: "列分隔符",
       additionalInformationDelimiter: "附加信息分隔符",
       translationDelimiter: "翻译分隔符",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "不允许为空主题",
       emptyWordNotAllowed: "不允许出现空词",
       emptyTranslationNotAllowed: "不允许空译",
-      articleNotInConfig: "文章“{{article}}”不在配置的文章中"
+      articleNotInConfig: "冠词“{{article}}”不在已配置的冠词中"
     },
     translation: {
       renameColumn: "重命名列",

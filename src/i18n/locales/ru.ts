@@ -23,16 +23,16 @@
       title: "Настройки",
       aria: "Панель настроек",
       showArticleColumn: "Показать столбец артикля",
-      showArticleColumnHint: "Если отключено, рекомендуется удалить статьи из конфига.",
+      showArticleColumnHint: "Если отключено, рекомендуется удалить артикли из конфига.",
       showAdditionalInformationColumn: "Показать столбец дополнительной информации",
       addLanguage: "Добавить язык",
-      addArticle: "Добавить статью",
+      addArticle: "Добавить артикль",
       removeItem: "Удалить элемент",
       languageErrorEmpty: "Язык не может быть пустым",
       languageErrorExists: "Язык «{{language}}» уже существует.",
       languageFrom: "Исходный язык",
       languagesTo: "Целевые языки (через запятую)",
-      articles: "Статьи (через запятую)",
+      articles: "Артикли (через запятую)",
       delimiter: "Разделитель столбцов",
       additionalInformationDelimiter: "Дополнительный разделитель информации",
       translationDelimiter: "Разделитель перевода",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "Пустая тема не допускается",
       emptyWordNotAllowed: "Пустое слово не допускается",
       emptyTranslationNotAllowed: "Пустой перевод не допускается",
-      articleNotInConfig: "Статьи «{{article}}» нет в настроенных статьях."
+      articleNotInConfig: "Артикля «{{article}}» нет в настроенных артиклях."
     },
     translation: {
       renameColumn: "Переименовать столбец",

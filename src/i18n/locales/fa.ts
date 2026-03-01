@@ -23,16 +23,16 @@
       title: "تنظیمات",
       aria: "پنل تنظیمات",
       showArticleColumn: "نمایش ستون حرف تعریف",
-      showArticleColumnHint: "اگر غیرفعال است، توصیه می شود مقالات را از پیکربندی حذف کنید.",
+      showArticleColumnHint: "اگر غیرفعال است، توصیه می‌شود حروف تعریف را از پیکربندی حذف کنید.",
       showAdditionalInformationColumn: "نمایش ستون اطلاعات اضافی",
       addLanguage: "زبان اضافه کنید",
-      addArticle: "اضافه کردن مقاله",
+      addArticle: "اضافه کردن حرف تعریف",
       removeItem: "حذف مورد",
       languageErrorEmpty: "زبان نمی تواند خالی باشد",
       languageErrorExists: "زبان \"{{language}}\" از قبل وجود دارد",
       languageFrom: "زبان مبدأ",
       languagesTo: "زبان های هدف (با کاما از هم جدا شده اند)",
-      articles: "مقالات (با کاما از هم جدا شده اند)",
+      articles: "حروف تعریف (با کاما جدا شده)",
       delimiter: "جداکننده ستون",
       additionalInformationDelimiter: "جداکننده اطلاعات اضافی",
       translationDelimiter: "جداکننده ترجمه",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "موضوع خالی مجاز نمی باشد",
       emptyWordNotAllowed: "کلمه خالی مجاز نیست",
       emptyTranslationNotAllowed: "ترجمه خالی مجاز نیست",
-      articleNotInConfig: "مقاله \"{{article}}\" در مقالات پیکربندی شده نیست"
+      articleNotInConfig: "حرف تعریف \"{{article}}\" در حروف تعریف پیکربندی‌شده نیست"
     },
     translation: {
       renameColumn: "تغییر نام ستون",

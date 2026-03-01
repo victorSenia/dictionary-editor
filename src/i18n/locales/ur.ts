@@ -23,16 +23,16 @@
       title: "ترتیبات",
       aria: "ترتیبات کا پینل",
       showArticleColumn: "حرفِ تعریف کا کالم دکھائیں",
-      showArticleColumnHint: "اگر غیر فعال ہے، تو یہ تجویز کیا جاتا ہے کہ کنفیگریشن سے مضامین کو ہٹا دیا جائے۔",
+      showArticleColumnHint: "اگر غیر فعال ہے، تو یہ تجویز کیا جاتا ہے کہ کنفیگریشن سے حروفِ تعریف کو ہٹا دیا جائے۔",
       showAdditionalInformationColumn: "اضافی معلومات کا کالم دکھائیں",
       addLanguage: "زبان شامل کریں۔",
-      addArticle: "مضمون شامل کریں۔",
+      addArticle: "حرفِ تعریف شامل کریں۔",
       removeItem: "آئٹم کو ہٹا دیں۔",
       languageErrorEmpty: "زبان خالی نہیں ہو سکتی",
       languageErrorExists: "زبان \"{{language}}\" پہلے سے موجود ہے۔",
       languageFrom: "ماخذ کی زبان",
       languagesTo: "ہدف کی زبانیں (کوما سے الگ کردہ)",
-      articles: "مضامین (کوما سے الگ کردہ)",
+      articles: "حروفِ تعریف (کوما سے الگ)",
       delimiter: "کالم ڈیلیمیٹر",
       additionalInformationDelimiter: "اضافی معلومات کی حد بندی",
       translationDelimiter: "ترجمہ ڈیلیمیٹر",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "خالی عنوان کی اجازت نہیں ہے۔",
       emptyWordNotAllowed: "خالی لفظ کی اجازت نہیں ہے۔",
       emptyTranslationNotAllowed: "خالی ترجمہ کی اجازت نہیں ہے۔",
-      articleNotInConfig: "آرٹیکل \"{{article}}\" ترتیب شدہ مضامین میں نہیں ہے۔"
+      articleNotInConfig: "حرفِ تعریف \"{{article}}\" ترتیب شدہ حروفِ تعریف میں نہیں ہے۔"
     },
     translation: {
       renameColumn: "کالم کا نام تبدیل کریں۔",

@@ -23,16 +23,16 @@
       title: "การตั้งค่า",
       aria: "แผงการตั้งค่า",
       showArticleColumn: "แสดงคอลัมน์คำนำหน้านาม",
-      showArticleColumnHint: "หากปิดใช้งาน ขอแนะนำให้ลบบทความออกจากการกำหนดค่า",
+      showArticleColumnHint: "หากปิดใช้งาน ขอแนะนำให้ลบคำนำหน้านามออกจากการกำหนดค่า",
       showAdditionalInformationColumn: "แสดงคอลัมน์ข้อมูลเพิ่มเติม",
       addLanguage: "เพิ่มภาษา",
-      addArticle: "เพิ่มบทความ",
+      addArticle: "เพิ่มคำนำหน้านาม",
       removeItem: "ลบรายการ",
       languageErrorEmpty: "ภาษาต้องไม่เว้นว่าง",
       languageErrorExists: "ภาษา \"{{language}}\" มีอยู่แล้ว",
       languageFrom: "ภาษาต้นฉบับ",
       languagesTo: "ภาษาเป้าหมาย (คั่นด้วยเครื่องหมายจุลภาค)",
-      articles: "บทความ (คั่นด้วยลูกน้ำ)",
+      articles: "คำนำหน้านาม (คั่นด้วยจุลภาค)",
       delimiter: "ตัวคั่นคอลัมน์",
       additionalInformationDelimiter: "ตัวคั่นข้อมูลเพิ่มเติม",
       translationDelimiter: "ตัวคั่นการแปล",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "ไม่อนุญาตให้มีหัวข้อที่ว่างเปล่า",
       emptyWordNotAllowed: "ไม่อนุญาตให้ใช้คำที่ว่างเปล่า",
       emptyTranslationNotAllowed: "ไม่อนุญาตให้แปลที่ว่างเปล่า",
-      articleNotInConfig: "บทความ \"{{article}}\" ไม่ได้อยู่ในบทความที่กำหนดค่า"
+      articleNotInConfig: "คำนำหน้านาม \"{{article}}\" ไม่ได้อยู่ในคำนำหน้านามที่กำหนดค่า"
     },
     translation: {
       renameColumn: "เปลี่ยนชื่อคอลัมน์",

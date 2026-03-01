@@ -23,16 +23,16 @@
       title: "Ayarlar",
       aria: "Ayarlar paneli",
       showArticleColumn: "Tanımlık sütununu göster",
-      showArticleColumnHint: "Devre dışı bırakılırsa makalelerin config'ten kaldırılması önerilir.",
+      showArticleColumnHint: "Devre dışı bırakılırsa artikellerin config'ten kaldırılması önerilir.",
       showAdditionalInformationColumn: "Ek Bilgi sütununu göster",
       addLanguage: "Dil ekle",
-      addArticle: "Makale ekle",
+      addArticle: "Artikel ekle",
       removeItem: "Öğeyi kaldır",
       languageErrorEmpty: "Dil boş olamaz",
       languageErrorExists: "\"{{language}}\" dili zaten mevcut",
       languageFrom: "Kaynak dil",
       languagesTo: "Hedef diller (virgülle ayrılmış)",
-      articles: "Makaleler (virgülle ayrılmış)",
+      articles: "Artikeller (virgülle ayrılmış)",
       delimiter: "Sütun sınırlayıcı",
       additionalInformationDelimiter: "Ek bilgi sınırlayıcı",
       translationDelimiter: "Çeviri sınırlayıcı",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "Boş konuya izin verilmiyor",
       emptyWordNotAllowed: "Boş kelimeye izin verilmiyor",
       emptyTranslationNotAllowed: "Boş çeviriye izin verilmiyor",
-      articleNotInConfig: "\"{{article}}\" makalesi yapılandırılmış makalelerde yok"
+      articleNotInConfig: "\"{{article}}\" artikeli yapılandırılmış artikellerde yok"
     },
     translation: {
       renameColumn: "Sütunu yeniden adlandır",

@@ -23,16 +23,16 @@
       title: "Налаштування",
       aria: "Панель налаштувань",
       showArticleColumn: "Показати колонку артикля",
-      showArticleColumnHint: "Якщо вимкнено, рекомендовано видалити статті з конфігурації.",
+      showArticleColumnHint: "Якщо вимкнено, рекомендовано видалити артиклі з конфігурації.",
       showAdditionalInformationColumn: "Показати колонку додаткової інформації",
       addLanguage: "Додайте мову",
-      addArticle: "Додати статтю",
+      addArticle: "Додати артикль",
       removeItem: "Видалити товар",
       languageErrorEmpty: "Мова не може бути пустою",
       languageErrorExists: "Мова \"{{language}}\" вже існує",
       languageFrom: "Мова оригіналу",
       languagesTo: "Цільові мови (розділені комами)",
-      articles: "Статті (через кому)",
+      articles: "Артиклі (через кому)",
       delimiter: "Розділювач стовпців",
       additionalInformationDelimiter: "Роздільник додаткової інформації",
       translationDelimiter: "Розділювач перекладу",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "Порожня тема не допускається",
       emptyWordNotAllowed: "Порожнє слово не допускається",
       emptyTranslationNotAllowed: "Порожній переклад не допускається",
-      articleNotInConfig: "Статті \"{{article}}\" немає в налаштованих статтях"
+      articleNotInConfig: "Артикля \"{{article}}\" немає в налаштованих артиклях"
     },
     translation: {
       renameColumn: "Перейменувати стовпець",

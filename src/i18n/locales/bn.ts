@@ -23,16 +23,16 @@
       title: "সেটিংস",
       aria: "সেটিংস প্যানেল",
       showArticleColumn: "আর্টিকেল কলাম দেখান",
-      showArticleColumnHint: "অক্ষম থাকলে, কনফিগারেশন থেকে নিবন্ধগুলি সরানোর পরামর্শ দেওয়া হয়।",
+      showArticleColumnHint: "অক্ষম থাকলে, কনফিগারেশন থেকে আর্টিকেলগুলো সরানোর পরামর্শ দেওয়া হয়।",
       showAdditionalInformationColumn: "অতিরিক্ত তথ্য কলাম দেখান",
       addLanguage: "ভাষা যোগ করুন",
-      addArticle: "নিবন্ধ যোগ করুন",
+      addArticle: "আর্টিকেল যোগ করুন",
       removeItem: "আইটেম সরান",
       languageErrorEmpty: "ভাষা খালি হতে পারে না",
       languageErrorExists: "\"{{language}}\" ভাষা আগে থেকেই বিদ্যমান",
       languageFrom: "উৎস ভাষা",
       languagesTo: "টার্গেট ভাষা (কমা দিয়ে আলাদা করা)",
-      articles: "প্রবন্ধ (কমা দ্বারা পৃথক করা)",
+      articles: "আর্টিকেল (কমা দিয়ে পৃথক করা)",
       delimiter: "কলাম ডিলিমিটার",
       additionalInformationDelimiter: "অতিরিক্ত তথ্য ডিলিমিটার",
       translationDelimiter: "অনুবাদ ডিলিমিটার",
@@ -97,7 +97,7 @@
       emptyTopicNotAllowed: "খালি বিষয় অনুমোদিত নয়",
       emptyWordNotAllowed: "খালি শব্দ অনুমোদিত নয়",
       emptyTranslationNotAllowed: "খালি অনুবাদ অনুমোদিত নয়",
-      articleNotInConfig: "নিবন্ধ \"{{article}}\" কনফিগার করা নিবন্ধে নেই"
+      articleNotInConfig: "আর্টিকেল \"{{article}}\" কনফিগার করা আর্টিকেলগুলোর মধ্যে নেই"
     },
     translation: {
       renameColumn: "কলাম পুনঃনামকরণ করুন",
