@@ -237,6 +237,7 @@ export function useGridColumns({
       {
         headerName: t("grid.word"),
         colId: COLUMN_ID_WORD,
+        flex: 1,
         editable: false,
         autoHeight: true,
         cellStyle: { display: "grid", alignItems: "center" },

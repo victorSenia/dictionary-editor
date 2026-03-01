@@ -27,11 +27,3 @@ export async function copyTextToClipboard(text: string): Promise<boolean> {
     return ok;
   }
 }
-
-export async function readTextFromClipboard(): Promise<string> {
-  try {
-    return await navigator.clipboard.readText();
-  } catch {
-    return "";
-  }
-}

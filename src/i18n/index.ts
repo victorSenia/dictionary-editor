@@ -3,7 +3,32 @@ import { initReactI18next } from "react-i18next";
 import { resources, type AppLanguage } from "./resources";
 
 const DEFAULT_LANGUAGE: AppLanguage = "en";
-const SUPPORTED_LANGUAGES: AppLanguage[] = ["en", "de", "uk"];
+const SUPPORTED_LANGUAGES: AppLanguage[] = [
+  "en",
+  "es",
+  "fr",
+  "in",
+  "pt",
+  "it",
+  "nl",
+  "pl",
+  "tr",
+  "ru",
+  "hi",
+  "bn",
+  "ur",
+  "zh",
+  "ja",
+  "ko",
+  "id",
+  "vi",
+  "th",
+  "uk",
+  "de",
+  "ar",
+  "he",
+  "fa"
+];
 const LANGUAGE_STORAGE_KEY = "dictionary-editor.language";
 
 function resolveInitialLanguage(): AppLanguage {

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, type Dispatch, type RefObject, type SetStateAction } from "react";
 import type { CellKeyDownEvent } from "ag-grid-community";
 import type { AgGridReact } from "ag-grid-react";
+import { useTranslation } from "react-i18next";
 import { createEmptyWordRow, type DictionaryConfig } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
 import type { LastActionState } from "../types/lastAction";
 import { createRowId } from "../utils/rowId";
-import { copyTextToClipboard, isEditableElement, readTextFromClipboard } from "./gridClipboard/clipboardIo";
+import { copyTextToClipboard, isEditableElement } from "./gridClipboard/clipboardIo";
 import { confirmDialog } from "./gridClipboard/confirmDialog";
 import {
   buildRowCopyText,
@@ -35,9 +36,8 @@ export function useGridClipboard({
   setRows,
   setLastAction
 }: Args) {
-  const pendingPasteRef = useRef<{ token: number; colId: string; rowId?: string; handled: boolean } | null>(null);
+  const { t } = useTranslation();
   const lastAppliedPasteRef = useRef<{ signature: string; at: number } | null>(null);
-  const PASTE_EVENT_WAIT_MS = 40;
   const PASTE_DEDUPE_WINDOW_MS = 300;
 
   const applyPasteText = useCallback(
@@ -78,7 +78,8 @@ export function useGridClipboard({
       const maxBufferColumns = Math.max(...parsedRows.map((row) => row.length));
       if (maxBufferColumns > availableColumns) {
         const shouldContinue = await confirmDialog(
-          `Pasted data has ${maxBufferColumns} columns, but only ${availableColumns} fit from the selected cell. Extra columns will be ignored. Continue?`
+          t("clipboard.confirmTooManyColumns", { maxBufferColumns, availableColumns }),
+          { cancelText: t("dialog.cancel"), okText: t("dialog.ok") }
         );
         if (!shouldContinue) {
           return;
@@ -119,9 +120,10 @@ export function useGridClipboard({
       };
 
       if (wouldOverwrite(rows)) {
-        const shouldOverwrite = await confirmDialog(
-          "Some target cells already contain data. Pasting will overwrite existing values. Continue?"
-        );
+        const shouldOverwrite = await confirmDialog(t("clipboard.confirmOverwrite"), {
+          cancelText: t("dialog.cancel"),
+          okText: t("dialog.ok")
+        });
         if (!shouldOverwrite) {
           return;
         }
@@ -143,7 +145,7 @@ export function useGridClipboard({
       });
       setLastAction({ key: "action.pasteInsert" });
     },
-    [config, rows, setLastAction, setRows]
+    [config, rows, setLastAction, setRows, t]
   );
 
   useEffect(() => {
@@ -170,11 +172,7 @@ export function useGridClipboard({
       const focusedRowId = focusedDisplayRow?.data?.id;
       const colId = focusedCell.column.getColId();
 
-      if (pendingPasteRef.current) {
-        pendingPasteRef.current.handled = true;
-      }
       void applyPasteText(text, colId, focusedRowId);
-      pendingPasteRef.current = null;
     };
 
     document.addEventListener("paste", onPaste);
@@ -306,27 +304,8 @@ export function useGridClipboard({
         return;
       }
 
-      keyboardEvent.preventDefault();
-      const focusedCell = gridRef.current?.api.getFocusedCell();
-      const focusedColId = focusedCell?.column.getColId() ?? event.column.getColId();
-      const focusedDisplayRow =
-        typeof focusedCell?.rowIndex === "number"
-          ? gridRef.current?.api.getDisplayedRowAtIndex(focusedCell.rowIndex)
-          : undefined;
-      const focusedRowId = focusedDisplayRow?.data?.id ?? event.data?.id;
-      const token = Date.now();
-      pendingPasteRef.current = { token, colId: focusedColId, rowId: focusedRowId, handled: false };
-
-      void (async () => {
-        await new Promise((resolve) => setTimeout(resolve, PASTE_EVENT_WAIT_MS));
-        const pending = pendingPasteRef.current;
-        if (!pending || pending.token !== token || pending.handled) {
-          return;
-        }
-        const text = await readTextFromClipboard();
-        await applyPasteText(text, pending.colId, pending.rowId);
-        pendingPasteRef.current = null;
-      })();
+      // Let the native paste event provide clipboard data. Avoid direct clipboard reads
+      // (`navigator.clipboard.readText`) to prevent browser permission prompts.
     },
     [applyPasteText, clearSelectedCells, config, gridRef, rows, selectedCellKeys, setLastAction, setRows]
   );

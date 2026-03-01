@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useTranslation } from "react-i18next";
 import type {
@@ -33,9 +33,13 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 const AUTOSAVE_DEBOUNCE_MS = 600;
 const AUTOSAVE_ENABLED = false;
+const RTL_LANGUAGES = new Set(["ar", "he", "ur", "fa"]);
 
 function App() {
   const { t, i18n } = useTranslation();
+  const activeLanguage = i18n.resolvedLanguage ?? i18n.language ?? "en";
+  const baseLanguage = activeLanguage.toLowerCase().split("-")[0];
+  const isRtl = RTL_LANGUAGES.has(baseLanguage);
   const gridRef = useRef<AgGridReact<GridRow>>(null);
   const [lastAction, setLastAction] = useState<LastActionState>(null);
   const isElectronMode = hasElectronApi();
@@ -198,12 +202,17 @@ function App() {
   useAppTitle({ title: t("app.title") });
   const statusText = useStatusText({ t, lastAction, currentFilePath });
 
+  useEffect(() => {
+    document.documentElement.lang = activeLanguage;
+    document.documentElement.dir = isRtl ? "rtl" : "ltr";
+  }, [activeLanguage, isRtl]);
+
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${isRtl ? "rtl" : ""}`} dir={isRtl ? "rtl" : "ltr"}>
       <Toolbar
         isSettingsOpen={isSettingsOpen}
         showOnlyInvalid={showOnlyInvalid}
-        language={i18n.resolvedLanguage ?? i18n.language ?? "en"}
+        language={activeLanguage}
         showSaveAs={isElectronMode}
         canCancel={canCancel}
         canReapply={canReapply}
@@ -223,7 +232,7 @@ function App() {
       <div className={`content ${isSettingsOpen ? "settings-open" : ""}`}>
         <main className="grid-area" aria-label={t("grid.containerAria")}>
           <div className="ag-theme-alpine grid-host">
-            <AgGridReact<GridRow> {...gridProps} />
+            <AgGridReact<GridRow> {...gridProps} enableRtl={isRtl} />
           </div>
           <RowEndActions onAddRow={handleAddRow} onAddTopic={handleAddTopic} />
           <p className="status">{statusText}</p>

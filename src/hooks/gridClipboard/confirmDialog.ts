@@ -1,4 +1,9 @@
-export async function confirmDialog(message: string): Promise<boolean> {
+type ConfirmDialogOptions = {
+  cancelText: string;
+  okText: string;
+};
+
+export async function confirmDialog(message: string, options: ConfirmDialogOptions): Promise<boolean> {
   return new Promise<boolean>((resolve) => {
     const overlay = document.createElement("div");
     overlay.style.position = "fixed";
@@ -32,7 +37,7 @@ export async function confirmDialog(message: string): Promise<boolean> {
 
     const cancelButton = document.createElement("button");
     cancelButton.type = "button";
-    cancelButton.textContent = "Cancel";
+    cancelButton.textContent = options.cancelText;
     cancelButton.style.border = "1px solid #cbd5e1";
     cancelButton.style.borderRadius = "6px";
     cancelButton.style.background = "#ffffff";
@@ -42,7 +47,7 @@ export async function confirmDialog(message: string): Promise<boolean> {
 
     const okButton = document.createElement("button");
     okButton.type = "button";
-    okButton.textContent = "OK";
+    okButton.textContent = options.okText;
     okButton.style.border = "1px solid #86efac";
     okButton.style.borderRadius = "6px";
     okButton.style.background = "#f0fdf4";
