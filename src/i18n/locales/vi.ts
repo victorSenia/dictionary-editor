@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "Dữ liệu đã dán có {{maxBufferColumns}} cột nhưng chỉ {{availableColumns}} vừa với ô đã chọn. Các cột bổ sung sẽ bị bỏ qua. Tiếp tục?",
       confirmOverwrite: "Một số ô mục tiêu đã chứa dữ liệu. Việc dán sẽ ghi đè lên các giá trị hiện có. Tiếp tục?"
-    },    topic: {
-      new: "Chủ đề mới"
     },
     agGrid: {
       page: "Trang",

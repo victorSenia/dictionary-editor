@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "Data yang ditempel memiliki kolom {{maxBufferColumns}}, namun hanya {{availableColumns}} yang muat dari sel yang dipilih. Kolom tambahan akan diabaikan. Melanjutkan?",
       confirmOverwrite: "Beberapa sel target sudah berisi data. Menempel akan menimpa nilai yang ada. Melanjutkan?"
-    },    topic: {
-      new: "Topik Baru"
     },
     agGrid: {
       page: "Halaman",

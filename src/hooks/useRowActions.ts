@@ -8,12 +8,11 @@ import { createRowId } from "../utils/rowId";
 type Args = {
   gridRef: RefObject<AgGridReact<GridRow>>;
   config: DictionaryConfig;
-  topicLabel: string;
   setRows: Dispatch<SetStateAction<GridRow[]>>;
   setLastAction: Dispatch<SetStateAction<LastActionState>>;
 };
 
-export function useRowActions({ gridRef, config, topicLabel, setRows, setLastAction }: Args) {
+export function useRowActions({ gridRef, config, setRows, setLastAction }: Args) {
   const getAnchorRowId = useCallback((): string | null => {
     const selectedId = gridRef.current?.api.getSelectedNodes()[0]?.data?.id;
     if (selectedId) {
@@ -54,7 +53,7 @@ export function useRowActions({ gridRef, config, topicLabel, setRows, setLastAct
     const id = createRowId("topic");
     const anchorRowId = getAnchorRowId();
     setRows((prev) => {
-      const nextRow: GridRow = { ...createTopicRow(topicLabel), id };
+      const nextRow: GridRow = { ...createTopicRow(""), id };
       if (!anchorRowId) {
         return [...prev, nextRow];
       }
@@ -69,7 +68,7 @@ export function useRowActions({ gridRef, config, topicLabel, setRows, setLastAct
       return next;
     });
     setLastAction({ key: "action.addTopic" });
-  }, [getAnchorRowId, setLastAction, setRows, topicLabel]);
+  }, [getAnchorRowId, setLastAction, setRows]);
 
   const handleDeleteSelected = useCallback(() => {
     const selectedIds = new Set(

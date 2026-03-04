@@ -96,7 +96,6 @@ function SettingsPanel({
   setShowAdditionalInformationColumn
 }: SettingsPanelProps) {
   const { t } = useTranslation();
-  const canRemoveLanguage = config.languagesTo.length > 1;
   const [languageDrafts, setLanguageDrafts] = useState<string[]>(config.languagesTo);
   const [languageErrors, setLanguageErrors] = useState<Record<number, string>>({});
 
@@ -199,13 +198,8 @@ function SettingsPanel({
       }
       return shifted;
     });
-    if (!canRemoveLanguage) {
-      return;
-    }
     const next = config.languagesTo.filter((_item, current) => current !== index);
-    if (next.length > 0) {
-      applyLanguagesTo(next);
-    }
+    applyLanguagesTo(next);
   };
 
   const updateArticleAt = (index: number, value: string) => {
@@ -273,7 +267,6 @@ function SettingsPanel({
           itemKeyPrefix="lang"
           addAriaLabel={t("settings.addLanguage")}
           removeAriaLabel={t("settings.removeItem")}
-          canRemove={canRemoveLanguage}
           onChangeAt={updateLanguageDraftAt}
           onBlurAt={commitLanguageAt}
           onKeyDownAt={handleLanguageKeyDownAt}

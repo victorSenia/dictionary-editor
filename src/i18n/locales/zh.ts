@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "粘贴的数据具有 {{maxBufferColumns}} 列，但只有 {{availableColumns}} 适合所选单元格。额外的列将被忽略。继续？",
       confirmOverwrite: "一些目标单元格已经包含数据。粘贴将覆盖现有值。继续？"
-    },    topic: {
-      new: "新主题"
     },
     agGrid: {
       page: "页",

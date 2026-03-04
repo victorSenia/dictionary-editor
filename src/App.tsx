@@ -90,7 +90,6 @@ function App() {
   const { handleAddRow, handleAddTopic } = useRowActions({
     gridRef,
     config,
-    topicLabel: t("topic.new"),
     setRows,
     setLastAction
   });

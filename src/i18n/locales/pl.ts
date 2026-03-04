@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "Wklejone dane mają {{maxBufferColumns}} kolumn, ale z wybranej komórki pasują tylko {{availableColumns}}. Dodatkowe kolumny zostaną zignorowane. Kontynuować?",
       confirmOverwrite: "Niektóre komórki docelowe zawierają już dane. Wklejenie spowoduje nadpisanie istniejących wartości. Kontynuować?"
-    },    topic: {
-      new: "Nowy temat"
     },
     agGrid: {
       page: "Strona",

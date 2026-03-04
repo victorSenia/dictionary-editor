@@ -145,8 +145,6 @@
       ar: "العربية",
       he: "עברית",
       fa: "فارسی"
-    },    topic: {
-      new: "New Topic"
     },
     agGrid: {
       page: "Page",

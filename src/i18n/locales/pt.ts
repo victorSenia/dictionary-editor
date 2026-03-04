@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "Os dados colados possuem colunas {{maxBufferColumns}}, mas apenas {{availableColumns}} cabem na célula selecionada. Colunas extras serão ignoradas. Continuar?",
       confirmOverwrite: "Algumas células de destino já contêm dados. Colar substituirá os valores existentes. Continuar?"
-    },    topic: {
-      new: "Novo tópico"
     },
     agGrid: {
       page: "Página",

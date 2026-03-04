@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "Eingefügte Daten haben {{maxBufferColumns}} Spalten, aber nur {{availableColumns}} passen in die ausgewählte Zelle. Zusätzliche Spalten werden ignoriert. Weitermachen?",
       confirmOverwrite: "Einige Zielzellen enthalten bereits Daten. Durch das Einfügen werden vorhandene Werte überschrieben. Weitermachen?"
-    },    topic: {
-      new: "Neues Thema"
     },
     agGrid: {
       page: "Seite",

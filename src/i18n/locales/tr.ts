@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "Yapıştırılan verilerde {{maxBufferColumns}} sütun var, ancak seçilen hücreden yalnızca {{availableColumns}} sığıyor. Ekstra sütunlar dikkate alınmayacaktır. Devam etmek?",
       confirmOverwrite: "Bazı hedef hücreler zaten veri içeriyor. Yapıştırma işlemi mevcut değerlerin üzerine yazılacaktır. Devam etmek?"
-    },    topic: {
-      new: "Yeni Konu"
     },
     agGrid: {
       page: "Sayfa",

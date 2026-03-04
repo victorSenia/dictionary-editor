@@ -68,11 +68,6 @@ export function useTranslationColumns({
   const removeTranslationColumn = useCallback(
     (language: string): boolean => {
       const languagesTo = config.languagesTo.filter((item) => item !== language);
-      if (languagesTo.length === 0) {
-        setLastAction({ key: "action.cannotRemoveLastTranslationColumn" });
-        return false;
-      }
-
       applyLanguagesTo(languagesTo);
       setLastAction({ key: "action.removeTranslationColumn" });
       return true;

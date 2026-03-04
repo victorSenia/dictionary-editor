@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "Geplakte gegevens hebben {{maxBufferColumns}} kolommen, maar alleen {{availableColumns}} past in de geselecteerde cel. Extra kolommen worden genegeerd. Doorgaan?",
       confirmOverwrite: "Sommige doelcellen bevatten al gegevens. Door te plakken worden bestaande waarden overschreven. Doorgaan?"
-    },    topic: {
-      new: "Nieuw onderwerp"
     },
     agGrid: {
       page: "Pagina",

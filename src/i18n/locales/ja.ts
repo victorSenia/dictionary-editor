@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "貼り付けられたデータには {{maxBufferColumns}} 列がありますが、選択したセルからは {{availableColumns}} のみが適合します。余分な列は無視されます。続く？",
       confirmOverwrite: "一部のターゲット セルにはすでにデータが含まれています。貼り付けると、既存の値が上書きされます。続く？"
-    },    topic: {
-      new: "新しいトピック"
     },
     agGrid: {
       page: "ページ",

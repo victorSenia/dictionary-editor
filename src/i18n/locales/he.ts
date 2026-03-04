@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "לנתונים שהודבקו יש {{maxBufferColumns}} עמודות, אך רק {{availableColumns}} מתאים מהתא שנבחר. תתעלם מעמודות נוספות. לְהַמשִׁיך?",
       confirmOverwrite: "חלק מתאי היעד כבר מכילים נתונים. הדבקה תחליף ערכים קיימים. לְהַמשִׁיך?"
-    },    topic: {
-      new: "נושא חדש"
     },
     agGrid: {
       page: "עַמוּד",

@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "I dati incollati hanno {{maxBufferColumns}} colonne, ma solo {{availableColumns}} si adattano alla cella selezionata. Le colonne aggiuntive verranno ignorate. Continuare?",
       confirmOverwrite: "Alcune celle obiettivo contengono già dati. Incollare sovrascriverà i valori esistenti. Continuare?"
-    },    topic: {
-      new: "Nuovo argomento"
     },
     agGrid: {
       page: "Pagina",

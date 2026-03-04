@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "Los datos pegados tienen {{maxBufferColumns}} columnas, pero solo {{availableColumns}} caben en la celda seleccionada. Se ignorarán las columnas adicionales. ¿Continuar?",
       confirmOverwrite: "Algunas celdas objetivo ya contienen datos. Al pegar se sobrescribirán los valores existentes. ¿Continuar?"
-    },    topic: {
-      new: "Nuevo tema"
     },
     agGrid: {
       page: "Página",

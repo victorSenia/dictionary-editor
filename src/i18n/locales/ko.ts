@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "붙여넣은 데이터에 {{maxBufferColumns}} 열이 있지만 선택한 셀에는 {{availableColumns}}만 맞습니다. 추가 열은 무시됩니다. 계속하다?",
       confirmOverwrite: "일부 대상 셀에는 이미 데이터가 포함되어 있습니다. 붙여넣으면 기존 값을 덮어쓰게 됩니다. 계속하다?"
-    },    topic: {
-      new: "새로운 주제"
     },
     agGrid: {
       page: "페이지",

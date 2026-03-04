@@ -119,8 +119,6 @@
       confirmTooManyColumns:
         "Les données collées comportent {{maxBufferColumns}} colonnes, mais seul {{availableColumns}} rentre dans la cellule sélectionnée. Les colonnes supplémentaires seront ignorées. Continuer?",
       confirmOverwrite: "Certaines cellules cibles contiennent déjà des données. Le collage écrasera les valeurs existantes. Continuer?"
-    },    topic: {
-      new: "Nouveau sujet"
     },
     agGrid: {
       page: "Page",
