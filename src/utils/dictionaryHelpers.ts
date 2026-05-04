@@ -1,6 +1,3 @@
-import type { DictionaryRow } from "../models/dictionary.ts";
-import type { GridRow } from "../types/grid.ts";
-
 export function parseTranslationValue(raw: string, delimiter: string): string[] {
   if (delimiter === "") {
     const value = raw.trim();
@@ -24,11 +21,11 @@ export function createNextLanguageKey(activeLanguages: string[]): string {
   return candidate;
 }
 
-export function withIds(rows: DictionaryRow[]): GridRow[] {
+export function attachGridRowIds<TRow extends { type: string }>(rows: TRow[]): Array<TRow & { rowId: string }> {
   const seed = Date.now();
-  return rows.map((row, index) => ({ ...row, id: `${row.type}-${seed}-${index}` }));
+  return rows.map((row, index) => ({ ...row, rowId: `${row.type}-${seed}-${index}` }));
 }
 
-export function withoutIds(rows: GridRow[]): DictionaryRow[] {
-  return rows.map(({ id: _id, ...row }) => row);
+export function stripGridRowIds<TRow extends object>(rows: Array<TRow & { rowId: string }>): TRow[] {
+  return rows.map(({ rowId: _rowId, ...row }) => row as TRow);
 }

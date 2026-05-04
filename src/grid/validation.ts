@@ -111,7 +111,7 @@ function asText(value: unknown): string {
 }
 
 export function validateCell(
-  params: CellClassParams<DictionaryRow | (DictionaryRow & { id: string })>,
+  params: CellClassParams<DictionaryRow | (DictionaryRow & { rowId: string })>,
   config: DictionaryConfig,
   row: DictionaryRow
 ): CellValidationResult {

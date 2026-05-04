@@ -5,10 +5,10 @@ import {
   type SetStateAction
 } from "react";
 import type { ColDef, ICellRendererParams, ValueGetterParams } from "ag-grid-community";
-import { ROW_TYPE_TOPIC, ROW_TYPE_WORD } from "../models/dictionary";
-import type { LastActionState } from "../types/lastAction";
-import type { GridRow } from "../types/grid";
 import DeferredTextField from "../components/DeferredTextField";
+import { ROW_TYPE_TOPIC, ROW_TYPE_WORD } from "../models/dictionary";
+import type { GridRow } from "../types/grid";
+import type { LastActionState } from "../types/lastAction";
 import {
   ARTICLE_COLUMN_MAX_WIDTH,
   ARTICLE_COLUMN_MIN_WIDTH,
@@ -41,7 +41,7 @@ export function useGridColumns({
 }: Args) {
   const updateRowById = useCallback(
     (rowId: string, transform: (row: GridRow) => GridRow) => {
-      setRows((prev) => prev.map((row) => (row.id === rowId ? transform(row) : row)));
+      setRows((prev) => prev.map((row) => (row.rowId === rowId ? transform(row) : row)));
     },
     [setRows]
   );
@@ -51,7 +51,7 @@ export function useGridColumns({
       if (!params.data) {
         return null;
       }
-      const rowId = params.data.id;
+      const rowId = params.data.rowId;
 
       return (
         <button
@@ -60,7 +60,7 @@ export function useGridColumns({
           aria-label={t("translation.removeRow")}
           onClick={(event) => {
             event.stopPropagation();
-            setRows((prev) => prev.filter((row) => row.id !== rowId));
+            setRows((prev) => prev.filter((row) => row.rowId !== rowId));
             setLastAction({ key: "action.removeRow" });
           }}
         >
@@ -95,7 +95,7 @@ export function useGridColumns({
         return null;
       }
 
-      const rowId = params.data.id;
+      const rowId = params.data.rowId;
       if (params.data.type === ROW_TYPE_TOPIC) {
         return renderTopicLabelEditor(rowId, params.data.label);
       }
@@ -134,7 +134,7 @@ export function useGridColumns({
         if (showArticleColumn) {
           return "";
         }
-        const rowId = params.data.id;
+        const rowId = params.data.rowId;
         return renderTopicLabelEditor(rowId, params.data.label);
       }
 
@@ -142,7 +142,7 @@ export function useGridColumns({
         return "";
       }
 
-      const rowId = params.data.id;
+      const rowId = params.data.rowId;
       const refreshRowHeights = () => params.api.resetRowHeights();
       return (
         <DeferredTextField
@@ -168,7 +168,7 @@ export function useGridColumns({
         return "";
       }
 
-      const rowId = params.data.id;
+      const rowId = params.data.rowId;
       const refreshRowHeights = () => params.api.resetRowHeights();
       return (
         <DeferredTextField

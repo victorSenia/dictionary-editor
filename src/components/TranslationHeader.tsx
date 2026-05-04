@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { TRANSLATION_COLUMN_PREFIX } from "../constants/grid";
 
 type TranslationHeaderProps = {
   displayName: string;
   column: { getColId: () => string };
+  columnPrefix: string;
   resetToken?: number;
+  labels: {
+    renameColumn: string;
+    deleteColumn: string;
+    saveRename: string;
+    cancelRename: string;
+    renameFailed: string;
+  };
   onRename: (fromLanguage: string, toLanguage: string) => { ok: boolean; error?: string };
   onDelete: (language: string) => boolean;
 };
@@ -13,14 +19,15 @@ type TranslationHeaderProps = {
 export default function TranslationHeader({
   displayName,
   column,
+  columnPrefix,
   resetToken = 0,
+  labels,
   onRename,
   onDelete
 }: TranslationHeaderProps) {
-  const { t } = useTranslation();
   const colId = column.getColId();
-  const language = colId.startsWith(TRANSLATION_COLUMN_PREFIX)
-    ? colId.slice(TRANSLATION_COLUMN_PREFIX.length)
+  const language = colId.startsWith(columnPrefix)
+    ? colId.slice(columnPrefix.length)
     : displayName.replace(/^To\s+/, "");
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(language);
@@ -44,8 +51,8 @@ export default function TranslationHeader({
         <span className="translation-header-actions">
           <button
             className="translation-header-btn translation-header-btn-edit"
-            aria-label={t("translation.renameColumn")}
-            title={t("translation.renameColumn")}
+            aria-label={labels.renameColumn}
+            title={labels.renameColumn}
             type="button"
             onClick={(event) => {
               event.stopPropagation();
@@ -57,8 +64,8 @@ export default function TranslationHeader({
           </button>
           <button
             className="translation-header-btn translation-header-btn-danger"
-            aria-label={t("translation.deleteColumn")}
-            title={t("translation.deleteColumn")}
+            aria-label={labels.deleteColumn}
+            title={labels.deleteColumn}
             type="button"
             onClick={(event) => {
               event.stopPropagation();
@@ -103,8 +110,8 @@ export default function TranslationHeader({
         <span className="translation-header-actions">
           <button
             className="translation-header-btn translation-header-btn-edit"
-            aria-label={t("translation.saveRename")}
-            title={t("translation.saveRename")}
+            aria-label={labels.saveRename}
+            title={labels.saveRename}
             type="button"
             onClick={(event) => {
               event.stopPropagation();
@@ -114,15 +121,15 @@ export default function TranslationHeader({
                 setIsEditing(false);
                 return;
               }
-              setError(result.error ?? t("translation.renameFailed"));
+              setError(result.error ?? labels.renameFailed);
             }}
           >
             {"\u2713"}
           </button>
           <button
             className="translation-header-btn"
-            aria-label={t("translation.cancelRename")}
-            title={t("translation.cancelRename")}
+            aria-label={labels.cancelRename}
+            title={labels.cancelRename}
             type="button"
             onClick={(event) => {
               event.stopPropagation();

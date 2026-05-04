@@ -5,29 +5,30 @@ import type {
   GridSizeChangedEvent
 } from "ag-grid-community";
 import type { AgGridReact } from "ag-grid-react";
-import type { GridRow } from "../types/grid";
 
-type Args = {
-  gridRef: RefObject<AgGridReact<GridRow>>;
+type Args<TRow> = {
+  gridRef: RefObject<AgGridReact<TRow>>;
   isSettingsOpen: boolean;
+  isAiPanelOpen: boolean;
   languageColumnsCount: number;
   showArticleColumn: boolean;
   showAdditionalInformationColumn: boolean;
 };
 
-export function useGridLayout({
+export function useGridLayout<TRow>({
   gridRef,
   isSettingsOpen,
+  isAiPanelOpen,
   languageColumnsCount,
   showArticleColumn,
   showAdditionalInformationColumn
-}: Args) {
+}: Args<TRow>) {
   const fitColumnsToWidth = useCallback(() => {
     gridRef.current?.api.sizeColumnsToFit();
   }, [gridRef]);
 
   const handleGridSizeChanged = useCallback(
-    (_event: GridSizeChangedEvent<GridRow>) => {
+    (_event: GridSizeChangedEvent<TRow>) => {
       // Avoid feedback loops between auto-height, scrollbar appearance and sizeColumnsToFit.
       // Column fitting is handled on first render and explicit layout changes.
     },
@@ -35,13 +36,13 @@ export function useGridLayout({
   );
 
   const handleFirstDataRendered = useCallback(
-    (_event: FirstDataRenderedEvent<GridRow>) => {
+    (_event: FirstDataRenderedEvent<TRow>) => {
       fitColumnsToWidth();
     },
     [fitColumnsToWidth]
   );
   const handleDisplayedColumnsChanged = useCallback(
-    (_event: DisplayedColumnsChangedEvent<GridRow>) => {
+    (_event: DisplayedColumnsChangedEvent<TRow>) => {
       // Intentionally do nothing: fitting here causes visible tremble on cell selection.
     },
     []
@@ -55,6 +56,7 @@ export function useGridLayout({
   }, [
     fitColumnsToWidth,
     isSettingsOpen,
+    isAiPanelOpen,
     languageColumnsCount,
     showArticleColumn,
     showAdditionalInformationColumn

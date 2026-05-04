@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import {
   createNextLanguageKey,
   parseTranslationValue,
-  withIds,
-  withoutIds
+  attachGridRowIds,
+  stripGridRowIds
 } from "../src/utils/dictionaryHelpers.ts";
 import type { DictionaryRow } from "../src/models/dictionary.ts";
 
@@ -23,7 +23,7 @@ test("createNextLanguageKey finds first available langN key", () => {
   assert.equal(next, "lang3");
 });
 
-test("withIds adds ids and withoutIds removes them", () => {
+test("attachGridRowIds adds grid row IDs and stripGridRowIds removes only grid row IDs", () => {
   const rows: DictionaryRow[] = [
     {
       type: "word",
@@ -35,11 +35,31 @@ test("withIds adds ids and withoutIds removes them", () => {
     { type: "topic", label: "Nature" }
   ];
 
-  const rowsWithIds = withIds(rows);
+  const rowsWithIds = attachGridRowIds(rows);
   assert.equal(rowsWithIds.length, 2);
-  assert.match(rowsWithIds[0].id, /^word-\d+-0$/);
-  assert.match(rowsWithIds[1].id, /^topic-\d+-1$/);
+  assert.match(rowsWithIds[0].rowId, /^word-\d+-0$/);
+  assert.match(rowsWithIds[1].rowId, /^topic-\d+-1$/);
 
-  const stripped = withoutIds(rowsWithIds);
+  const stripped = stripGridRowIds(rowsWithIds);
+  assert.deepEqual(stripped, rows);
+});
+
+test("attachGridRowIds preserves persistent id fields", () => {
+  const rows = [
+    {
+      id: "persistent-word-id",
+      type: "word",
+      article: "der",
+      valueFrom: "Baum",
+      additionalInformation: "",
+      valuesTo: { en: ["tree"] }
+    }
+  ];
+
+  const rowsWithIds = attachGridRowIds(rows);
+  assert.equal(rowsWithIds[0].id, "persistent-word-id");
+  assert.match(rowsWithIds[0].rowId, /^word-\d+-0$/);
+
+  const stripped = stripGridRowIds(rowsWithIds);
   assert.deepEqual(stripped, rows);
 });

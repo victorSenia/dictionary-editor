@@ -1,13 +1,13 @@
 import { useCallback, useMemo, type Dispatch, type SetStateAction } from "react";
 import type { ColDef, ColumnHeaderClickedEvent, ICellRendererParams, ValueGetterParams } from "ag-grid-community";
 import { useTranslation } from "react-i18next";
+import TranslationCell from "../components/TranslationCell";
+import TranslationHeader from "../components/TranslationHeader";
 import { ROW_TYPE_WORD, type DictionaryConfig } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
-import type { LastActionState } from "../types/lastAction";
-import { createNextLanguageKey, parseTranslationValue } from "../utils/dictionaryHelpers";
 import type { RenamePair } from "../utils/languageTransition";
-import TranslationHeader from "../components/TranslationHeader";
-import TranslationCell from "../components/TranslationCell";
+import { createNextLanguageKey, parseTranslationValue } from "../utils/dictionaryHelpers";
+import type { LastActionState } from "../types/lastAction";
 import { COLUMN_ID_ADD_END, TRANSLATION_COLUMN_PREFIX } from "../constants/grid";
 
 type Args = {
@@ -31,7 +31,7 @@ export function useTranslationColumns({
     (rowId: string, language: string, transform: (current: string[]) => string[] | null) => {
       setRows((prev): GridRow[] =>
         prev.map((row): GridRow => {
-          if (row.id !== rowId || row.type !== ROW_TYPE_WORD) {
+          if (row.rowId !== rowId || row.type !== ROW_TYPE_WORD) {
             return row;
           }
 
@@ -194,7 +194,15 @@ export function useTranslationColumns({
       colId: `${TRANSLATION_COLUMN_PREFIX}${language}`,
       headerComponent: TranslationHeader,
       headerComponentParams: {
+        columnPrefix: TRANSLATION_COLUMN_PREFIX,
         resetToken: headerEditResetToken,
+        labels: {
+          renameColumn: t("translation.renameColumn"),
+          deleteColumn: t("translation.deleteColumn"),
+          saveRename: t("translation.saveRename"),
+          cancelRename: t("translation.cancelRename"),
+          renameFailed: t("translation.renameFailed")
+        },
         onRename: renameTranslationColumn,
         onDelete: removeTranslationColumn
       },
@@ -210,16 +218,24 @@ export function useTranslationColumns({
         }
         return (params.data.valuesTo[language] ?? []).join(`${config.translationDelimiter} `);
       },
-      cellRenderer: (params: ICellRendererParams<GridRow>) => (
-        <TranslationCell
-          params={params}
-          language={language}
-          onMove={moveTranslationItem}
-          onUpdate={updateTranslationItem}
-          onAdd={addTranslationItem}
-          onRemove={removeTranslationItem}
-        />
-      )
+      cellRenderer: (params: ICellRendererParams<GridRow>) => {
+        return (
+          <TranslationCell
+            params={params}
+            language={language}
+            labels={{
+              moveUp: t("translation.moveUp"),
+              moveDown: t("translation.moveDown"),
+              remove: t("translation.remove"),
+              add: t("translation.add")
+            }}
+            onMove={moveTranslationItem}
+            onUpdate={updateTranslationItem}
+            onAdd={addTranslationItem}
+            onRemove={removeTranslationItem}
+          />
+        );
+      }
     }));
   }, [
     addTranslationItem,

@@ -1,32 +1,33 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useTranslation } from "react-i18next";
+import RowEndActions from "./components/RowEndActions";
+import { DEFAULT_PAGE_SIZE } from "./constants/grid";
+import type { GridRow } from "./types/grid";
+import { useEditorHistory } from "./hooks/useEditorHistory";
+import { useAppTitle, useAppUiState, useStatusText } from "./hooks/useAppUiState";
+import { useGridColumns } from "./hooks/useGridColumns";
+import { useGridClipboard } from "./hooks/useGridClipboard";
+import { useGridLayout } from "./hooks/useGridLayout";
+import { useGridSelectionAndRowDrag } from "./hooks/useGridSelectionAndRowDrag";
+import { useGridViewModel } from "./hooks/useGridViewModel";
+import { useRowActions } from "./hooks/useRowActions";
+import { useTranslationColumns } from "./hooks/useTranslationColumns";
+import type { LastActionState } from "./types/lastAction";
 import type {
   GetRowIdParams
 } from "ag-grid-community";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import RowEndActions from "./components/RowEndActions";
 import SettingsPanel from "./components/SettingsPanel";
 import Toolbar from "./components/Toolbar";
+import AiPanel from "./components/AiPanel";
+import CourseHeader from "./components/CourseHeader";
 import { hasElectronApi } from "./io/fileAccess";
 import { useAutosave } from "./hooks/useAutosave";
-import { useGridClipboard } from "./hooks/useGridClipboard";
-import { useGridLayout } from "./hooks/useGridLayout";
-import { useGridColumns } from "./hooks/useGridColumns";
-import { useRowActions } from "./hooks/useRowActions";
-import { useGridSelectionAndRowDrag } from "./hooks/useGridSelectionAndRowDrag";
-import { useTranslationColumns } from "./hooks/useTranslationColumns";
-import { useEditorHistory } from "./hooks/useEditorHistory";
-import { useAppTitle, useAppUiState, useStatusText } from "./hooks/useAppUiState";
 import { useDocumentWorkflow } from "./hooks/useDocumentWorkflow";
 import { useEditorDocumentState } from "./hooks/useEditorDocumentState";
-import { useGridViewModel } from "./hooks/useGridViewModel";
-import type { LastActionState } from "./types/lastAction";
-import type { GridRow } from "./types/grid";
-import {
-  DEFAULT_PAGE_SIZE
-} from "./constants/grid";
+import { useAiDraftHelper } from "./hooks/useAiDraftHelper";
 import "./App.css";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -116,7 +117,7 @@ function App() {
     markResetOnNextChange
   });
 
-  const getRowId = useCallback((params: GetRowIdParams<GridRow>) => params.data?.id ?? "", []);
+  const getRowId = useCallback((params: GetRowIdParams<GridRow>) => params.data?.rowId ?? "", []);
 
   const { translationColumns, onColumnHeaderClicked: handleColumnHeaderClicked } = useTranslationColumns({
     config,
@@ -158,6 +159,31 @@ function App() {
     setRows,
     setLastAction
   });
+
+  const {
+    isAiPanelOpen,
+    aiResponse,
+    aiParseMessage,
+    lastAppliedAiSignature,
+    aiRequestModeChoice,
+    aiRequestContext,
+    setAiRequestModeChoice,
+    setAiParseMessage,
+    handleAiResponseChange,
+    handleAddAiRows,
+    handleRegexRowsParsed,
+    handleAiRequestGenerated,
+    toggleAiPanel
+  } = useAiDraftHelper({
+    config,
+    rows,
+    selectedCellKeys,
+    setRows,
+    setLastAction,
+    t
+  });
+
+
   useAutosave({
     enabled: AUTOSAVE_ENABLED,
     debounceMs: AUTOSAVE_DEBOUNCE_MS,
@@ -172,6 +198,7 @@ function App() {
   const { handleGridSizeChanged, handleFirstDataRendered, handleDisplayedColumnsChanged } = useGridLayout({
     gridRef,
     isSettingsOpen,
+    isAiPanelOpen,
     languageColumnsCount: config.languagesTo.length,
     showArticleColumn,
     showAdditionalInformationColumn
@@ -200,7 +227,6 @@ function App() {
   });
   useAppTitle({ title: t("app.title") });
   const statusText = useStatusText({ t, lastAction, currentFilePath });
-
   useEffect(() => {
     document.documentElement.lang = activeLanguage;
     document.documentElement.dir = isRtl ? "rtl" : "ltr";
@@ -211,6 +237,7 @@ function App() {
       <Toolbar
         isSettingsOpen={isSettingsOpen}
         showOnlyInvalid={showOnlyInvalid}
+        isAiPanelOpen={isAiPanelOpen}
         language={activeLanguage}
         showSaveAs={isElectronMode}
         canCancel={canCancel}
@@ -224,18 +251,49 @@ function App() {
         onCancel={handleCancel}
         onReapply={handleReapply}
         onToggleSettings={handleToggleSettings}
+        onToggleAiPanel={toggleAiPanel}
         onToggleShowOnlyInvalid={handleToggleShowOnlyInvalid}
         onDeleteSelected={handleDeleteRowsWithSelectedCells}
       />
+      <CourseHeader config={config} setConfig={setConfig} />
 
-      <div className={`content ${isSettingsOpen ? "settings-open" : ""}`}>
+      <div
+        className={`content ${isSettingsOpen ? "settings-open" : ""} ${
+          isAiPanelOpen ? "ai-open" : ""
+        }`}
+      >
         <main className="grid-area" aria-label={t("grid.containerAria")}>
           <div className="ag-theme-alpine grid-host">
             <AgGridReact<GridRow> {...gridProps} enableRtl={isRtl} />
           </div>
-          <RowEndActions onAddRow={handleAddRow} onAddTopic={handleAddTopic} />
+          <RowEndActions
+            addRowLabel={t("actions.addRow")}
+            addTopicLabel={t("actions.addTopic")}
+            onAddRow={handleAddRow}
+            onAddTopic={handleAddTopic}
+          />
           <p className="status">{statusText}</p>
         </main>
+
+        {isAiPanelOpen ? (
+          <main className="ai-workspace">
+            <AiPanel
+              config={config}
+              requestContext={aiRequestContext}
+              requestModeChoice={aiRequestModeChoice}
+              onRequestModeChoiceChange={setAiRequestModeChoice}
+              response={aiResponse}
+              parseMessage={aiParseMessage}
+              onResponseChange={handleAiResponseChange}
+              onParseMessageChange={setAiParseMessage}
+              onParsingConfigurationChange={() => undefined}
+              lastAppliedAiSignature={lastAppliedAiSignature}
+              onAddRows={handleAddAiRows}
+              onResponseParsed={handleRegexRowsParsed}
+              onRequestGenerated={handleAiRequestGenerated}
+            />
+          </main>
+        ) : null}
 
         <SettingsPanel
           isOpen={isSettingsOpen}

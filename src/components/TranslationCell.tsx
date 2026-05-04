@@ -1,5 +1,4 @@
 import type { ICellRendererParams } from "ag-grid-community";
-import { useTranslation } from "react-i18next";
 import { ROW_TYPE_WORD } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
 import DeferredTextField from "./DeferredTextField";
@@ -7,6 +6,12 @@ import DeferredTextField from "./DeferredTextField";
 type TranslationCellProps = {
   params: ICellRendererParams<GridRow>;
   language: string;
+  labels: {
+    moveUp: string;
+    moveDown: string;
+    remove: string;
+    add: string;
+  };
   onMove: (rowId: string, language: string, from: number, to: number) => void;
   onUpdate: (rowId: string, language: string, index: number, value: string) => void;
   onAdd: (rowId: string, language: string) => void;
@@ -16,22 +21,25 @@ type TranslationCellProps = {
 export default function TranslationCell({
   params,
   language,
+  labels,
   onMove,
   onUpdate,
   onAdd,
   onRemove
 }: TranslationCellProps) {
-  const { t } = useTranslation();
-
   if (!params.data || params.data.type !== ROW_TYPE_WORD) {
-    return <></>;
+    return null;
   }
 
+  const rowId = params.data.rowId;
   const values = params.data.valuesTo[language] ?? [];
   const valuesSignature = values.join("\u001F");
   const showReorder = values.length > 1;
   const refreshRowHeights = () => params.api.resetRowHeights();
   const refreshCell = () => {
+    if (!params.column) {
+      return;
+    }
     params.api.refreshCells({
       rowNodes: [params.node],
       columns: [params.column],
@@ -43,7 +51,7 @@ export default function TranslationCell({
       <div className="translation-stack">
       {values.map((value, valueIndex) => (
         <div
-          key={`${params.data?.id}-${language}-${valueIndex}-${valuesSignature}`}
+          key={`${rowId}-${language}-${valueIndex}-${valuesSignature}`}
           className="translation-item"
         >
           <DeferredTextField
@@ -53,7 +61,7 @@ export default function TranslationCell({
             value={value}
             onHeightChange={refreshRowHeights}
             onCommit={(nextValue) => {
-              onUpdate(params.data!.id, language, valueIndex, nextValue);
+              onUpdate(rowId, language, valueIndex, nextValue);
               refreshRowHeights();
               queueMicrotask(refreshCell);
             }}
@@ -63,12 +71,12 @@ export default function TranslationCell({
               <button
                 type="button"
                 className="translation-item-btn translation-item-btn-edit"
-                aria-label={t("translation.moveUp")}
-                title={t("translation.moveUp")}
+                aria-label={labels.moveUp}
+                title={labels.moveUp}
                 disabled={valueIndex === 0}
                 onClick={(event) => {
                   event.stopPropagation();
-                  onMove(params.data!.id, language, valueIndex, valueIndex - 1);
+                  onMove(rowId, language, valueIndex, valueIndex - 1);
                   queueMicrotask(refreshCell);
                 }}
               >
@@ -79,12 +87,12 @@ export default function TranslationCell({
               <button
                 type="button"
                 className="translation-item-btn translation-item-btn-edit"
-                aria-label={t("translation.moveDown")}
-                title={t("translation.moveDown")}
+                aria-label={labels.moveDown}
+                title={labels.moveDown}
                 disabled={valueIndex === values.length - 1}
                 onClick={(event) => {
                   event.stopPropagation();
-                  onMove(params.data!.id, language, valueIndex, valueIndex + 1);
+                  onMove(rowId, language, valueIndex, valueIndex + 1);
                   queueMicrotask(refreshCell);
                 }}
               >
@@ -94,11 +102,11 @@ export default function TranslationCell({
             <button
               type="button"
               className="translation-item-btn translation-item-btn-danger"
-              aria-label={t("translation.remove")}
-              title={t("translation.remove")}
+              aria-label={labels.remove}
+              title={labels.remove}
               onClick={(event) => {
                 event.stopPropagation();
-                onRemove(params.data!.id, language, valueIndex);
+                onRemove(rowId, language, valueIndex);
                 queueMicrotask(refreshCell);
               }}
             >
@@ -110,11 +118,11 @@ export default function TranslationCell({
       <button
         type="button"
         className="translation-item-btn translation-item-btn-new"
-        aria-label={t("translation.add")}
-        title={t("translation.add")}
+        aria-label={labels.add}
+        title={labels.add}
         onClick={(event) => {
           event.stopPropagation();
-          onAdd(params.data!.id, language);
+          onAdd(rowId, language);
           queueMicrotask(refreshCell);
         }}
       >

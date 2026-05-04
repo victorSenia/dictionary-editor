@@ -1,8 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
+import {
+  applyLanguageTransitionToRows,
+  type RenamePair
+} from "../utils/languageTransition";
 import { DEFAULT_CONFIG, type DictionaryConfig } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
 import { isRowInvalid } from "../grid/validation";
-import { applyLanguageTransitionToRows, type RenamePair } from "../utils/languageTransition";
 
 type Args = {
   showOnlyInvalid: boolean;

@@ -9,8 +9,8 @@ import type {
 import { ROW_TYPE_TOPIC, type DictionaryConfig, type DictionaryRow } from "../models/dictionary";
 import { PAGE_SIZE_OPTIONS, TRANSLATION_COLUMN_PREFIX } from "../constants/grid";
 import type { GridRow } from "../types/grid";
-import type { LastActionState } from "../types/lastAction";
 import { validateCell } from "../grid/validation";
+import type { LastActionState } from "../types/lastAction";
 
 type Args = {
   gridRef: RefObject<AgGridReact<GridRow>>;
@@ -41,7 +41,7 @@ function getCellValidation(params: CellClassParams<GridRow>, config: DictionaryC
   }
 
   return validateCell(
-    params as unknown as CellClassParams<DictionaryRow | (DictionaryRow & { id: string })>,
+    params as unknown as CellClassParams<DictionaryRow | (DictionaryRow & { rowId: string })>,
     config,
     params.data
   );
@@ -94,7 +94,7 @@ export function useGridViewModel({
       },
       cellClassRules: {
         "invalid-cell": (params) => !getCellValidation(params, config).isValid,
-        "custom-cell-selected": (params) => isCellSelected(params.data?.id, params.column.getColId())
+        "custom-cell-selected": (params) => isCellSelected(params.data?.rowId, params.column.getColId())
       }
     }),
     [config, isCellSelected, t]
@@ -144,7 +144,7 @@ export function useGridViewModel({
       getRowId,
       columnDefs,
       defaultColDef,
-      animateRows: true,
+      animateRows: false,
       rowDragManaged: false,
       rowDragEntireRow: false,
       rowDragMultiRow: false,

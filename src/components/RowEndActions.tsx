@@ -1,20 +1,18 @@
-import { useTranslation } from "react-i18next";
-
 type RowEndActionsProps = {
+  addRowLabel: string;
+  addTopicLabel: string;
   onAddRow: () => void;
   onAddTopic: () => void;
 };
 
-function RowEndActions({ onAddRow, onAddTopic }: RowEndActionsProps) {
-  const { t } = useTranslation();
-
+function RowEndActions({ addRowLabel, addTopicLabel, onAddRow, onAddTopic }: RowEndActionsProps) {
   return (
     <div className="row-end-actions">
       <button type="button" className="bottom-action-button new-button" onClick={onAddRow}>
-        {t("actions.addRow")}
+        {addRowLabel}
       </button>
       <button type="button" className="bottom-action-button new-button" onClick={onAddTopic}>
-        {t("actions.addTopic")}
+        {addTopicLabel}
       </button>
     </div>
   );

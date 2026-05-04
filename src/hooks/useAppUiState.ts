@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { PaginationChangedEvent } from "ag-grid-community";
-import type { GridRow } from "../types/grid";
 import type { LastActionState } from "../types/lastAction";
+import type { GridRow } from "../types/grid";
 
 type Args = {
   defaultPageSize: number;

@@ -1,7 +1,9 @@
 import { useEffect, useState, type Dispatch, type KeyboardEvent, type SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
+import {
+  createNextLanguageKey,
+} from "../utils/dictionaryHelpers";
 import type { DictionaryConfig } from "../models/dictionary";
-import { createNextLanguageKey } from "../utils/dictionaryHelpers";
 import type { RenamePair } from "../utils/languageTransition";
 
 type SettingsPanelProps = {
@@ -334,14 +336,6 @@ function SettingsPanel({
           onChange={(event) =>
             setConfig((prev) => ({ ...prev, topicDelimiter: event.target.value }))
           }
-        />
-      </label>
-      <label>
-        <span>{t("settings.rootTopic")}</span>
-        <input
-          type="text"
-          value={config.rootTopic}
-          onChange={(event) => setConfig((prev) => ({ ...prev, rootTopic: event.target.value }))}
         />
       </label>
     </aside>

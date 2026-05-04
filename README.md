@@ -13,9 +13,11 @@ Live site:
 
 ## Features
 - Open, edit, validate, import, and export dictionary files
+- Edit course vocabulary drafts in the same application shell
 - Parse and edit configuration/header values:
-  - source language and target languages
-  - articles list
+  - source language
+  - editable target language list
+  - editable articles list
   - field delimiters (word/translation/additional info/topic)
 - Parse and edit content rows:
   - topic rows
@@ -25,7 +27,31 @@ Live site:
   - translation item editing in cells (add/remove/reorder)
   - drag-and-drop row reordering
   - row selection, copy/paste insert, pagination
-- Native file dialogs and autosave sidecar support
+- AI draft helper:
+  - generate an editable AI request from the current course/topic context
+  - expand known language keys in prompts, for example `de` -> `Deutsch`
+  - parse pasted AI responses with an explicit visual line pattern
+  - suggest and fill the line pattern from the current AI response
+  - add parsed rows for full vocabulary generation
+  - fill missing translations for selected existing rows
+- Native file dialogs and autosave sidecar support when running in Electron
+- Browser and single-file HTML fallback when Electron APIs are unavailable
+
+## AI Draft Workflow
+1. Open the AI panel.
+2. Choose request mode:
+   - `Auto` selects full generation or translations-only from the current selection.
+   - `Full generation` creates new word rows.
+   - `Translations only` fills missing target-language cells for selected rows.
+3. Generate or edit the request text.
+4. Paste the AI response.
+5. Use `Suggest pattern` or `Parse response`.
+   - If no parsing pattern is configured, parsing first suggests a pattern from the response and fills the visual pattern builder.
+   - A pattern that matches no response lines is rejected.
+   - Partial matches are shown as warnings.
+6. Use `Add` or `Fill translations` to apply the parsed result.
+
+The AI response parser does not use a hidden default parsing configuration. It parses only with the visual line pattern shown in the UI.
 
 ## Requirements
 - Node.js 18+
@@ -101,9 +127,7 @@ npm run dist
 
 Installer artifacts are generated in `dist/`.
 
-## Useful Scripts
-- `npm run build:renderer`
-- `npm run build:renderer:single-file`
-- `npm run build:renderer:all`
-- `npm run build:electron`
-- `npm test`
+## Test
+```bash
+npm test
+```

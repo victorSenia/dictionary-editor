@@ -1,9 +1,9 @@
 import { useCallback, type Dispatch, type RefObject, type SetStateAction } from "react";
 import type { AgGridReact } from "ag-grid-react";
 import { createEmptyWordRow, createTopicRow, type DictionaryConfig } from "../models/dictionary";
-import type { LastActionState } from "../types/lastAction";
 import type { GridRow } from "../types/grid";
-import { createRowId } from "../utils/rowId";
+import { createGridRowId } from "../utils/rowId";
+import type { LastActionState } from "../types/lastAction";
 
 type Args = {
   gridRef: RefObject<AgGridReact<GridRow>>;
@@ -14,7 +14,7 @@ type Args = {
 
 export function useRowActions({ gridRef, config, setRows, setLastAction }: Args) {
   const getAnchorRowId = useCallback((): string | null => {
-    const selectedId = gridRef.current?.api.getSelectedNodes()[0]?.data?.id;
+    const selectedId = gridRef.current?.api.getSelectedNodes()[0]?.data?.rowId;
     if (selectedId) {
       return selectedId;
     }
@@ -25,19 +25,19 @@ export function useRowActions({ gridRef, config, setRows, setLastAction }: Args)
     }
 
     const focusedNode = gridRef.current?.api.getDisplayedRowAtIndex(focused.rowIndex);
-    return focusedNode?.data?.id ?? null;
+    return focusedNode?.data?.rowId ?? null;
   }, [gridRef]);
 
   const handleAddRow = useCallback(() => {
-    const id = createRowId("word");
+    const rowId = createGridRowId();
     const anchorRowId = getAnchorRowId();
     setRows((prev) => {
-      const nextRow: GridRow = { ...createEmptyWordRow(config), id };
+      const nextRow: GridRow = { ...createEmptyWordRow(config), rowId };
       if (!anchorRowId) {
         return [...prev, nextRow];
       }
 
-      const index = prev.findIndex((row) => row.id === anchorRowId);
+      const index = prev.findIndex((row) => row.rowId === anchorRowId);
       if (index < 0) {
         return [...prev, nextRow];
       }
@@ -50,15 +50,15 @@ export function useRowActions({ gridRef, config, setRows, setLastAction }: Args)
   }, [config, getAnchorRowId, setLastAction, setRows]);
 
   const handleAddTopic = useCallback(() => {
-    const id = createRowId("topic");
+    const rowId = createGridRowId();
     const anchorRowId = getAnchorRowId();
     setRows((prev) => {
-      const nextRow: GridRow = { ...createTopicRow(""), id };
+      const nextRow: GridRow = { ...createTopicRow(""), rowId };
       if (!anchorRowId) {
         return [...prev, nextRow];
       }
 
-      const index = prev.findIndex((row) => row.id === anchorRowId);
+      const index = prev.findIndex((row) => row.rowId === anchorRowId);
       if (index < 0) {
         return [...prev, nextRow];
       }
@@ -74,12 +74,12 @@ export function useRowActions({ gridRef, config, setRows, setLastAction }: Args)
     const selectedIds = new Set(
       gridRef.current?.api
         .getSelectedNodes()
-        .map((node) => node.data?.id)
-        .filter((id): id is string => typeof id === "string")
+        .map((node) => node.data?.rowId)
+        .filter((rowId): rowId is string => typeof rowId === "string")
     );
 
     if (selectedIds.size > 0) {
-      setRows((prev) => prev.filter((row) => !selectedIds.has(row.id)));
+      setRows((prev) => prev.filter((row) => !selectedIds.has(row.rowId)));
     }
 
     setLastAction({ key: "action.removeSelectedRows" });

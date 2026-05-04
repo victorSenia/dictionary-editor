@@ -2,20 +2,14 @@ import { useCallback, useEffect, useRef, type Dispatch, type RefObject, type Set
 import type { CellKeyDownEvent } from "ag-grid-community";
 import type { AgGridReact } from "ag-grid-react";
 import { useTranslation } from "react-i18next";
+import { buildRowCopyText, clearCellText, getCellText, getPasteColumns, setCellText } from "./gridClipboard/cellText";
+import { buildSelectedCellsCopyText } from "./gridClipboard/selectionCopy";
 import { createEmptyWordRow, type DictionaryConfig } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
 import type { LastActionState } from "../types/lastAction";
-import { createRowId } from "../utils/rowId";
 import { copyTextToClipboard, isEditableElement } from "./gridClipboard/clipboardIo";
 import { confirmDialog } from "./gridClipboard/confirmDialog";
-import {
-  buildRowCopyText,
-  clearCellText,
-  getCellText,
-  getPasteColumns,
-  setCellText
-} from "./gridClipboard/cellText";
-import { buildSelectedCellsCopyText } from "./gridClipboard/selectionCopy";
+import { createGridRowId } from "../utils/rowId";
 
 type Args = {
   gridRef: RefObject<AgGridReact<GridRow>>;
@@ -89,7 +83,7 @@ export function useGridClipboard({
       const clippedRows = parsedRows.map((row) => row.slice(0, availableColumns));
       const resolveStartRowIndex = (baseRows: GridRow[]): number => {
         if (focusedRowId) {
-          const focusedIndex = baseRows.findIndex((row) => row.id === focusedRowId);
+          const focusedIndex = baseRows.findIndex((row) => row.rowId === focusedRowId);
           if (focusedIndex >= 0) {
             return focusedIndex;
           }
@@ -101,7 +95,7 @@ export function useGridClipboard({
         const next = [...baseRows];
         const requiredRowsCount = startRowIndex + clippedRows.length;
         while (next.length < requiredRowsCount) {
-          next.push({ ...createEmptyWordRow(config), id: createRowId("word") });
+          next.push({ ...createEmptyWordRow(config), rowId: createGridRowId() });
         }
         return next;
       };
@@ -169,7 +163,7 @@ export function useGridClipboard({
 
       clipboardEvent.preventDefault();
       const focusedDisplayRow = gridRef.current?.api.getDisplayedRowAtIndex(focusedCell.rowIndex);
-      const focusedRowId = focusedDisplayRow?.data?.id;
+      const focusedRowId = focusedDisplayRow?.data?.rowId;
       const colId = focusedCell.column.getColId();
 
       void applyPasteText(text, colId, focusedRowId);
@@ -227,7 +221,7 @@ export function useGridClipboard({
             rowIdToColumnIds.get(rowId)?.add(colId);
           });
 
-          const rowIndexById = new Map(next.map((row, index) => [row.id, index]));
+          const rowIndexById = new Map(next.map((row, index) => [row.rowId, index]));
           rowIdToColumnIds.forEach((columnIds, rowId) => {
             const rowIndex = rowIndexById.get(rowId);
             if (rowIndex == null) {

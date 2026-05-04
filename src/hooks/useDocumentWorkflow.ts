@@ -1,7 +1,8 @@
 import { useCallback, useState, type Dispatch, type RefObject, type SetStateAction } from "react";
 import type { AgGridReact } from "ag-grid-react";
-import { DEFAULT_CONFIG, type DictionaryConfig } from "../models/dictionary";
+import { attachGridRowIds, stripGridRowIds } from "../utils/dictionaryHelpers";
 import type { LastActionState } from "../types/lastAction";
+import { DEFAULT_CONFIG, type DictionaryConfig } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
 import { exportFile, parseFile } from "../io/dictionaryFormat";
 import {
@@ -11,7 +12,6 @@ import {
   saveFileUniversal
 } from "../io/fileAccess";
 import { parseAutosavePayload } from "../io/autosavePayload";
-import { withIds, withoutIds } from "../utils/dictionaryHelpers";
 
 type Args = {
   gridRef: RefObject<AgGridReact<GridRow>>;
@@ -88,7 +88,7 @@ export function useDocumentWorkflow({
     }
 
     setConfig(nextConfig);
-    setRows(withIds(nextRows));
+    setRows(attachGridRowIds(nextRows));
     if (nextConfig.articles.some((article) => article.trim().length > 0)) {
       setShowArticleColumn(true);
     }
@@ -106,7 +106,7 @@ export function useDocumentWorkflow({
   ]);
 
   const handleSaveAs = useCallback(async () => {
-    const content = exportFile(config, withoutIds(rows));
+    const content = exportFile(config, stripGridRowIds(rows));
     const saved = await saveFileAsUniversal(content, currentFilePath);
     if (saved) {
       setCurrentFilePath(saved.path);
@@ -115,7 +115,7 @@ export function useDocumentWorkflow({
   }, [config, currentFilePath, rows, setLastAction]);
 
   const handleSave = useCallback(async () => {
-    const content = exportFile(config, withoutIds(rows));
+    const content = exportFile(config, stripGridRowIds(rows));
     if (currentFilePath) {
       await saveFileUniversal(currentFilePath, content);
       setLastAction({ key: "action.save" });

@@ -56,7 +56,7 @@ export function useGridSelectionAndRowDrag({ gridRef, rows, setRows, setLastActi
       }
       const count = api.getDisplayedRowCount();
       for (let i = 0; i < count; i += 1) {
-        if (api.getDisplayedRowAtIndex(i)?.data?.id === rowId) {
+        if (api.getDisplayedRowAtIndex(i)?.data?.rowId === rowId) {
           return i;
         }
       }
@@ -96,7 +96,7 @@ export function useGridSelectionAndRowDrag({ gridRef, rows, setRows, setLastActi
       const nextKeys: string[] = [];
       for (let rowIndex = rowStart; rowIndex <= rowEnd; rowIndex += 1) {
         const node = api.getDisplayedRowAtIndex(rowIndex);
-        const rowId = node?.data?.id;
+        const rowId = node?.data?.rowId;
         if (!rowId) {
           continue;
         }
@@ -133,10 +133,10 @@ export function useGridSelectionAndRowDrag({ gridRef, rows, setRows, setLastActi
         return;
       }
 
-      dragAnchorRef.current = { rowId: event.data.id, colId };
+      dragAnchorRef.current = { rowId: event.data.rowId, colId };
       dragStartPointRef.current = { x: mouseEvent.clientX, y: mouseEvent.clientY };
       dragSelectingRef.current = false;
-      updateDraggedCellSelection(event.data.id, colId, event.data.id, colId);
+      updateDraggedCellSelection(event.data.rowId, colId, event.data.rowId, colId);
     },
     [isSelectableColId, updateDraggedCellSelection]
   );
@@ -173,7 +173,7 @@ export function useGridSelectionAndRowDrag({ gridRef, rows, setRows, setLastActi
       updateDraggedCellSelection(
         dragAnchorRef.current.rowId,
         dragAnchorRef.current.colId,
-        event.data.id,
+        event.data.rowId,
         colId
       );
     },
@@ -187,12 +187,12 @@ export function useGridSelectionAndRowDrag({ gridRef, rows, setRows, setLastActi
       }
 
       setRows((prev) => {
-        const fromIndex = prev.findIndex((row) => row.id === movingId);
+        const fromIndex = prev.findIndex((row) => row.rowId === movingId);
         if (fromIndex < 0) {
           return prev;
         }
 
-        let toIndex = overId ? prev.findIndex((row) => row.id === overId) : -1;
+        let toIndex = overId ? prev.findIndex((row) => row.rowId === overId) : -1;
         if (toIndex < 0 && overIndex != null) {
           toIndex = overIndex;
         }
@@ -216,30 +216,30 @@ export function useGridSelectionAndRowDrag({ gridRef, rows, setRows, setLastActi
 
   const onRowDragMove = useCallback(
     (event: RowDragMoveEvent<GridRow>) => {
-      const movingId = event.node.data?.id;
+      const movingId = event.node.data?.rowId;
       if (!movingId) {
         return;
       }
 
-      const target = `${movingId}|${event.overNode?.data?.id ?? ""}|${event.overIndex ?? -1}`;
+      const target = `${movingId}|${event.overNode?.data?.rowId ?? ""}|${event.overIndex ?? -1}`;
       if (lastDragTargetRef.current === target) {
         return;
       }
       lastDragTargetRef.current = target;
 
-      moveDraggedRow(movingId, event.overNode?.data?.id, event.overIndex);
+      moveDraggedRow(movingId, event.overNode?.data?.rowId, event.overIndex);
     },
     [moveDraggedRow]
   );
 
   const onRowDragEnd = useCallback(
     (event: RowDragEndEvent<GridRow>) => {
-      const movingId = event.node.data?.id;
+      const movingId = event.node.data?.rowId;
       if (!movingId) {
         return;
       }
 
-      moveDraggedRow(movingId, event.overNode?.data?.id, event.overIndex);
+      moveDraggedRow(movingId, event.overNode?.data?.rowId, event.overIndex);
       lastDragTargetRef.current = "";
     },
     [moveDraggedRow]
@@ -257,7 +257,7 @@ export function useGridSelectionAndRowDrag({ gridRef, rows, setRows, setLastActi
   }, []);
 
   useEffect(() => {
-    const existingRowIds = new Set(rows.map((row) => row.id));
+    const existingRowIds = new Set(rows.map((row) => row.rowId));
     setSelectedCellKeys((prev) => {
       const next = prev.filter((key) => {
         const [rowId] = key.split("::");
@@ -296,7 +296,7 @@ export function useGridSelectionAndRowDrag({ gridRef, rows, setRows, setLastActi
       return;
     }
 
-    setRows((prev) => prev.filter((row) => !selectedRowIds.has(row.id)));
+    setRows((prev) => prev.filter((row) => !selectedRowIds.has(row.rowId)));
     clearCellSelection();
     setLastAction({ key: "action.removeSelectedRows" });
   }, [clearCellSelection, selectedCellKeys, setLastAction, setRows]);

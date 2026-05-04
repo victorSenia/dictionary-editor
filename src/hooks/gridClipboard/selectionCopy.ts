@@ -28,7 +28,7 @@ export function buildSelectedCellsCopyText({
   const displayedRowOrder = new Map<string, number>();
   const rowCount = api.getDisplayedRowCount();
   for (let rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
-    const rowId = api.getDisplayedRowAtIndex(rowIndex)?.data?.id;
+    const rowId = api.getDisplayedRowAtIndex(rowIndex)?.data?.rowId;
     if (rowId) {
       displayedRowOrder.set(rowId, rowIndex);
     }
@@ -62,7 +62,7 @@ export function buildSelectedCellsCopyText({
     return null;
   }
 
-  const rowById = new Map(rows.map((row) => [row.id, row]));
+  const rowById = new Map(rows.map((row) => [row.rowId, row]));
   const lines = selectedRowIds.map((rowId) => {
     const row = rowById.get(rowId);
     if (!row) {

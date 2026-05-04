@@ -1,13 +1,12 @@
-import { ROW_TYPE_TOPIC } from "../../models/dictionary";
-import type { DictionaryConfig } from "../../models/dictionary";
-import type { GridRow } from "../../types/grid";
-import { parseTranslationValue } from "../../utils/dictionaryHelpers";
 import {
   COLUMN_ID_ADDITIONAL_INFO,
   COLUMN_ID_ARTICLE,
   COLUMN_ID_WORD,
   TRANSLATION_COLUMN_PREFIX
 } from "../../constants/grid";
+import { ROW_TYPE_TOPIC, type DictionaryConfig } from "../../models/dictionary";
+import type { GridRow } from "../../types/grid";
+import { parseTranslationValue } from "../../utils/dictionaryHelpers";
 
 export function isSelectableGridColId(colId: string): boolean {
   return (

@@ -1,10 +1,13 @@
 import { useEffect, type Dispatch, type SetStateAction } from "react";
+import {
+  attachGridRowIds,
+  stripGridRowIds,
+} from "../utils/dictionaryHelpers";
 import type { DictionaryConfig } from "../models/dictionary";
-import { hasElectronApi, readAutosaveUniversal, writeAutosaveUniversal } from "../io/fileAccess";
-import { parseAutosavePayload, type AutosavePayload } from "../io/autosavePayload";
 import type { GridRow } from "../types/grid";
 import type { LastActionState } from "../types/lastAction";
-import { withIds, withoutIds } from "../utils/dictionaryHelpers";
+import { hasElectronApi, readAutosaveUniversal, writeAutosaveUniversal } from "../io/fileAccess";
+import { parseAutosavePayload, type AutosavePayload } from "../io/autosavePayload";
 
 type UseAutosaveArgs = {
   enabled: boolean;
@@ -48,7 +51,7 @@ export function useAutosave({
       const payload = parseAutosavePayload(restored.content);
       if (payload && !disposed) {
         setConfig(payload.config);
-        setRows(withIds(payload.rows));
+        setRows(attachGridRowIds(payload.rows));
         setFilePath(payload.filePath);
         setLastAction({ key: "action.autosaveRestored" });
       }
@@ -71,7 +74,7 @@ export function useAutosave({
 
     const payload: AutosavePayload = {
       config,
-      rows: withoutIds(rows),
+      rows: stripGridRowIds(rows),
       filePath
     };
 
