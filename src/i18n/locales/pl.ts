@@ -1,4 +1,4 @@
-﻿export const pl = {
+export const pl = {
   translation: {
     app: {
       title: "Edytor słownika"
@@ -13,11 +13,15 @@
       reapply: "Zastosuj ponownie",
       export: "Eksportuj",
       import: "Importuj",
+      showAiPanel: "Otwórz szkic AI",
+      hideAiPanel: "Zamknij szkic AI",
       showSettings: "Pokaż ustawienia",
       hideSettings: "Ukryj ustawienia",
       removeSelectedRows: "Usuń wybrane wiersze",
       language: "Język",
-      showOnlyInvalid: "Pokaż tylko nieprawidłowe"
+      showOnlyInvalid: "Pokaż tylko nieprawidłowe",
+      noInvalidRows: "Nie ma nieprawidłowych wierszy",
+      selectRowsToRemove: "Wybierz wiersze do usunięcia",
     },
     settings: {
       title: "Ustawienia",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "Dodatkowy ogranicznik informacji",
       translationDelimiter: "Ogranicznik tłumaczenia",
       topicFlag: "Przedrostek tematu",
-      topicDelimiter: "Ogranicznik tematu",
-      rootTopic: "Temat główny"
+      topicDelimiter: "Ogranicznik tematu"
+    },
+    courseHeader: {
+      aria: "Kurs",
+      courseName: "Nazwa kursu"
     },
     actions: {
-      addRow: "+ Dodaj wiersz",
+      addRow: "+ Dodaj słowo",
       addTopic: "+ Dodaj temat"
+    },
+    aiPanel: {
+      title: "Szkic AI",
+      requestSection: "Żądanie",
+      requestMode: "Tryb",
+      requestModeAuto: "Automatycznie",
+      requestModeVocabulary: "Pełne generowanie",
+      requestModeTranslations: "Tylko tłumaczenia",
+      parsingSection: "Parsowanie",
+      responseSection: "Odpowiedź",
+      topic: "Temat",
+      wordCount: "Słowa",
+      requestNotes: "Instrukcje",
+      request: "Żądanie",
+      generateRequest: "Wygeneruj żądanie",
+      linePrefixPreset: "Prefiks wiersza",
+      patternBuilder: "Wzorzec wiersza",
+      patternGap: "Separator wzorca",
+      patternSeparatorNone: "(brak)",
+      patternSeparatorTab: "Tabulator",
+      addField: "Dodaj pole",
+      moveLeft: "Przenieś w lewo",
+      moveRight: "Przenieś w prawo",
+      removeField: "Usuń pole",
+      patternPreview: "Kształt wiersza",
+      parseDelimiterHint: "Wiele tłumaczeń jest dzielonych przy użyciu „{{delimiter}}” z ustawień.",
+      parseDelimiterHintNone: "Wiele tłumaczeń nie jest dzielonych, ponieważ ogranicznik tłumaczenia w ustawieniach jest pusty.",
+      suggestPattern: "Zaproponuj wzorzec",
+      patternSuggested: "Wzorzec dopasował {{matched}}/{{total}} wierszy",
+      parseResponse: "Przeanalizuj odpowiedź",
+      response: "Edytowalna odpowiedź",
+      parseError: "Nie można przeanalizować odpowiedzi",
+      parsedRows: "Przeanalizowano {{count}} wierszy",
+      parseResultNotParsedPrefix: "Nie przeanalizowano:",
+      parseResultNotParsed: "Nie przeanalizowano:\n{{lines}}",
+      parseResultAllParsed: "Wszystkie niepuste wiersze zostały przeanalizowane.",
+      parseResultEmpty: "Odpowiedź jest pusta",
+      parseResultNoMatch: "Żaden wiersz nie pasował do presetów regex",
+      parseResultMatched: "Dopasowane presety regex",
+      parsingConfigurationMissingPattern: "Konfiguracja parsowania AI nie ma wzorca elementu",
+      fillTranslations: "Uzupełnij tłumaczenia",
+      addRows: "Dodaj do tabeli",
+      moreActions: "Więcej działań",
+      replaceRows: "Zastąp tabelę",
+      replaceConfirm: "Zastąpić wszystkie bieżące wiersze tabeli wierszami z odpowiedzi AI?"
+    },
+    aiPrompt: {
+      taskVocabulary: "Zadanie: Utwórz zwięzłe wiersze słownictwa.",
+      taskTranslation: "Zadanie: Przetłumacz wymienione słowa.",
+      requirementsLine: "Wymagania: {{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "Uwzględnij tłumaczenia dla wszystkich języków docelowych.",
+      multipleTranslationsAllowed: "Dozwolonych jest wiele tłumaczeń na język.",
+      addBriefNotes: "Dodaj krótkie notatki tylko wtedy, gdy są przydatne, np. formy liczby mnogiej, odmianę lub użycie.",
+      includeArticlesWhenNatural: "Jeśli rodzajniki są naturalne w języku źródłowym, uwzględnij je.",
+      course: "Kurs: {{course}}",
+      topic: "Temat: {{topic}}",
+      entryCount: "Liczba wpisów: {{count}}",
+      sourceLanguage: "Język źródłowy: {{language}}",
+      targetLanguages: "Języki docelowe: {{languages}}",
+      words: "Słowa:"
     },
     grid: {
       containerAria: "Pojemnik z siatką",
       article: "Rodzajnik",
       word: "Słowo",
       additionalInfo: "Dodatkowe informacje",
-      toLanguage: "Do {{language}}"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "Ostatnia akcja: {{action}}",
@@ -65,7 +132,7 @@
       cancel: "Anuluj",
       reapply: "Zastosuj ponownie",
       export: "Eksportuj",
-      addRow: "Dodaj wiersz",
+      addRow: "Dodaj słowo",
       addTopic: "Dodaj temat",
       removeRow: "Usuń wiersz",
       removeSelectedRows: "Usuń wybrane wiersze",
@@ -75,6 +142,10 @@
       copySelected: "Kopiuj wybrane",
       pasteFailed: "Wklejanie nie powiodło się",
       pasteInsert: "Wklej wstawkę",
+      addAiRows: "Dodaj wiersze AI",
+      replaceAiRows: "Zastąp wierszami AI",
+      generateAiRequest: "Wygeneruj żądanie AI",
+      parseAiRegex: "Przeanalizuj odpowiedź AI",
       addTranslationColumn: "Dodaj kolumnę tłumaczenia",
       reorderTranslationColumns: "Zmień kolejność kolumn tłumaczeń",
       removeTranslationColumn: "Usuń kolumnę tłumaczenia",
@@ -133,7 +204,9 @@
       selectAll: "Wybierz wszystko",
       searchOoo: "Szukaj...",
       blanks: "(Puste miejsca)",
-      noRowsToShow: "Brak wierszy do pokazania"
+      noRowsToShow: "Brak wierszy do pokazania",
+      pageSizeSelectorLabel: "Rozmiar strony:",
+      ariaPageSizeSelectorLabel: "Rozmiar strony"
     }
   }
 } as const;

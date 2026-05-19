@@ -1,4 +1,4 @@
-﻿export const tr = {
+export const tr = {
   translation: {
     app: {
       title: "Sözlük Düzenleyici"
@@ -13,11 +13,15 @@
       reapply: "Yeniden uygula",
       export: "Dışa aktar",
       import: "İçe aktar",
+      showAiPanel: "AI taslağını aç",
+      hideAiPanel: "AI taslağını kapat",
       showSettings: "Ayarları Göster",
       hideSettings: "Ayarları Gizle",
       removeSelectedRows: "Seçilen Satırları Kaldır",
       language: "Dil",
-      showOnlyInvalid: "Yalnızca Geçersizi Göster"
+      showOnlyInvalid: "Yalnızca Geçersizi Göster",
+      noInvalidRows: "Geçersiz satır yok",
+      selectRowsToRemove: "Kaldırılacak satırları seç",
     },
     settings: {
       title: "Ayarlar",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "Ek bilgi sınırlayıcı",
       translationDelimiter: "Çeviri sınırlayıcı",
       topicFlag: "Konu öneki",
-      topicDelimiter: "Konu sınırlayıcı",
-      rootTopic: "Kök konu"
+      topicDelimiter: "Konu sınırlayıcı"
+    },
+    courseHeader: {
+      aria: "Kurs",
+      courseName: "Kurs adı"
     },
     actions: {
-      addRow: "+ Satır Ekle",
+      addRow: "+ Kelime ekle",
       addTopic: "+ Konu Ekle"
+    },
+    aiPanel: {
+      title: "AI Taslağı",
+      requestSection: "İstek",
+      requestMode: "Mod",
+      requestModeAuto: "Otomatik",
+      requestModeVocabulary: "Tam oluşturma",
+      requestModeTranslations: "Yalnızca çeviriler",
+      parsingSection: "Ayrıştırma",
+      responseSection: "Yanıt",
+      topic: "Konu",
+      wordCount: "Kelimeler",
+      requestNotes: "Talimatlar",
+      request: "İstek",
+      generateRequest: "İstek oluştur",
+      linePrefixPreset: "Satır öneki",
+      patternBuilder: "Satır deseni",
+      patternGap: "Desen ayırıcı",
+      patternSeparatorNone: "(yok)",
+      patternSeparatorTab: "Sekme",
+      addField: "Alan ekle",
+      moveLeft: "Sola taşı",
+      moveRight: "Sağa taşı",
+      removeField: "Alanı kaldır",
+      patternPreview: "Satır şekli",
+      parseDelimiterHint: "Birden fazla çeviri, Ayarlar’daki “{{delimiter}}” ile ayrılır.",
+      parseDelimiterHintNone: "Çeviri sınırlayıcı Ayarlar’da boş olduğu için birden fazla çeviri ayrılmaz.",
+      suggestPattern: "Desen öner",
+      patternSuggested: "Desen {{matched}}/{{total}} satırla eşleşti",
+      parseResponse: "Yanıtı ayrıştır",
+      response: "Düzenlenebilir yanıt",
+      parseError: "Yanıt ayrıştırılamadı",
+      parsedRows: "{{count}} satır ayrıştırıldı",
+      parseResultNotParsedPrefix: "Ayrıştırılmadı:",
+      parseResultNotParsed: "Ayrıştırılmadı:\n{{lines}}",
+      parseResultAllParsed: "Boş olmayan tüm satırlar ayrıştırıldı.",
+      parseResultEmpty: "Yanıt boş",
+      parseResultNoMatch: "Hiçbir satır regex ön ayarlarıyla eşleşmedi",
+      parseResultMatched: "Eşleşen regex ön ayarları",
+      parsingConfigurationMissingPattern: "AI ayrıştırma yapılandırmasında öğe deseni yok",
+      fillTranslations: "Çevirileri doldur",
+      addRows: "Tabloya ekle",
+      moreActions: "Daha fazla eylem",
+      replaceRows: "Tabloyu değiştir",
+      replaceConfirm: "Geçerli tüm tablo satırları AI yanıtı satırlarıyla değiştirilsin mi?"
+    },
+    aiPrompt: {
+      taskVocabulary: "Görev: Kısa kelime bilgisi satırları oluşturun.",
+      taskTranslation: "Görev: Listelenen kelimeleri çevirin.",
+      requirementsLine: "Gereksinimler: {{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "Tüm hedef diller için çevirileri ekleyin.",
+      multipleTranslationsAllowed: "Dil başına birden çok çeviriye izin verilir.",
+      addBriefNotes: "Yalnızca yararlı olduğunda çoğul biçimler, çekim veya kullanım gibi kısa notlar ekleyin.",
+      includeArticlesWhenNatural: "Kaynak dilde artikeller doğalsa bunları ekleyin.",
+      course: "Kurs: {{course}}",
+      topic: "Konu: {{topic}}",
+      entryCount: "Girdi sayısı: {{count}}",
+      sourceLanguage: "Kaynak dil: {{language}}",
+      targetLanguages: "Hedef diller: {{languages}}",
+      words: "Kelimeler:"
     },
     grid: {
       containerAria: "Izgara kabı",
       article: "Tanımlık",
       word: "Kelime",
       additionalInfo: "Ek Bilgi",
-      toLanguage: "{{language}}'a"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "Son işlem: {{action}}",
@@ -65,7 +132,7 @@
       cancel: "İptal",
       reapply: "Yeniden uygula",
       export: "Dışa aktar",
-      addRow: "Satır Ekle",
+      addRow: "Kelime ekle",
       addTopic: "Konu Ekle",
       removeRow: "Satırı kaldır",
       removeSelectedRows: "Seçilen Satırları Kaldır",
@@ -75,6 +142,10 @@
       copySelected: "Seçileni Kopyala",
       pasteFailed: "Yapıştırma başarısız oldu",
       pasteInsert: "Yapıştır Ekle",
+      addAiRows: "AI satırları ekle",
+      replaceAiRows: "AI satırlarıyla değiştir",
+      generateAiRequest: "AI isteği oluştur",
+      parseAiRegex: "AI yanıtını ayrıştır",
       addTranslationColumn: "Çeviri Sütunu Ekle",
       reorderTranslationColumns: "Çeviri Sütunlarını Yeniden Sırala",
       removeTranslationColumn: "Çeviri Sütunu Kaldır",
@@ -133,7 +204,9 @@
       selectAll: "Tümünü Seç",
       searchOoo: "Aramak...",
       blanks: "(Boşluklar)",
-      noRowsToShow: "Gösterilecek satır yok"
+      noRowsToShow: "Gösterilecek satır yok",
+      pageSizeSelectorLabel: "Sayfa boyutu:",
+      ariaPageSizeSelectorLabel: "Sayfa boyutu"
     }
   }
 } as const;

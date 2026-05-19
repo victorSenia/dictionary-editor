@@ -122,12 +122,7 @@ body,
   gap: 8px;
   font-size: 14px;
   color: #334155;
-  margin-left: auto;
-}
-
-.app-shell.rtl .page-size-label {
-  margin-left: 0;
-  margin-right: auto;
+  margin-inline-start: auto;
 }
 
 .content {
@@ -157,17 +152,13 @@ body,
 }
 
 .content.settings-open .grid-area {
-  margin-right: 320px;
+  margin-inline-end: 320px;
 }
 
 .content.ai-open .grid-area {
   display: none;
 }
 
-.app-shell.rtl .content.settings-open .grid-area {
-  margin-right: 0;
-  margin-left: 320px;
-}
 
 .insert-row-button {
   width: 28px;
@@ -190,6 +181,7 @@ body,
   justify-content: flex-start;
   gap: 8px;
 }
+
 
 .row-end-actions-separator {
   width: 16px;
@@ -230,16 +222,14 @@ body,
 
 .ag-theme-alpine .ag-cell.add-col-cell {
   background: #f8fafc;
-  padding-left: 0;
-  padding-right: 0;
+  padding-inline: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .ag-theme-alpine .ag-cell {
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-inline: 4px;
 }
 
 .ag-theme-alpine .ag-row-even .ag-cell {
@@ -281,7 +271,7 @@ body,
 .ag-theme-alpine .ag-floating-filter-input .ag-input-wrapper::before {
   content: "\2315";
   position: absolute;
-  left: 6px;
+  inset-inline-start: 6px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -291,7 +281,7 @@ body,
 
 .ag-theme-alpine .ag-floating-filter-input input.ag-input-field-input {
   font-size: 14px;
-  padding-left: 24px !important;
+  padding-inline-start: 24px !important;
 }
 
 .translation-header {
@@ -541,11 +531,11 @@ body,
 .settings-panel {
   position: absolute;
   top: 0;
-  right: 0;
+  inset-inline-end: 0;
   width: 320px;
   height: 100%;
   background: #ffffff;
-  border-left: 1px solid #d1d5db;
+  border-inline-start: 1px solid #d1d5db;
   padding: 16px;
   box-sizing: border-box;
   transform: translateX(100%);
@@ -554,11 +544,7 @@ body,
   overflow-y: auto;
 }
 
-.app-shell.rtl .settings-panel {
-  right: auto;
-  left: 0;
-  border-left: 0;
-  border-right: 1px solid #d1d5db;
+.app-shell.rtl .settings-panel:not(.open) {
   transform: translateX(-100%);
 }
 
@@ -575,12 +561,7 @@ body,
 }
 
 .content.settings-open .ai-workspace {
-  margin-right: 320px;
-}
-
-.app-shell.rtl .content.settings-open .ai-workspace {
-  margin-right: 0;
-  margin-left: 320px;
+  margin-inline-end: 320px;
 }
 
 .ai-panel {
@@ -828,7 +809,6 @@ body,
 }
 
 .pattern-preview {
-  grid-column: 1 / -1;
   margin: 0;
   color: #64748b;
   font-family: Consolas, "Courier New", monospace;
@@ -867,7 +847,7 @@ body,
 
 .more-menu[open] button {
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   top: 40px;
   z-index: 5;
   width: 160px;
@@ -979,7 +959,7 @@ body,
 
 .settings-field-error {
   margin: 0;
-  padding-left: 2px;
+  padding-inline-start: 2px;
   font-size: 12px;
   color: #b91c1c;
   font-weight: 600;

@@ -1,4 +1,4 @@
-﻿export const pt = {
+export const pt = {
   translation: {
     app: {
       title: "Editor de dicionário"
@@ -13,11 +13,15 @@
       reapply: "Reaplicar",
       export: "Exportar",
       import: "Importar",
+      showAiPanel: "Abrir rascunho de IA",
+      hideAiPanel: "Fechar rascunho de IA",
       showSettings: "Mostrar configurações",
       hideSettings: "Ocultar configurações",
       removeSelectedRows: "Remover linhas selecionadas",
       language: "Linguagem",
-      showOnlyInvalid: "Mostrar apenas inválido"
+      showOnlyInvalid: "Mostrar apenas inválido",
+      noInvalidRows: "Não há linhas inválidas",
+      selectRowsToRemove: "Selecione linhas para remover",
     },
     settings: {
       title: "Configurações",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "Delimitador de informações adicionais",
       translationDelimiter: "Delimitador de tradução",
       topicFlag: "Prefixo do tópico",
-      topicDelimiter: "Delimitador de tópico",
-      rootTopic: "Tópico raiz"
+      topicDelimiter: "Delimitador de tópico"
+    },
+    courseHeader: {
+      aria: "Curso",
+      courseName: "Nome do curso"
     },
     actions: {
-      addRow: "+ Adicionar linha",
+      addRow: "+ Adicionar palavra",
       addTopic: "+ Adicionar tópico"
+    },
+    aiPanel: {
+      title: "Rascunho de IA",
+      requestSection: "Solicitação",
+      requestMode: "Modo",
+      requestModeAuto: "Automático",
+      requestModeVocabulary: "Geração completa",
+      requestModeTranslations: "Apenas traduções",
+      parsingSection: "Análise",
+      responseSection: "Resposta",
+      topic: "Tópico",
+      wordCount: "Palavras",
+      requestNotes: "Instruções",
+      request: "Solicitação",
+      generateRequest: "Gerar solicitação",
+      linePrefixPreset: "Prefixo da linha",
+      patternBuilder: "Padrão da linha",
+      patternGap: "Separador de padrão",
+      patternSeparatorNone: "(nenhum)",
+      patternSeparatorTab: "Tabulação",
+      addField: "Adicionar campo",
+      moveLeft: "Mover para a esquerda",
+      moveRight: "Mover para a direita",
+      removeField: "Remover campo",
+      patternPreview: "Formato da linha",
+      parseDelimiterHint: "Várias traduções são separadas usando “{{delimiter}}” nas Configurações.",
+      parseDelimiterHintNone: "Várias traduções não são separadas porque o delimitador de tradução está vazio nas Configurações.",
+      suggestPattern: "Sugerir padrão",
+      patternSuggested: "O padrão correspondeu a {{matched}}/{{total}} linhas",
+      parseResponse: "Analisar resposta",
+      response: "Resposta editável",
+      parseError: "Não foi possível analisar a resposta",
+      parsedRows: "{{count}} linhas analisadas",
+      parseResultNotParsedPrefix: "Não analisado:",
+      parseResultNotParsed: "Não analisado:\n{{lines}}",
+      parseResultAllParsed: "Todas as linhas não vazias foram analisadas.",
+      parseResultEmpty: "A resposta está vazia",
+      parseResultNoMatch: "Nenhuma linha correspondeu aos presets regex",
+      parseResultMatched: "Presets regex correspondentes",
+      parsingConfigurationMissingPattern: "A configuração de análise de IA não tem padrão de item",
+      fillTranslations: "Preencher traduções",
+      addRows: "Adicionar à tabela",
+      moreActions: "Mais ações",
+      replaceRows: "Substituir tabela",
+      replaceConfirm: "Substituir todas as linhas atuais da tabela por linhas da resposta de IA?"
+    },
+    aiPrompt: {
+      taskVocabulary: "Tarefa: crie linhas de vocabulário concisas.",
+      taskTranslation: "Tarefa: traduza as palavras listadas.",
+      requirementsLine: "Requisitos: {{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "Inclua traduções para todos os idiomas de destino.",
+      multipleTranslationsAllowed: "Várias traduções por idioma são permitidas.",
+      addBriefNotes: "Adicione notas breves apenas quando forem úteis, como plurais, flexões ou uso.",
+      includeArticlesWhenNatural: "Se artigos forem naturais no idioma de origem, inclua-os.",
+      course: "Curso: {{course}}",
+      topic: "Tópico: {{topic}}",
+      entryCount: "Contagem de entradas: {{count}}",
+      sourceLanguage: "Idioma de origem: {{language}}",
+      targetLanguages: "Idiomas de destino: {{languages}}",
+      words: "Palavras:"
     },
     grid: {
       containerAria: "Contêiner de grade",
       article: "Artigo",
       word: "Palavra",
       additionalInfo: "Informações Adicionais",
-      toLanguage: "Para {{language}}"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "Última ação: {{action}}",
@@ -65,7 +132,7 @@
       cancel: "Cancelar",
       reapply: "Reaplicar",
       export: "Exportar",
-      addRow: "Adicionar linha",
+      addRow: "Adicionar palavra",
       addTopic: "Adicionar tópico",
       removeRow: "Remover linha",
       removeSelectedRows: "Remover linhas selecionadas",
@@ -75,6 +142,10 @@
       copySelected: "Copiar selecionado",
       pasteFailed: "Falha ao colar",
       pasteInsert: "Colar Inserir",
+      addAiRows: "Adicionar linhas de IA",
+      replaceAiRows: "Substituir por linhas de IA",
+      generateAiRequest: "Gerar solicitação de IA",
+      parseAiRegex: "Analisar resposta da IA",
       addTranslationColumn: "Adicionar coluna de tradução",
       reorderTranslationColumns: "Reordenar colunas de tradução",
       removeTranslationColumn: "Remover coluna de tradução",
@@ -133,7 +204,9 @@
       selectAll: "Selecionar tudo",
       searchOoo: "Procurar...",
       blanks: "(Espaços em branco)",
-      noRowsToShow: "Nenhuma linha para mostrar"
+      noRowsToShow: "Nenhuma linha para mostrar",
+      pageSizeSelectorLabel: "Tamanho da página:",
+      ariaPageSizeSelectorLabel: "Tamanho da página"
     }
   }
 } as const;

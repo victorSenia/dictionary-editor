@@ -1,4 +1,4 @@
-﻿export const zh = {
+export const zh = {
   translation: {
     app: {
       title: "词典编辑器"
@@ -13,11 +13,15 @@
       reapply: "重新应用",
       export: "导出",
       import: "导入",
+      showAiPanel: "打开 AI 草稿",
+      hideAiPanel: "关闭 AI 草稿",
       showSettings: "显示设置",
       hideSettings: "隐藏设置",
       removeSelectedRows: "删除选定的行",
       language: "语言",
-      showOnlyInvalid: "仅显示无效"
+      showOnlyInvalid: "仅显示无效",
+      noInvalidRows: "没有无效行",
+      selectRowsToRemove: "选择要删除的行",
     },
     settings: {
       title: "设置",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "附加信息分隔符",
       translationDelimiter: "翻译分隔符",
       topicFlag: "主题前缀",
-      topicDelimiter: "主题分隔符",
-      rootTopic: "根主题"
+      topicDelimiter: "主题分隔符"
+    },
+    courseHeader: {
+      aria: "课程",
+      courseName: "课程名称"
     },
     actions: {
-      addRow: "+ 添加行",
+      addRow: "+ 添加单词",
       addTopic: "+ 添加主题"
+    },
+    aiPanel: {
+      title: "AI 草稿",
+      requestSection: "请求",
+      requestMode: "模式",
+      requestModeAuto: "自动",
+      requestModeVocabulary: "完整生成",
+      requestModeTranslations: "仅翻译",
+      parsingSection: "解析",
+      responseSection: "响应",
+      topic: "主题",
+      wordCount: "单词",
+      requestNotes: "说明",
+      request: "请求",
+      generateRequest: "生成请求",
+      linePrefixPreset: "行前缀",
+      patternBuilder: "行模式",
+      patternGap: "模式分隔符",
+      patternSeparatorNone: "（无）",
+      patternSeparatorTab: "制表符",
+      addField: "添加字段",
+      moveLeft: "向左移动",
+      moveRight: "向右移动",
+      removeField: "移除字段",
+      patternPreview: "行形状",
+      parseDelimiterHint: "多个翻译会使用设置中的“{{delimiter}}”分隔。",
+      parseDelimiterHintNone: "由于设置中的翻译分隔符为空，多个翻译不会被分隔。",
+      suggestPattern: "建议模式",
+      patternSuggested: "模式匹配了 {{matched}}/{{total}} 行",
+      parseResponse: "解析响应",
+      response: "可编辑响应",
+      parseError: "无法解析响应",
+      parsedRows: "已解析 {{count}} 行",
+      parseResultNotParsedPrefix: "未解析：",
+      parseResultNotParsed: "未解析：\n{{lines}}",
+      parseResultAllParsed: "所有非空行均已解析。",
+      parseResultEmpty: "响应为空",
+      parseResultNoMatch: "没有行匹配 regex 预设",
+      parseResultMatched: "匹配的 regex 预设",
+      parsingConfigurationMissingPattern: "AI 解析配置没有项目模式",
+      fillTranslations: "填充翻译",
+      addRows: "添加到表格",
+      moreActions: "更多操作",
+      replaceRows: "替换表格",
+      replaceConfirm: "是否用 AI 响应中的行替换当前表格的所有行？"
+    },
+    aiPrompt: {
+      taskVocabulary: "任务：创建简洁的词汇行。",
+      taskTranslation: "任务：翻译列出的单词。",
+      requirementsLine: "要求：{{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "包含所有目标语言的翻译。",
+      multipleTranslationsAllowed: "允许每种语言有多个翻译。",
+      addBriefNotes: "仅在有用时添加简短说明，例如复数形式、词形变化或用法。",
+      includeArticlesWhenNatural: "如果冠词在源语言中是自然的，请包含它们。",
+      course: "课程：{{course}}",
+      topic: "主题：{{topic}}",
+      entryCount: "条目数：{{count}}",
+      sourceLanguage: "源语言：{{language}}",
+      targetLanguages: "目标语言：{{languages}}",
+      words: "单词："
     },
     grid: {
       containerAria: "网格容器",
       article: "冠词",
       word: "单词",
       additionalInfo: "附加信息",
-      toLanguage: "至 {{language}}"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "最后操作：{{action}}",
@@ -65,7 +132,7 @@
       cancel: "取消",
       reapply: "重新应用",
       export: "导出",
-      addRow: "添加行",
+      addRow: "添加单词",
       addTopic: "添加主题",
       removeRow: "删除行",
       removeSelectedRows: "删除选定的行",
@@ -75,6 +142,10 @@
       copySelected: "复制所选内容",
       pasteFailed: "粘贴失败",
       pasteInsert: "粘贴插入",
+      addAiRows: "添加 AI 行",
+      replaceAiRows: "替换为 AI 行",
+      generateAiRequest: "生成 AI 请求",
+      parseAiRegex: "解析 AI 响应",
       addTranslationColumn: "添加翻译栏",
       reorderTranslationColumns: "重新排序翻译列",
       removeTranslationColumn: "删除翻译栏",
@@ -133,7 +204,9 @@
       selectAll: "选择全部",
       searchOoo: "搜索...",
       blanks: "（空白）",
-      noRowsToShow: "没有可显示的行"
+      noRowsToShow: "没有可显示的行",
+      pageSizeSelectorLabel: "页面大小:",
+      ariaPageSizeSelectorLabel: "页面大小"
     }
   }
 } as const;

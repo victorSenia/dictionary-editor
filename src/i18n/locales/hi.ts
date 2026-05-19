@@ -1,4 +1,4 @@
-﻿export const hi = {
+export const hi = {
   translation: {
     app: {
       title: "शब्दकोश संपादक"
@@ -13,11 +13,15 @@
       reapply: "फिर लागू करें",
       export: "निर्यात",
       import: "आयात",
+      showAiPanel: "AI ड्राफ्ट खोलें",
+      hideAiPanel: "AI ड्राफ्ट बंद करें",
       showSettings: "सेटिंग दिखाएँ",
       hideSettings: "सेटिंग्स छिपाएँ",
       removeSelectedRows: "चयनित पंक्तियाँ हटाएँ",
       language: "भाषा",
-      showOnlyInvalid: "केवल अमान्य दिखाएं"
+      showOnlyInvalid: "केवल अमान्य दिखाएं",
+      noInvalidRows: "कोई अमान्य पंक्तियाँ नहीं हैं",
+      selectRowsToRemove: "हटाने के लिए पंक्तियाँ चुनें",
     },
     settings: {
       title: "सेटिंग्स",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "अतिरिक्त जानकारी सीमांकक",
       translationDelimiter: "अनुवाद सीमांकक",
       topicFlag: "विषय उपसर्ग",
-      topicDelimiter: "विषय सीमांकक",
-      rootTopic: "मूल विषय"
+      topicDelimiter: "विषय सीमांकक"
+    },
+    courseHeader: {
+      aria: "कोर्स",
+      courseName: "कोर्स का नाम"
     },
     actions: {
-      addRow: "+ पंक्ति जोड़ें",
+      addRow: "+ शब्द जोड़ें",
       addTopic: "+ विषय जोड़ें"
+    },
+    aiPanel: {
+      title: "AI ड्राफ़्ट",
+      requestSection: "अनुरोध",
+      requestMode: "मोड",
+      requestModeAuto: "स्वचालित",
+      requestModeVocabulary: "पूर्ण जनरेशन",
+      requestModeTranslations: "केवल अनुवाद",
+      parsingSection: "पार्सिंग",
+      responseSection: "उत्तर",
+      topic: "विषय",
+      wordCount: "शब्द",
+      requestNotes: "निर्देश",
+      request: "अनुरोध",
+      generateRequest: "अनुरोध जनरेट करें",
+      linePrefixPreset: "पंक्ति उपसर्ग",
+      patternBuilder: "पंक्ति पैटर्न",
+      patternGap: "पैटर्न विभाजक",
+      patternSeparatorNone: "(कोई नहीं)",
+      patternSeparatorTab: "टैब",
+      addField: "फ़ील्ड जोड़ें",
+      moveLeft: "बाएँ ले जाएँ",
+      moveRight: "दाएँ ले जाएँ",
+      removeField: "फ़ील्ड हटाएँ",
+      patternPreview: "पंक्ति का रूप",
+      parseDelimiterHint: "एकाधिक अनुवादों को सेटिंग्स में दिए “{{delimiter}}” से अलग किया जाता है।",
+      parseDelimiterHintNone: "एकाधिक अनुवाद अलग नहीं किए जाते क्योंकि सेटिंग्स में अनुवाद सीमांकक खाली है।",
+      suggestPattern: "पैटर्न सुझाएँ",
+      patternSuggested: "पैटर्न {{matched}}/{{total}} पंक्तियों से मेल खाया",
+      parseResponse: "उत्तर पार्स करें",
+      response: "संपादन योग्य उत्तर",
+      parseError: "उत्तर पार्स नहीं हो सका",
+      parsedRows: "{{count}} पंक्तियाँ पार्स हुईं",
+      parseResultNotParsedPrefix: "पार्स नहीं हुआ:",
+      parseResultNotParsed: "पार्स नहीं हुआ:\n{{lines}}",
+      parseResultAllParsed: "सभी खाली न होने वाली पंक्तियाँ पार्स हो गईं।",
+      parseResultEmpty: "उत्तर खाली है",
+      parseResultNoMatch: "कोई पंक्ति regex प्रीसेट से मेल नहीं खाई",
+      parseResultMatched: "मेल खाने वाले regex प्रीसेट",
+      parsingConfigurationMissingPattern: "AI पार्सिंग कॉन्फ़िगरेशन में कोई आइटम पैटर्न नहीं है",
+      fillTranslations: "अनुवाद भरें",
+      addRows: "तालिका में जोड़ें",
+      moreActions: "और कार्रवाइयाँ",
+      replaceRows: "तालिका बदलें",
+      replaceConfirm: "क्या वर्तमान तालिका की सभी पंक्तियों को AI उत्तर की पंक्तियों से बदलना है?"
+    },
+    aiPrompt: {
+      taskVocabulary: "कार्य: संक्षिप्त शब्दावली पंक्तियाँ बनाएँ।",
+      taskTranslation: "कार्य: सूचीबद्ध शब्दों का अनुवाद करें।",
+      requirementsLine: "आवश्यकताएँ: {{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "सभी लक्ष्य भाषाओं के लिए अनुवाद शामिल करें।",
+      multipleTranslationsAllowed: "प्रति भाषा कई अनुवादों की अनुमति है।",
+      addBriefNotes: "केवल उपयोगी होने पर संक्षिप्त नोट जोड़ें, जैसे बहुवचन रूप, रूप-परिवर्तन या प्रयोग।",
+      includeArticlesWhenNatural: "यदि स्रोत भाषा में articles स्वाभाविक हैं, तो उन्हें शामिल करें।",
+      course: "कोर्स: {{course}}",
+      topic: "विषय: {{topic}}",
+      entryCount: "प्रविष्टि संख्या: {{count}}",
+      sourceLanguage: "स्रोत भाषा: {{language}}",
+      targetLanguages: "लक्ष्य भाषाएँ: {{languages}}",
+      words: "शब्द:"
     },
     grid: {
       containerAria: "ग्रिड कंटेनर",
       article: "उपपद",
       word: "शब्द",
       additionalInfo: "अतिरिक्त जानकारी",
-      toLanguage: "{{language}} को"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "अंतिम क्रिया: {{action}}",
@@ -65,7 +132,7 @@
       cancel: "रद्द करें",
       reapply: "फिर लागू करें",
       export: "निर्यात",
-      addRow: "लाइन जोड़ो",
+      addRow: "शब्द जोड़ें",
       addTopic: "विषय जोड़ें",
       removeRow: "पंक्ति हटाएँ",
       removeSelectedRows: "चयनित पंक्तियाँ हटाएँ",
@@ -75,6 +142,10 @@
       copySelected: "प्रतिलिपि चयनित",
       pasteFailed: "चिपकाना विफल",
       pasteInsert: "चिपकाएँ सम्मिलित करें",
+      addAiRows: "AI पंक्तियाँ जोड़ें",
+      replaceAiRows: "AI पंक्तियों से बदलें",
+      generateAiRequest: "AI अनुरोध बनाएँ",
+      parseAiRegex: "AI प्रतिक्रिया पार्स करें",
       addTranslationColumn: "अनुवाद कॉलम जोड़ें",
       reorderTranslationColumns: "अनुवाद कॉलम पुन: व्यवस्थित करें",
       removeTranslationColumn: "अनुवाद कॉलम हटाएँ",
@@ -133,7 +204,9 @@
       selectAll: "सबका चयन करें",
       searchOoo: "खोज...",
       blanks: "(रिक्त स्थान)",
-      noRowsToShow: "दिखाने के लिए कोई पंक्ति नहीं"
+      noRowsToShow: "दिखाने के लिए कोई पंक्ति नहीं",
+      pageSizeSelectorLabel: "पेज आकार:",
+      ariaPageSizeSelectorLabel: "पेज आकार"
     }
   }
 } as const;

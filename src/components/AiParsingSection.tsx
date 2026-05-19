@@ -109,6 +109,9 @@ const AiParsingSection = React.forwardRef<AiParsingSectionHandle, AiParsingSecti
     requestContext,
     hasConfiguredArticles(config.articles)
   );
+  const translationDelimiterHint = config.translationDelimiter
+    ? t("aiPanel.parseDelimiterHint", { delimiter: config.translationDelimiter })
+    : t("aiPanel.parseDelimiterHintNone");
 
   return (
     <details
@@ -137,6 +140,7 @@ const AiParsingSection = React.forwardRef<AiParsingSectionHandle, AiParsingSecti
       {patternFields.length > 0 ? (
         <p className="pattern-preview">{t("aiPanel.patternPreview")}: {patternExample}</p>
       ) : null}
+      <p className="pattern-preview">{translationDelimiterHint}</p>
       <button type="button" className="secondary-button full-width-button" onClick={suggestPattern}>
         {t("aiPanel.suggestPattern")}
       </button>

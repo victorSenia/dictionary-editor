@@ -1,4 +1,4 @@
-﻿export const en = {
+export const en = {
   translation: {
     app: {
       title: "Dictionary Editor"
@@ -75,6 +75,8 @@
       moveRight: "Move right",
       removeField: "Remove field",
       patternPreview: "Line shape",
+      parseDelimiterHint: "Multiple translations are split using “{{delimiter}}” from Settings.",
+      parseDelimiterHintNone: "Multiple translations are not split because the translation delimiter is empty in Settings.",
       patternField: {
         article: "article",
         word: "word",
@@ -235,7 +237,9 @@
       selectAll: "Select All",
       searchOoo: "Search...",
       blanks: "(Blanks)",
-      noRowsToShow: "No rows to show"
+      noRowsToShow: "No rows to show",
+      pageSizeSelectorLabel: "Page Size:",
+      ariaPageSizeSelectorLabel: "Page Size"
     }
   }
 } as const;

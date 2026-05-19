@@ -1,4 +1,4 @@
-﻿export const vi = {
+export const vi = {
   translation: {
     app: {
       title: "Trình soạn thảo từ điển"
@@ -13,11 +13,15 @@
       reapply: "Áp dụng lại",
       export: "Xuất",
       import: "Nhập",
+      showAiPanel: "Mở bản nháp AI",
+      hideAiPanel: "Đóng bản nháp AI",
       showSettings: "Hiển thị cài đặt",
       hideSettings: "Ẩn cài đặt",
       removeSelectedRows: "Xóa các hàng đã chọn",
       language: "Ngôn ngữ",
-      showOnlyInvalid: "Chỉ hiển thị không hợp lệ"
+      showOnlyInvalid: "Chỉ hiển thị không hợp lệ",
+      noInvalidRows: "Không có hàng không hợp lệ",
+      selectRowsToRemove: "Chọn hàng để xóa",
     },
     settings: {
       title: "Cài đặt",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "Dấu phân cách thông tin bổ sung",
       translationDelimiter: "Dấu phân cách dịch",
       topicFlag: "Tiền tố chủ đề",
-      topicDelimiter: "Dấu phân cách chủ đề",
-      rootTopic: "chủ đề gốc"
+      topicDelimiter: "Dấu phân cách chủ đề"
+    },
+    courseHeader: {
+      aria: "Khóa học",
+      courseName: "Tên khóa học"
     },
     actions: {
-      addRow: "+ Thêm hàng",
+      addRow: "+ Thêm từ",
       addTopic: "+ Thêm chủ đề"
+    },
+    aiPanel: {
+      title: "Bản nháp AI",
+      requestSection: "Yêu cầu",
+      requestMode: "Chế độ",
+      requestModeAuto: "Tự động",
+      requestModeVocabulary: "Tạo đầy đủ",
+      requestModeTranslations: "Chỉ bản dịch",
+      parsingSection: "Phân tích",
+      responseSection: "Phản hồi",
+      topic: "Chủ đề",
+      wordCount: "Từ",
+      requestNotes: "Hướng dẫn",
+      request: "Yêu cầu",
+      generateRequest: "Tạo yêu cầu",
+      linePrefixPreset: "Tiền tố dòng",
+      patternBuilder: "Mẫu dòng",
+      patternGap: "Dấu phân tách mẫu",
+      patternSeparatorNone: "(không có)",
+      patternSeparatorTab: "Tab",
+      addField: "Thêm trường",
+      moveLeft: "Di chuyển sang trái",
+      moveRight: "Di chuyển sang phải",
+      removeField: "Xóa trường",
+      patternPreview: "Dạng dòng",
+      parseDelimiterHint: "Nhiều bản dịch được tách bằng “{{delimiter}}” trong Cài đặt.",
+      parseDelimiterHintNone: "Nhiều bản dịch không được tách vì dấu phân cách dịch đang trống trong Cài đặt.",
+      suggestPattern: "Đề xuất mẫu",
+      patternSuggested: "Mẫu khớp {{matched}}/{{total}} dòng",
+      parseResponse: "Phân tích phản hồi",
+      response: "Phản hồi có thể chỉnh sửa",
+      parseError: "Không thể phân tích phản hồi",
+      parsedRows: "Đã phân tích {{count}} hàng",
+      parseResultNotParsedPrefix: "Chưa phân tích:",
+      parseResultNotParsed: "Chưa phân tích:\n{{lines}}",
+      parseResultAllParsed: "Tất cả các dòng không trống đã được phân tích.",
+      parseResultEmpty: "Phản hồi trống",
+      parseResultNoMatch: "Không có dòng nào khớp với preset regex",
+      parseResultMatched: "Preset regex khớp",
+      parsingConfigurationMissingPattern: "Cấu hình phân tích AI không có mẫu mục",
+      fillTranslations: "Điền bản dịch",
+      addRows: "Thêm vào bảng",
+      moreActions: "Thêm hành động",
+      replaceRows: "Thay thế bảng",
+      replaceConfirm: "Thay thế tất cả các hàng hiện tại của bảng bằng các hàng từ phản hồi AI?"
+    },
+    aiPrompt: {
+      taskVocabulary: "Nhiệm vụ: Tạo các hàng từ vựng ngắn gọn.",
+      taskTranslation: "Nhiệm vụ: Dịch các từ được liệt kê.",
+      requirementsLine: "Yêu cầu: {{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "Bao gồm bản dịch cho tất cả ngôn ngữ đích.",
+      multipleTranslationsAllowed: "Cho phép nhiều bản dịch cho mỗi ngôn ngữ.",
+      addBriefNotes: "Chỉ thêm ghi chú ngắn khi hữu ích, chẳng hạn như dạng số nhiều, biến tố hoặc cách dùng.",
+      includeArticlesWhenNatural: "Nếu mạo từ là tự nhiên trong ngôn ngữ nguồn, hãy bao gồm chúng.",
+      course: "Khóa học: {{course}}",
+      topic: "Chủ đề: {{topic}}",
+      entryCount: "Số mục: {{count}}",
+      sourceLanguage: "Ngôn ngữ nguồn: {{language}}",
+      targetLanguages: "Ngôn ngữ đích: {{languages}}",
+      words: "Từ:"
     },
     grid: {
       containerAria: "Thùng chứa lưới",
       article: "Mạo từ",
       word: "Từ",
       additionalInfo: "Thông tin bổ sung",
-      toLanguage: "Tới {{language}}"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "Hành động cuối cùng: {{action}}",
@@ -65,7 +132,7 @@
       cancel: "Hủy",
       reapply: "Áp dụng lại",
       export: "Xuất",
-      addRow: "Thêm hàng",
+      addRow: "Thêm từ",
       addTopic: "Thêm chủ đề",
       removeRow: "Xóa hàng",
       removeSelectedRows: "Xóa các hàng đã chọn",
@@ -75,6 +142,10 @@
       copySelected: "Sao chép đã chọn",
       pasteFailed: "Dán không thành công",
       pasteInsert: "Dán Chèn",
+      addAiRows: "Thêm hàng AI",
+      replaceAiRows: "Thay bằng hàng AI",
+      generateAiRequest: "Tạo yêu cầu AI",
+      parseAiRegex: "Phân tích phản hồi AI",
       addTranslationColumn: "Thêm cột dịch",
       reorderTranslationColumns: "Sắp xếp lại các cột dịch",
       removeTranslationColumn: "Xóa cột dịch",
@@ -133,7 +204,9 @@
       selectAll: "Chọn tất cả",
       searchOoo: "Tìm kiếm...",
       blanks: "(Trống)",
-      noRowsToShow: "Không có hàng nào để hiển thị"
+      noRowsToShow: "Không có hàng nào để hiển thị",
+      pageSizeSelectorLabel: "Kích thước trang:",
+      ariaPageSizeSelectorLabel: "Kích thước trang"
     }
   }
 } as const;

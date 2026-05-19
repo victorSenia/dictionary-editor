@@ -1,4 +1,4 @@
-﻿export const ur = {
+export const ur = {
   translation: {
     app: {
       title: "ڈکشنری ایڈیٹر"
@@ -13,11 +13,15 @@
       reapply: "دوبارہ لاگو کریں",
       export: "برآمد کریں",
       import: "درآمد کریں",
+      showAiPanel: "AI مسودہ کھولیں",
+      hideAiPanel: "AI مسودہ بند کریں",
       showSettings: "ترتیبات دکھائیں۔",
       hideSettings: "ترتیبات چھپائیں۔",
       removeSelectedRows: "منتخب قطاروں کو ہٹا دیں۔",
       language: "زبان",
-      showOnlyInvalid: "صرف غلط دکھائیں۔"
+      showOnlyInvalid: "صرف غلط دکھائیں۔",
+      noInvalidRows: "کوئی غلط قطاریں نہیں ہیں",
+      selectRowsToRemove: "ہٹانے کے لیے قطاریں منتخب کریں",
     },
     settings: {
       title: "ترتیبات",
@@ -29,7 +33,7 @@
       addArticle: "حرفِ تعریف شامل کریں۔",
       removeItem: "آئٹم کو ہٹا دیں۔",
       languageErrorEmpty: "زبان خالی نہیں ہو سکتی",
-      languageErrorExists: "زبان \"{{language}}\" پہلے سے موجود ہے۔",
+      languageErrorExists: "زبان \"⁨{{language}}⁩\" پہلے سے موجود ہے۔",
       languageFrom: "ماخذ کی زبان",
       languagesTo: "ہدف کی زبانیں",
       articles: "حروفِ تعریف",
@@ -37,23 +41,86 @@
       additionalInformationDelimiter: "اضافی معلومات کی حد بندی",
       translationDelimiter: "ترجمہ ڈیلیمیٹر",
       topicFlag: "موضوع کا سابقہ",
-      topicDelimiter: "موضوع کی حد بندی کرنے والا",
-      rootTopic: "جڑ کا موضوع"
+      topicDelimiter: "موضوع کی حد بندی کرنے والا"
+    },
+    courseHeader: {
+      aria: "کورس",
+      courseName: "کورس کا نام"
     },
     actions: {
-      addRow: "+ قطار شامل کریں۔",
+      addRow: "+ لفظ شامل کریں",
       addTopic: "+ موضوع شامل کریں۔"
+    },
+    aiPanel: {
+      title: "AI مسودہ",
+      requestSection: "درخواست",
+      requestMode: "موڈ",
+      requestModeAuto: "خودکار",
+      requestModeVocabulary: "مکمل تخلیق",
+      requestModeTranslations: "صرف تراجم",
+      parsingSection: "تجزیہ",
+      responseSection: "جواب",
+      topic: "موضوع",
+      wordCount: "الفاظ",
+      requestNotes: "ہدایات",
+      request: "درخواست",
+      generateRequest: "درخواست بنائیں",
+      linePrefixPreset: "سطر کا سابقہ",
+      patternBuilder: "سطر کا پیٹرن",
+      patternGap: "پیٹرن جداکار",
+      patternSeparatorNone: "(کوئی نہیں)",
+      patternSeparatorTab: "ٹیب",
+      addField: "فیلڈ شامل کریں",
+      moveLeft: "بائیں منتقل کریں",
+      moveRight: "دائیں منتقل کریں",
+      removeField: "فیلڈ ہٹائیں",
+      patternPreview: "سطر کی شکل",
+      parseDelimiterHint: "متعدد تراجم کو ترتیبات کے \"⁨{{delimiter}}⁩\" سے الگ کیا جاتا ہے۔",
+      parseDelimiterHintNone: "متعدد تراجم الگ نہیں کیے جاتے کیونکہ ترتیبات میں ترجمہ ڈیلیمیٹر خالی ہے۔",
+      suggestPattern: "پیٹرن تجویز کریں",
+      patternSuggested: "پیٹرن ⁨{{total}}⁩ میں سے ⁨{{matched}}⁩ سطروں سے ملا",
+      parseResponse: "جواب کا تجزیہ کریں",
+      response: "قابل تدوین جواب",
+      parseError: "جواب کا تجزیہ نہیں ہو سکا",
+      parsedRows: "⁨{{count}}⁩ قطاروں کا تجزیہ ہوا",
+      parseResultNotParsedPrefix: "تجزیہ نہیں ہوا:",
+      parseResultNotParsed: "تجزیہ نہیں ہوا:\n⁨{{lines}}⁩",
+      parseResultAllParsed: "تمام غیر خالی سطروں کا تجزیہ ہو گیا۔",
+      parseResultEmpty: "جواب خالی ہے",
+      parseResultNoMatch: "کوئی سطر regex presets سے نہیں ملی",
+      parseResultMatched: "ملنے والے regex presets",
+      parsingConfigurationMissingPattern: "AI تجزیہ کنفیگریشن میں item pattern نہیں ہے",
+      fillTranslations: "تراجم پُر کریں",
+      addRows: "جدول میں شامل کریں",
+      moreActions: "مزید اقدامات",
+      replaceRows: "جدول تبدیل کریں",
+      replaceConfirm: "کیا موجودہ جدول کی تمام قطاروں کو AI جواب کی قطاروں سے تبدیل کیا جائے؟"
+    },
+    aiPrompt: {
+      taskVocabulary: "کام: مختصر ذخیرہ الفاظ کی قطاریں بنائیں۔",
+      taskTranslation: "کام: درج الفاظ کا ترجمہ کریں۔",
+      requirementsLine: "تقاضے: ⁨{{allLanguages}}⁩، ⁨{{multipleTranslations}}⁩، ⁨{{notes}}⁩، ⁨{{articles}}⁩",
+      includeTranslationsForAllTargetLanguages: "تمام ہدفی زبانوں کے لیے تراجم شامل کریں۔",
+      multipleTranslationsAllowed: "ہر زبان کے لیے متعدد تراجم کی اجازت ہے۔",
+      addBriefNotes: "صرف مفید ہونے پر مختصر نوٹس شامل کریں، جیسے جمع، صرف یا استعمال۔",
+      includeArticlesWhenNatural: "اگر ماخذ زبان میں articles فطری ہوں تو انہیں شامل کریں۔",
+      course: "کورس: ⁨{{course}}⁩",
+      topic: "موضوع: ⁨{{topic}}⁩",
+      entryCount: "اندراجات کی تعداد: ⁨{{count}}⁩",
+      sourceLanguage: "ماخذ زبان: ⁨{{language}}⁩",
+      targetLanguages: "ہدفی زبانیں: ⁨{{languages}}⁩",
+      words: "الفاظ:"
     },
     grid: {
       containerAria: "گرڈ کنٹینر",
       article: "حرفِ تعریف",
       word: "کلام",
       additionalInfo: "اضافی معلومات",
-      toLanguage: "{{language}} تک"
+      toLanguage: "⁨{{language}}⁩"
     },
     status: {
-      lastAction: "آخری کارروائی: {{action}}",
-      file: "فائل: {{path}}",
+      lastAction: "آخری کارروائی: ⁨{{action}}⁩",
+      file: "فائل: ⁨{{path}}⁩",
       none: "کوئی نہیں۔"
     },
     action: {
@@ -65,7 +132,7 @@
       cancel: "منسوخ کریں",
       reapply: "دوبارہ لاگو کریں",
       export: "برآمد کریں",
-      addRow: "قطار شامل کریں۔",
+      addRow: "لفظ شامل کریں",
       addTopic: "موضوع شامل کریں۔",
       removeRow: "قطار کو ہٹا دیں۔",
       removeSelectedRows: "منتخب قطاروں کو ہٹا دیں۔",
@@ -75,13 +142,17 @@
       copySelected: "منتخب کردہ کاپی کریں۔",
       pasteFailed: "پیسٹ کرنے میں ناکام",
       pasteInsert: "پیسٹ داخل کریں۔",
+      addAiRows: "AI قطاریں شامل کریں",
+      replaceAiRows: "AI قطاروں سے بدلیں",
+      generateAiRequest: "AI درخواست بنائیں",
+      parseAiRegex: "AI جواب پارس کریں",
       addTranslationColumn: "ترجمہ کالم شامل کریں۔",
       reorderTranslationColumns: "ترجمے کے کالموں کو دوبارہ ترتیب دیں۔",
       removeTranslationColumn: "ترجمہ کالم کو ہٹا دیں۔",
       renameTranslationColumn: "ترجمہ کالم کا نام تبدیل کریں۔",
       cannotRemoveLastTranslationColumn: "ترجمہ کے آخری کالم کو ہٹایا نہیں جا سکتا",
-      languageNotFound: "زبان \"{{language}}\" نہیں ملی",
-      languageExists: "زبان \"{{language}}\" پہلے سے موجود ہے۔",
+      languageNotFound: "زبان \"⁨{{language}}⁩\" نہیں ملی",
+      languageExists: "زبان \"⁨{{language}}⁩\" پہلے سے موجود ہے۔",
       reorderTranslation: "ترجمہ کو دوبارہ ترتیب دیں۔",
       editTranslation: "ترجمہ میں ترمیم کریں۔",
       addTranslation: "ترجمہ شامل کریں۔",
@@ -89,15 +160,15 @@
     },
     validation: {
       translationContainsColumnDelimiter:
-        "ترجمہ کالم کی ممنوعہ حد بندی پر مشتمل ہے \"{{delimiter}}\"",
-      containsColumnDelimiter: "کالم کی ممنوعہ حد بندی \"{{delimiter}}\" پر مشتمل ہے",
+        "ترجمہ کالم کی ممنوعہ حد بندی پر مشتمل ہے \"⁨{{delimiter}}⁩\"",
+      containsColumnDelimiter: "کالم کی ممنوعہ حد بندی \"⁨{{delimiter}}⁩\" پر مشتمل ہے",
       containsAdditionalInformationDelimiter:
-        "ممنوع اضافی معلومات کی حد بندی \"{{delimiter}}\" پر مشتمل ہے",
-      containsTopicFlag: "ممنوعہ موضوع کا جھنڈا \"{{topicFlag}}\" پر مشتمل ہے",
+        "ممنوع اضافی معلومات کی حد بندی \"⁨{{delimiter}}⁩\" پر مشتمل ہے",
+      containsTopicFlag: "ممنوعہ موضوع کا جھنڈا \"⁨{{topicFlag}}⁩\" پر مشتمل ہے",
       emptyTopicNotAllowed: "خالی عنوان کی اجازت نہیں ہے۔",
       emptyWordNotAllowed: "خالی لفظ کی اجازت نہیں ہے۔",
       emptyTranslationNotAllowed: "خالی ترجمہ کی اجازت نہیں ہے۔",
-      articleNotInConfig: "حرفِ تعریف \"{{article}}\" ترتیب شدہ حروفِ تعریف میں نہیں ہے۔"
+      articleNotInConfig: "حرفِ تعریف \"⁨{{article}}⁩\" ترتیب شدہ حروفِ تعریف میں نہیں ہے۔"
     },
     translation: {
       renameColumn: "کالم کا نام تبدیل کریں۔",
@@ -117,7 +188,7 @@
     },
     clipboard: {
       confirmTooManyColumns:
-        "پیسٹ کردہ ڈیٹا میں {{maxBufferColumns}} کالم ہیں، لیکن منتخب سیل سے صرف {{availableColumns}} فٹ ہیں۔ اضافی کالموں کو نظر انداز کر دیا جائے گا۔ جاری رکھیں؟",
+        "پیسٹ کردہ ڈیٹا میں ⁨{{maxBufferColumns}}⁩ کالم ہیں، لیکن منتخب سیل سے صرف ⁨{{availableColumns}}⁩ فٹ ہیں۔ اضافی کالموں کو نظر انداز کر دیا جائے گا۔ جاری رکھیں؟",
       confirmOverwrite: "کچھ ٹارگٹ سیلز پہلے سے ہی ڈیٹا پر مشتمل ہیں۔ چسپاں کرنا موجودہ اقدار کو اوور رائٹ کر دے گا۔ جاری رکھیں؟"
     },
     agGrid: {
@@ -133,7 +204,9 @@
       selectAll: "سبھی کو منتخب کریں۔",
       searchOoo: "تلاش کریں...",
       blanks: "(خالی جگہیں)",
-      noRowsToShow: "دکھانے کے لیے کوئی قطار نہیں ہے۔"
+      noRowsToShow: "دکھانے کے لیے کوئی قطار نہیں ہے۔",
+      pageSizeSelectorLabel: "صفحہ کا سائز:",
+      ariaPageSizeSelectorLabel: "صفحہ کا سائز"
     }
   }
 } as const;

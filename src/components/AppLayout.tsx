@@ -37,6 +37,8 @@ export default function AppLayout({ controller }: Props) {
     toolbarActions
   } = controller;
 
+  const gridInstanceKey = `${activeLanguage}:${isRtl ? "rtl" : "ltr"}`;
+
   return (
     <div className={`app-shell ${isRtl ? "rtl" : ""}`} dir={isRtl ? "rtl" : "ltr"}>
       <Toolbar
@@ -70,7 +72,7 @@ export default function AppLayout({ controller }: Props) {
             onDeleteSelected={toolbarActions.handleDeleteRowsWithSelectedCells}
           />
           <div className="ag-theme-alpine grid-host">
-            <AgGridReact<GridRow> {...gridProps} enableRtl={isRtl} />
+            <AgGridReact<GridRow> key={gridInstanceKey} {...gridProps} enableRtl={isRtl} />
           </div>
           <p className="status">{statusText}</p>
         </main>

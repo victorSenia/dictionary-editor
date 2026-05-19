@@ -1,4 +1,4 @@
-﻿export const ko = {
+export const ko = {
   translation: {
     app: {
       title: "사전 편집자"
@@ -13,11 +13,15 @@
       reapply: "다시 적용",
       export: "내보내기",
       import: "가져오기",
+      showAiPanel: "AI 초안 열기",
+      hideAiPanel: "AI 초안 닫기",
       showSettings: "설정 표시",
       hideSettings: "설정 숨기기",
       removeSelectedRows: "선택한 행 제거",
       language: "언어",
-      showOnlyInvalid: "유효하지 않은 것만 표시"
+      showOnlyInvalid: "유효하지 않은 것만 표시",
+      noInvalidRows: "잘못된 행이 없습니다",
+      selectRowsToRemove: "제거할 행 선택",
     },
     settings: {
       title: "설정",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "추가 정보 구분 기호",
       translationDelimiter: "번역 구분 기호",
       topicFlag: "주제 접두어",
-      topicDelimiter: "주제 구분 기호",
-      rootTopic: "루트 주제"
+      topicDelimiter: "주제 구분 기호"
+    },
+    courseHeader: {
+      aria: "강좌",
+      courseName: "강좌 이름"
     },
     actions: {
-      addRow: "+ 행 추가",
+      addRow: "+ 단어 추가",
       addTopic: "+ 주제 추가"
+    },
+    aiPanel: {
+      title: "AI 초안",
+      requestSection: "요청",
+      requestMode: "모드",
+      requestModeAuto: "자동",
+      requestModeVocabulary: "전체 생성",
+      requestModeTranslations: "번역만",
+      parsingSection: "파싱",
+      responseSection: "응답",
+      topic: "주제",
+      wordCount: "단어",
+      requestNotes: "지침",
+      request: "요청",
+      generateRequest: "요청 생성",
+      linePrefixPreset: "줄 접두사",
+      patternBuilder: "줄 패턴",
+      patternGap: "패턴 구분자",
+      patternSeparatorNone: "(없음)",
+      patternSeparatorTab: "탭",
+      addField: "필드 추가",
+      moveLeft: "왼쪽으로 이동",
+      moveRight: "오른쪽으로 이동",
+      removeField: "필드 제거",
+      patternPreview: "줄 형태",
+      parseDelimiterHint: "여러 번역은 설정의 “{{delimiter}}”로 분리됩니다.",
+      parseDelimiterHintNone: "설정의 번역 구분 기호가 비어 있어 여러 번역이 분리되지 않습니다.",
+      suggestPattern: "패턴 제안",
+      patternSuggested: "패턴이 {{matched}}/{{total}}개 줄과 일치했습니다",
+      parseResponse: "응답 파싱",
+      response: "편집 가능한 응답",
+      parseError: "응답을 파싱할 수 없습니다",
+      parsedRows: "{{count}}개 행이 파싱됨",
+      parseResultNotParsedPrefix: "파싱되지 않음:",
+      parseResultNotParsed: "파싱되지 않음:\n{{lines}}",
+      parseResultAllParsed: "비어 있지 않은 모든 줄이 파싱되었습니다.",
+      parseResultEmpty: "응답이 비어 있습니다",
+      parseResultNoMatch: "regex 프리셋과 일치하는 줄이 없습니다",
+      parseResultMatched: "일치한 regex 프리셋",
+      parsingConfigurationMissingPattern: "AI 파싱 구성에 항목 패턴이 없습니다",
+      fillTranslations: "번역 채우기",
+      addRows: "테이블에 추가",
+      moreActions: "추가 작업",
+      replaceRows: "테이블 바꾸기",
+      replaceConfirm: "현재 테이블의 모든 행을 AI 응답 행으로 바꾸시겠습니까?"
+    },
+    aiPrompt: {
+      taskVocabulary: "작업: 간결한 어휘 행을 만드세요.",
+      taskTranslation: "작업: 나열된 단어를 번역하세요.",
+      requirementsLine: "요구 사항: {{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "모든 대상 언어의 번역을 포함하세요.",
+      multipleTranslationsAllowed: "언어당 여러 번역이 허용됩니다.",
+      addBriefNotes: "복수형, 굴절, 용법처럼 유용한 경우에만 짧은 메모를 추가하세요.",
+      includeArticlesWhenNatural: "원본 언어에서 관사가 자연스러운 경우 포함하세요.",
+      course: "과정: {{course}}",
+      topic: "주제: {{topic}}",
+      entryCount: "항목 수: {{count}}",
+      sourceLanguage: "원본 언어: {{language}}",
+      targetLanguages: "대상 언어: {{languages}}",
+      words: "단어:"
     },
     grid: {
       containerAria: "그리드 컨테이너",
       article: "관사",
       word: "단어",
       additionalInfo: "추가 정보",
-      toLanguage: "{{language}}(으)로"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "마지막 작업: {{action}}",
@@ -65,7 +132,7 @@
       cancel: "취소",
       reapply: "다시 적용",
       export: "내보내기",
-      addRow: "행 추가",
+      addRow: "단어 추가",
       addTopic: "주제 추가",
       removeRow: "행 삭제",
       removeSelectedRows: "선택한 행 제거",
@@ -75,6 +142,10 @@
       copySelected: "선택 항목 복사",
       pasteFailed: "붙여넣기 실패",
       pasteInsert: "삽입 붙여넣기",
+      addAiRows: "AI 행 추가",
+      replaceAiRows: "AI 행으로 바꾸기",
+      generateAiRequest: "AI 요청 생성",
+      parseAiRegex: "AI 응답 구문 분석",
       addTranslationColumn: "번역 열 추가",
       reorderTranslationColumns: "번역 열 재정렬",
       removeTranslationColumn: "번역 열 제거",
@@ -133,7 +204,9 @@
       selectAll: "모두 선택",
       searchOoo: "찾다...",
       blanks: "(공백)",
-      noRowsToShow: "표시할 행이 없습니다."
+      noRowsToShow: "표시할 행이 없습니다.",
+      pageSizeSelectorLabel: "페이지 크기:",
+      ariaPageSizeSelectorLabel: "페이지 크기"
     }
   }
 } as const;

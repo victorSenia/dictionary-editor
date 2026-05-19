@@ -31,18 +31,60 @@ const SUPPORTED_LANGUAGES: AppLanguage[] = [
 ];
 const LANGUAGE_STORAGE_KEY = "dictionary-editor.language";
 
+const LANGUAGE_ALIASES: Partial<Record<string, AppLanguage>> = {
+  iw: "he",
+  in: "id"
+};
+
+function normalizeLanguageCode(language: string): string {
+  return language.trim().toLowerCase().replace("_", "-");
+}
+
+function resolveSupportedLanguage(language: string): AppLanguage | null {
+  const normalized = normalizeLanguageCode(language);
+  const alias = LANGUAGE_ALIASES[normalized];
+  if (alias && SUPPORTED_LANGUAGES.includes(alias)) {
+    return alias;
+  }
+
+  if (SUPPORTED_LANGUAGES.includes(normalized as AppLanguage)) {
+    return normalized as AppLanguage;
+  }
+
+  const baseLanguage = normalized.split("-")[0];
+  const baseAlias = LANGUAGE_ALIASES[baseLanguage];
+  if (baseAlias && SUPPORTED_LANGUAGES.includes(baseAlias)) {
+    return baseAlias;
+  }
+
+  return SUPPORTED_LANGUAGES.includes(baseLanguage as AppLanguage)
+    ? baseLanguage as AppLanguage
+    : null;
+}
+
+function resolveBrowserLanguage(): AppLanguage | null {
+  const browserLanguages = navigator.languages?.length
+    ? navigator.languages
+    : [navigator.language];
+
+  for (const language of browserLanguages) {
+    const supportedLanguage = resolveSupportedLanguage(language);
+    if (supportedLanguage) {
+      return supportedLanguage;
+    }
+  }
+
+  return null;
+}
+
 function resolveInitialLanguage(): AppLanguage {
   const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-  if (stored && SUPPORTED_LANGUAGES.includes(stored as AppLanguage)) {
-    return stored as AppLanguage;
+  const storedLanguage = stored ? resolveSupportedLanguage(stored) : null;
+  if (storedLanguage) {
+    return storedLanguage;
   }
 
-  const browserLanguage = navigator.language.toLowerCase().split("-")[0] as AppLanguage;
-  if (SUPPORTED_LANGUAGES.includes(browserLanguage)) {
-    return browserLanguage;
-  }
-
-  return DEFAULT_LANGUAGE;
+  return resolveBrowserLanguage() ?? DEFAULT_LANGUAGE;
 }
 
 const initialLanguage = resolveInitialLanguage();
@@ -57,7 +99,10 @@ void i18n.use(initReactI18next).init({
 });
 
 i18n.on("languageChanged", (language: string) => {
-  localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+  const supportedLanguage = resolveSupportedLanguage(language);
+  if (supportedLanguage) {
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, supportedLanguage);
+  }
 });
 
 export { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES };

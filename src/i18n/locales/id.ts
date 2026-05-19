@@ -1,4 +1,4 @@
-﻿export const id = {
+export const id = {
   translation: {
     app: {
       title: "Editor Kamus"
@@ -13,11 +13,15 @@
       reapply: "Terapkan ulang",
       export: "Ekspor",
       import: "Impor",
+      showAiPanel: "Buka Draf AI",
+      hideAiPanel: "Tutup Draf AI",
       showSettings: "Tampilkan Pengaturan",
       hideSettings: "Sembunyikan Pengaturan",
       removeSelectedRows: "Hapus Baris yang Dipilih",
       language: "Bahasa",
-      showOnlyInvalid: "Tampilkan Hanya Tidak Valid"
+      showOnlyInvalid: "Tampilkan Hanya Tidak Valid",
+      noInvalidRows: "Tidak ada baris yang tidak valid",
+      selectRowsToRemove: "Pilih baris untuk dihapus",
     },
     settings: {
       title: "Pengaturan",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "Pembatas info tambahan",
       translationDelimiter: "Pembatas terjemahan",
       topicFlag: "Awalan topik",
-      topicDelimiter: "Pembatas topik",
-      rootTopic: "Topik dasar"
+      topicDelimiter: "Pembatas topik"
+    },
+    courseHeader: {
+      aria: "Kursus",
+      courseName: "Nama kursus"
     },
     actions: {
-      addRow: "+ Tambahkan Baris",
+      addRow: "+ Tambah kata",
       addTopic: "+ Tambahkan Topik"
+    },
+    aiPanel: {
+      title: "Draf AI",
+      requestSection: "Permintaan",
+      requestMode: "Mode",
+      requestModeAuto: "Otomatis",
+      requestModeVocabulary: "Pembuatan penuh",
+      requestModeTranslations: "Hanya terjemahan",
+      parsingSection: "Parsing",
+      responseSection: "Respons",
+      topic: "Topik",
+      wordCount: "Kata",
+      requestNotes: "Instruksi",
+      request: "Permintaan",
+      generateRequest: "Buat permintaan",
+      linePrefixPreset: "Prefiks baris",
+      patternBuilder: "Pola baris",
+      patternGap: "Pemisah pola",
+      patternSeparatorNone: "(tidak ada)",
+      patternSeparatorTab: "Tab",
+      addField: "Tambah bidang",
+      moveLeft: "Pindah ke kiri",
+      moveRight: "Pindah ke kanan",
+      removeField: "Hapus bidang",
+      patternPreview: "Bentuk baris",
+      parseDelimiterHint: "Beberapa terjemahan dipisahkan menggunakan “{{delimiter}}” dari Pengaturan.",
+      parseDelimiterHintNone: "Beberapa terjemahan tidak dipisahkan karena pembatas terjemahan kosong di Pengaturan.",
+      suggestPattern: "Sarankan pola",
+      patternSuggested: "Pola cocok dengan {{matched}}/{{total}} baris",
+      parseResponse: "Parse respons",
+      response: "Respons yang dapat diedit",
+      parseError: "Tidak dapat mem-parse respons",
+      parsedRows: "{{count}} baris di-parse",
+      parseResultNotParsedPrefix: "Tidak di-parse:",
+      parseResultNotParsed: "Tidak di-parse:\n{{lines}}",
+      parseResultAllParsed: "Semua baris yang tidak kosong telah di-parse.",
+      parseResultEmpty: "Respons kosong",
+      parseResultNoMatch: "Tidak ada baris yang cocok dengan preset regex",
+      parseResultMatched: "Preset regex yang cocok",
+      parsingConfigurationMissingPattern: "Konfigurasi parsing AI tidak memiliki pola item",
+      fillTranslations: "Isi terjemahan",
+      addRows: "Tambahkan ke tabel",
+      moreActions: "Tindakan lainnya",
+      replaceRows: "Ganti tabel",
+      replaceConfirm: "Ganti semua baris tabel saat ini dengan baris dari respons AI?"
+    },
+    aiPrompt: {
+      taskVocabulary: "Tugas: Buat baris kosakata yang ringkas.",
+      taskTranslation: "Tugas: Terjemahkan kata-kata yang tercantum.",
+      requirementsLine: "Persyaratan: {{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "Sertakan terjemahan untuk semua bahasa target.",
+      multipleTranslationsAllowed: "Beberapa terjemahan per bahasa diperbolehkan.",
+      addBriefNotes: "Tambahkan catatan singkat hanya jika berguna, seperti bentuk jamak, infleksi, atau penggunaan.",
+      includeArticlesWhenNatural: "Jika artikel alami dalam bahasa sumber, sertakan.",
+      course: "Kursus: {{course}}",
+      topic: "Topik: {{topic}}",
+      entryCount: "Jumlah entri: {{count}}",
+      sourceLanguage: "Bahasa sumber: {{language}}",
+      targetLanguages: "Bahasa target: {{languages}}",
+      words: "Kata:"
     },
     grid: {
       containerAria: "Wadah kisi",
       article: "Artikel",
       word: "Kata",
       additionalInfo: "Info Tambahan",
-      toLanguage: "Ke {{language}}"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "Tindakan terakhir: {{action}}",
@@ -65,7 +132,7 @@
       cancel: "Batal",
       reapply: "Terapkan ulang",
       export: "Ekspor",
-      addRow: "Tambahkan Baris",
+      addRow: "Tambah kata",
       addTopic: "Tambahkan Topik",
       removeRow: "Hapus baris",
       removeSelectedRows: "Hapus Baris yang Dipilih",
@@ -75,6 +142,10 @@
       copySelected: "Salin yang Dipilih",
       pasteFailed: "Gagal menempel",
       pasteInsert: "Tempel Sisipkan",
+      addAiRows: "Tambah baris AI",
+      replaceAiRows: "Ganti dengan baris AI",
+      generateAiRequest: "Buat permintaan AI",
+      parseAiRegex: "Uraikan respons AI",
       addTranslationColumn: "Tambahkan Kolom Terjemahan",
       reorderTranslationColumns: "Susun Ulang Kolom Terjemahan",
       removeTranslationColumn: "Hapus Kolom Terjemahan",
@@ -133,7 +204,9 @@
       selectAll: "Pilih Semua",
       searchOoo: "Mencari...",
       blanks: "(Kosong)",
-      noRowsToShow: "Tidak ada baris untuk ditampilkan"
+      noRowsToShow: "Tidak ada baris untuk ditampilkan",
+      pageSizeSelectorLabel: "Ukuran halaman:",
+      ariaPageSizeSelectorLabel: "Ukuran halaman"
     }
   }
 } as const;

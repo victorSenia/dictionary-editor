@@ -1,4 +1,4 @@
-﻿export const uk = {
+export const uk = {
   translation: {
     app: {
       title: "Редактор словників"
@@ -13,11 +13,15 @@
       reapply: "Повторити",
       export: "Експорт",
       import: "Імпорт",
+      showAiPanel: "Відкрити AI-чернетку",
+      hideAiPanel: "Закрити AI-чернетку",
       showSettings: "Показати налаштування",
       hideSettings: "Приховати налаштування",
       removeSelectedRows: "Видалити вибрані рядки",
       language: "Мова",
-      showOnlyInvalid: "Показати лише недійсні"
+      showOnlyInvalid: "Показати лише недійсні",
+      noInvalidRows: "Немає невалідних рядків",
+      selectRowsToRemove: "Виберіть рядки для видалення",
     },
     settings: {
       title: "Налаштування",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "Роздільник додаткової інформації",
       translationDelimiter: "Розділювач перекладу",
       topicFlag: "Префікс теми",
-      topicDelimiter: "Розмежувач теми",
-      rootTopic: "Корінна тема"
+      topicDelimiter: "Розмежувач теми"
+    },
+    courseHeader: {
+      aria: "Курс",
+      courseName: "Назва курсу"
     },
     actions: {
-      addRow: "+ Додати рядок",
+      addRow: "+ Додати слово",
       addTopic: "+ Додати тему"
+    },
+    aiPanel: {
+      title: "AI-чернетка",
+      requestSection: "Запит",
+      requestMode: "Режим",
+      requestModeAuto: "Авто",
+      requestModeVocabulary: "Повна генерація",
+      requestModeTranslations: "Лише переклади",
+      parsingSection: "Розбір",
+      responseSection: "Відповідь",
+      topic: "Тема",
+      wordCount: "Слова",
+      requestNotes: "Інструкції",
+      request: "Запит",
+      generateRequest: "Згенерувати запит",
+      linePrefixPreset: "Префікс рядка",
+      patternBuilder: "Шаблон рядка",
+      patternGap: "Розділювач шаблону",
+      patternSeparatorNone: "(немає)",
+      patternSeparatorTab: "Табуляція",
+      addField: "Додати поле",
+      moveLeft: "Перемістити ліворуч",
+      moveRight: "Перемістити праворуч",
+      removeField: "Видалити поле",
+      patternPreview: "Форма рядка",
+      parseDelimiterHint: "Кілька перекладів розділяються за допомогою «{{delimiter}}» з налаштувань.",
+      parseDelimiterHintNone: "Кілька перекладів не розділяються, бо розділювач перекладу в налаштуваннях порожній.",
+      suggestPattern: "Запропонувати шаблон",
+      patternSuggested: "Шаблон збігся з {{matched}}/{{total}} рядками",
+      parseResponse: "Розібрати відповідь",
+      response: "Редагована відповідь",
+      parseError: "Не вдалося розібрати відповідь",
+      parsedRows: "Розібрано рядків: {{count}}",
+      parseResultNotParsedPrefix: "Не розібрано:",
+      parseResultNotParsed: "Не розібрано:\n{{lines}}",
+      parseResultAllParsed: "Усі непорожні рядки розібрано.",
+      parseResultEmpty: "Відповідь порожня",
+      parseResultNoMatch: "Жоден рядок не збігся з regex-пресетами",
+      parseResultMatched: "Збіглися regex-пресети",
+      parsingConfigurationMissingPattern: "У конфігурації AI-розбору немає шаблону елемента",
+      fillTranslations: "Заповнити переклади",
+      addRows: "Додати до таблиці",
+      moreActions: "Більше дій",
+      replaceRows: "Замінити таблицю",
+      replaceConfirm: "Замінити всі поточні рядки таблиці рядками з AI-відповіді?"
+    },
+    aiPrompt: {
+      taskVocabulary: "Завдання: створити стислі словникові рядки.",
+      taskTranslation: "Завдання: перекласти перелічені слова.",
+      requirementsLine: "Вимоги: {{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "Додайте переклади для всіх цільових мов.",
+      multipleTranslationsAllowed: "Дозволено кілька перекладів для однієї мови.",
+      addBriefNotes: "Додавайте короткі примітки лише за потреби, наприклад форми множини, відмінювання або вживання.",
+      includeArticlesWhenNatural: "Якщо артиклі природні для вихідної мови, додайте їх.",
+      course: "Курс: {{course}}",
+      topic: "Тема: {{topic}}",
+      entryCount: "Кількість записів: {{count}}",
+      sourceLanguage: "Вихідна мова: {{language}}",
+      targetLanguages: "Цільові мови: {{languages}}",
+      words: "Слова:"
     },
     grid: {
       containerAria: "Контейнер-сітка",
       article: "Артикль",
       word: "Слово",
       additionalInfo: "Додаткова інформація",
-      toLanguage: "До {{language}}"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "Остання дія: {{action}}",
@@ -65,7 +132,7 @@
       cancel: "Скасувати",
       reapply: "Повторити",
       export: "Експорт",
-      addRow: "Додати рядок",
+      addRow: "Додати слово",
       addTopic: "Додати тему",
       removeRow: "Видалити рядок",
       removeSelectedRows: "Видалити вибрані рядки",
@@ -75,6 +142,10 @@
       copySelected: "Копіювати вибране",
       pasteFailed: "Не вставити",
       pasteInsert: "Вставити вставку",
+      addAiRows: "Додати AI-рядки",
+      replaceAiRows: "Замінити AI-рядками",
+      generateAiRequest: "Згенерувати AI-запит",
+      parseAiRegex: "Розібрати AI-відповідь",
       addTranslationColumn: "Додати стовпець перекладу",
       reorderTranslationColumns: "Змінити порядок стовпців перекладу",
       removeTranslationColumn: "Видалити стовпець перекладу",
@@ -133,7 +204,9 @@
       selectAll: "Виберіть усі",
       searchOoo: "пошук...",
       blanks: "(Бланки)",
-      noRowsToShow: "Немає рядків для показу"
+      noRowsToShow: "Немає рядків для показу",
+      pageSizeSelectorLabel: "Розмір сторінки:",
+      ariaPageSizeSelectorLabel: "Розмір сторінки"
     }
   }
 } as const;

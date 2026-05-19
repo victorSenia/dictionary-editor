@@ -1,4 +1,4 @@
-﻿export const nl = {
+export const nl = {
   translation: {
     app: {
       title: "Woordenboek-editor"
@@ -13,11 +13,15 @@
       reapply: "Opnieuw toepassen",
       export: "Exporteren",
       import: "Importeren",
+      showAiPanel: "AI-concept openen",
+      hideAiPanel: "AI-concept sluiten",
       showSettings: "Instellingen tonen",
       hideSettings: "Instellingen verbergen",
       removeSelectedRows: "Geselecteerde rijen verwijderen",
       language: "Taal",
-      showOnlyInvalid: "Alleen weergeven Ongeldig"
+      showOnlyInvalid: "Alleen weergeven Ongeldig",
+      noInvalidRows: "Er zijn geen ongeldige rijen",
+      selectRowsToRemove: "Selecteer rijen om te verwijderen",
     },
     settings: {
       title: "Instellingen",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "Scheidingsteken voor aanvullende informatie",
       translationDelimiter: "Vertaalscheidingsteken",
       topicFlag: "Onderwerpvoorvoegsel",
-      topicDelimiter: "Onderwerpscheidingsteken",
-      rootTopic: "Root-onderwerp"
+      topicDelimiter: "Onderwerpscheidingsteken"
+    },
+    courseHeader: {
+      aria: "Cursus",
+      courseName: "Cursusnaam"
     },
     actions: {
-      addRow: "+ Rij toevoegen",
+      addRow: "+ Woord toevoegen",
       addTopic: "+ Onderwerp toevoegen"
+    },
+    aiPanel: {
+      title: "AI-concept",
+      requestSection: "Verzoek",
+      requestMode: "Modus",
+      requestModeAuto: "Automatisch",
+      requestModeVocabulary: "Volledige generatie",
+      requestModeTranslations: "Alleen vertalingen",
+      parsingSection: "Parseren",
+      responseSection: "Antwoord",
+      topic: "Onderwerp",
+      wordCount: "Woorden",
+      requestNotes: "Instructies",
+      request: "Verzoek",
+      generateRequest: "Verzoek genereren",
+      linePrefixPreset: "Regelprefix",
+      patternBuilder: "Regelpatroon",
+      patternGap: "Patroonscheiding",
+      patternSeparatorNone: "(geen)",
+      patternSeparatorTab: "Tab",
+      addField: "Veld toevoegen",
+      moveLeft: "Naar links verplaatsen",
+      moveRight: "Naar rechts verplaatsen",
+      removeField: "Veld verwijderen",
+      patternPreview: "Regelvorm",
+      parseDelimiterHint: "Meerdere vertalingen worden gesplitst met “{{delimiter}}” uit Instellingen.",
+      parseDelimiterHintNone: "Meerdere vertalingen worden niet gesplitst omdat het vertaalscheidingsteken leeg is in Instellingen.",
+      suggestPattern: "Patroon voorstellen",
+      patternSuggested: "Patroon kwam overeen met {{matched}}/{{total}} regels",
+      parseResponse: "Antwoord parseren",
+      response: "Bewerkbaar antwoord",
+      parseError: "Kan antwoord niet parseren",
+      parsedRows: "{{count}} rijen geparseerd",
+      parseResultNotParsedPrefix: "Niet geparseerd:",
+      parseResultNotParsed: "Niet geparseerd:\n{{lines}}",
+      parseResultAllParsed: "Alle niet-lege regels zijn geparseerd.",
+      parseResultEmpty: "Antwoord is leeg",
+      parseResultNoMatch: "Geen regels kwamen overeen met regex-presets",
+      parseResultMatched: "Overeenkomende regex-presets",
+      parsingConfigurationMissingPattern: "AI-parserconfiguratie heeft geen itempatroon",
+      fillTranslations: "Vertalingen invullen",
+      addRows: "Toevoegen aan tabel",
+      moreActions: "Meer acties",
+      replaceRows: "Tabel vervangen",
+      replaceConfirm: "Alle huidige tabelrijen vervangen door rijen uit het AI-antwoord?"
+    },
+    aiPrompt: {
+      taskVocabulary: "Taak: Maak beknopte woordenschatrijen.",
+      taskTranslation: "Taak: Vertaal de vermelde woorden.",
+      requirementsLine: "Vereisten: {{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "Neem vertalingen op voor alle doeltalen.",
+      multipleTranslationsAllowed: "Meerdere vertalingen per taal zijn toegestaan.",
+      addBriefNotes: "Voeg alleen korte notities toe wanneer nuttig, zoals meervouden, verbuiging of gebruik.",
+      includeArticlesWhenNatural: "Als lidwoorden natuurlijk zijn in de brontaal, neem ze dan op.",
+      course: "Cursus: {{course}}",
+      topic: "Onderwerp: {{topic}}",
+      entryCount: "Aantal items: {{count}}",
+      sourceLanguage: "Brontaal: {{language}}",
+      targetLanguages: "Doeltalen: {{languages}}",
+      words: "Woorden:"
     },
     grid: {
       containerAria: "Rastercontainer",
       article: "Lidwoord",
       word: "Woord",
       additionalInfo: "Aanvullende informatie",
-      toLanguage: "Naar {{language}}"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "Laatste actie: {{action}}",
@@ -65,7 +132,7 @@
       cancel: "Annuleren",
       reapply: "Opnieuw toepassen",
       export: "Exporteren",
-      addRow: "Rij toevoegen",
+      addRow: "Woord toevoegen",
       addTopic: "Onderwerp toevoegen",
       removeRow: "Rij verwijderen",
       removeSelectedRows: "Geselecteerde rijen verwijderen",
@@ -75,6 +142,10 @@
       copySelected: "Kopieer geselecteerd",
       pasteFailed: "Plakken is mislukt",
       pasteInsert: "Plak het invoegsel",
+      addAiRows: "AI-rijen toevoegen",
+      replaceAiRows: "Vervangen door AI-rijen",
+      generateAiRequest: "AI-verzoek genereren",
+      parseAiRegex: "AI-antwoord analyseren",
       addTranslationColumn: "Vertaalkolom toevoegen",
       reorderTranslationColumns: "Vertaalkolommen opnieuw rangschikken",
       removeTranslationColumn: "Vertaalkolom verwijderen",
@@ -133,7 +204,9 @@
       selectAll: "Selecteer Alles",
       searchOoo: "Zoekopdracht...",
       blanks: "(spaties)",
-      noRowsToShow: "Er zijn geen rijen om weer te geven"
+      noRowsToShow: "Er zijn geen rijen om weer te geven",
+      pageSizeSelectorLabel: "Paginagrootte:",
+      ariaPageSizeSelectorLabel: "Paginagrootte"
     }
   }
 } as const;

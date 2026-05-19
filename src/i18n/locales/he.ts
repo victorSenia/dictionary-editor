@@ -1,4 +1,4 @@
-﻿export const he = {
+export const he = {
   translation: {
     app: {
       title: "עורך מילון"
@@ -13,11 +13,15 @@
       reapply: "החל שוב",
       export: "ייצוא",
       import: "ייבוא",
+      showAiPanel: "פתח טיוטת AI",
+      hideAiPanel: "סגור טיוטת AI",
       showSettings: "הצג הגדרות",
       hideSettings: "הסתר הגדרות",
       removeSelectedRows: "הסר שורות נבחרות",
       language: "שָׂפָה",
-      showOnlyInvalid: "הצג רק לא חוקי"
+      showOnlyInvalid: "הצג רק לא חוקי",
+      noInvalidRows: "אין שורות לא תקינות",
+      selectRowsToRemove: "בחר שורות להסרה",
     },
     settings: {
       title: "הגדרות",
@@ -29,7 +33,7 @@
       addArticle: "הוסף ארטיקל",
       removeItem: "הסר פריט",
       languageErrorEmpty: "השפה לא יכולה להיות ריקה",
-      languageErrorExists: "השפה \"{{language}}\" כבר קיימת",
+      languageErrorExists: "השפה \"⁨{{language}}⁩\" כבר קיימת",
       languageFrom: "שפת המקור",
       languagesTo: "שפות יעד",
       articles: "ארטיקלים",
@@ -37,23 +41,86 @@
       additionalInformationDelimiter: "מפריד מידע נוסף",
       translationDelimiter: "תוחם תרגום",
       topicFlag: "קידומת נושא",
-      topicDelimiter: "תוחם נושאים",
-      rootTopic: "נושא שורש"
+      topicDelimiter: "תוחם נושאים"
+    },
+    courseHeader: {
+      aria: "קורס",
+      courseName: "שם הקורס"
     },
     actions: {
-      addRow: "+ הוסף שורה",
+      addRow: "+ הוסף מילה",
       addTopic: "+ הוסף נושא"
+    },
+    aiPanel: {
+      title: "טיוטת AI",
+      requestSection: "בקשה",
+      requestMode: "מצב",
+      requestModeAuto: "אוטומטי",
+      requestModeVocabulary: "יצירה מלאה",
+      requestModeTranslations: "תרגומים בלבד",
+      parsingSection: "פענוח",
+      responseSection: "תגובה",
+      topic: "נושא",
+      wordCount: "מילים",
+      requestNotes: "הנחיות",
+      request: "בקשה",
+      generateRequest: "יצירת בקשה",
+      linePrefixPreset: "קידומת שורה",
+      patternBuilder: "תבנית שורה",
+      patternGap: "מפריד תבנית",
+      patternSeparatorNone: "(ללא)",
+      patternSeparatorTab: "טאב",
+      addField: "הוספת שדה",
+      moveLeft: "הזזה שמאלה",
+      moveRight: "הזזה ימינה",
+      removeField: "הסרת שדה",
+      patternPreview: "צורת שורה",
+      parseDelimiterHint: "תרגומים מרובים מופרדים באמצעות \"⁨{{delimiter}}⁩\" מההגדרות.",
+      parseDelimiterHintNone: "תרגומים מרובים אינם מופרדים כי תוחם התרגום ריק בהגדרות.",
+      suggestPattern: "הצע תבנית",
+      patternSuggested: "התבנית התאימה ל-⁨{{matched}}⁩ מתוך ⁨{{total}}⁩ שורות",
+      parseResponse: "פענח תגובה",
+      response: "תגובה ניתנת לעריכה",
+      parseError: "לא ניתן לפענח את התגובה",
+      parsedRows: "⁨{{count}}⁩ שורות פוענחו",
+      parseResultNotParsedPrefix: "לא פוענח:",
+      parseResultNotParsed: "לא פוענח:\n⁨{{lines}}⁩",
+      parseResultAllParsed: "כל השורות שאינן ריקות פוענחו.",
+      parseResultEmpty: "התגובה ריקה",
+      parseResultNoMatch: "אף שורה לא התאימה להגדרות regex מוכנות",
+      parseResultMatched: "הגדרות regex מוכנות שהתאימו",
+      parsingConfigurationMissingPattern: "לתצורת פענוח AI אין תבנית פריט",
+      fillTranslations: "מלא תרגומים",
+      addRows: "הוסף לטבלה",
+      moreActions: "פעולות נוספות",
+      replaceRows: "החלף טבלה",
+      replaceConfirm: "להחליף את כל שורות הטבלה הנוכחיות בשורות מתגובת AI?"
+    },
+    aiPrompt: {
+      taskVocabulary: "משימה: צור שורות אוצר מילים תמציתיות.",
+      taskTranslation: "משימה: תרגם את המילים הרשומות.",
+      requirementsLine: "דרישות: ⁨{{allLanguages}}⁩, ⁨{{multipleTranslations}}⁩, ⁨{{notes}}⁩, ⁨{{articles}}⁩",
+      includeTranslationsForAllTargetLanguages: "כלול תרגומים לכל שפות היעד.",
+      multipleTranslationsAllowed: "מותרים כמה תרגומים לכל שפה.",
+      addBriefNotes: "הוסף הערות קצרות רק כאשר הן מועילות, כגון צורות רבים, נטייה או שימוש.",
+      includeArticlesWhenNatural: "אם יידועים טבעיים בשפת המקור, כלול אותם.",
+      course: "קורס: ⁨{{course}}⁩",
+      topic: "נושא: ⁨{{topic}}⁩",
+      entryCount: "מספר רשומות: ⁨{{count}}⁩",
+      sourceLanguage: "שפת מקור: ⁨{{language}}⁩",
+      targetLanguages: "שפות יעד: ⁨{{languages}}⁩",
+      words: "מילים:"
     },
     grid: {
       containerAria: "מיכל רשת",
       article: "תווית יידוע",
       word: "מִלָה",
       additionalInfo: "מידע נוסף",
-      toLanguage: "אל {{language}}"
+      toLanguage: "⁨{{language}}⁩"
     },
     status: {
-      lastAction: "פעולה אחרונה: {{action}}",
-      file: "קובץ: {{path}}",
+      lastAction: "פעולה אחרונה: ⁨{{action}}⁩",
+      file: "קובץ: ⁨{{path}}⁩",
       none: "אַף לֹא אֶחָד"
     },
     action: {
@@ -65,7 +132,7 @@
       cancel: "ביטול",
       reapply: "החל שוב",
       export: "ייצוא",
-      addRow: "הוסף שורה",
+      addRow: "הוסף מילה",
       addTopic: "הוסף נושא",
       removeRow: "הסר שורה",
       removeSelectedRows: "הסר שורות נבחרות",
@@ -75,13 +142,17 @@
       copySelected: "העתק נבחר",
       pasteFailed: "ההדבקה נכשלה",
       pasteInsert: "הדבק הוספה",
+      addAiRows: "הוסף שורות AI",
+      replaceAiRows: "החלף בשורות AI",
+      generateAiRequest: "צור בקשת AI",
+      parseAiRegex: "נתח תגובת AI",
       addTranslationColumn: "הוסף עמודת תרגום",
       reorderTranslationColumns: "סדר מחדש את עמודות התרגום",
       removeTranslationColumn: "הסר את עמודת התרגום",
       renameTranslationColumn: "שנה את שם עמודת התרגום",
       cannotRemoveLastTranslationColumn: "לא ניתן להסיר את עמודת התרגום האחרונה",
-      languageNotFound: "השפה \"{{language}}\" לא נמצאה",
-      languageExists: "השפה \"{{language}}\" כבר קיימת",
+      languageNotFound: "השפה \"⁨{{language}}⁩\" לא נמצאה",
+      languageExists: "השפה \"⁨{{language}}⁩\" כבר קיימת",
       reorderTranslation: "סדר מחדש את התרגום",
       editTranslation: "ערוך תרגום",
       addTranslation: "הוסף תרגום",
@@ -89,15 +160,15 @@
     },
     validation: {
       translationContainsColumnDelimiter:
-        "התרגום מכיל מפריד עמודות אסור \"{{delimiter}}\"",
-      containsColumnDelimiter: "מכיל מפריד עמודות אסור \"{{delimiter}}\"",
+        "התרגום מכיל מפריד עמודות אסור \"⁨{{delimiter}}⁩\"",
+      containsColumnDelimiter: "מכיל מפריד עמודות אסור \"⁨{{delimiter}}⁩\"",
       containsAdditionalInformationDelimiter:
-        "מכיל מפריד מידע נוסף אסור \"{{delimiter}}\"",
-      containsTopicFlag: "מכיל דגל נושא אסור \"{{topicFlag}}\"",
+        "מכיל מפריד מידע נוסף אסור \"⁨{{delimiter}}⁩\"",
+      containsTopicFlag: "מכיל דגל נושא אסור \"⁨{{topicFlag}}⁩\"",
       emptyTopicNotAllowed: "אסור לנושא ריק",
       emptyWordNotAllowed: "אסור להשתמש במילה ריקה",
       emptyTranslationNotAllowed: "תרגום ריק אסור",
-      articleNotInConfig: "הארטיקל \"{{article}}\" אינו נמצא בארטיקלים שהוגדרו"
+      articleNotInConfig: "הארטיקל \"⁨{{article}}⁩\" אינו נמצא בארטיקלים שהוגדרו"
     },
     translation: {
       renameColumn: "שנה את שם העמודה",
@@ -117,7 +188,7 @@
     },
     clipboard: {
       confirmTooManyColumns:
-        "לנתונים שהודבקו יש {{maxBufferColumns}} עמודות, אך רק {{availableColumns}} מתאים מהתא שנבחר. תתעלם מעמודות נוספות. לְהַמשִׁיך?",
+        "לנתונים שהודבקו יש ⁨{{maxBufferColumns}}⁩ עמודות, אך רק ⁨{{availableColumns}}⁩ מתאים מהתא שנבחר. תתעלם מעמודות נוספות. לְהַמשִׁיך?",
       confirmOverwrite: "חלק מתאי היעד כבר מכילים נתונים. הדבקה תחליף ערכים קיימים. לְהַמשִׁיך?"
     },
     agGrid: {
@@ -133,7 +204,9 @@
       selectAll: "בחר הכל",
       searchOoo: "לְחַפֵּשׂ...",
       blanks: "(ריק)",
-      noRowsToShow: "אין שורות להצגה"
+      noRowsToShow: "אין שורות להצגה",
+      pageSizeSelectorLabel: "גודל עמוד:",
+      ariaPageSizeSelectorLabel: "גודל עמוד"
     }
   }
 } as const;

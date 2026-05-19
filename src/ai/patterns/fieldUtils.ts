@@ -53,8 +53,6 @@ export function getPatternFieldLabel(
       return translate("grid.word");
     case "additionalInformation":
       return translate("grid.additionalInfo");
-    case "translation":
-      return translate("aiPanel.patternField.translation");
   }
 
   return field;

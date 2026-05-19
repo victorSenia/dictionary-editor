@@ -1,4 +1,4 @@
-﻿export const bn = {
+export const bn = {
   translation: {
     app: {
       title: "অভিধান সম্পাদক"
@@ -13,11 +13,15 @@
       reapply: "পুনরায় প্রয়োগ",
       export: "রপ্তানি",
       import: "আমদানি",
+      showAiPanel: "AI খসড়া খুলুন",
+      hideAiPanel: "AI খসড়া বন্ধ করুন",
       showSettings: "সেটিংস দেখান",
       hideSettings: "সেটিংস লুকান",
       removeSelectedRows: "নির্বাচিত সারি সরান",
       language: "ভাষা",
-      showOnlyInvalid: "শুধুমাত্র অবৈধ দেখান"
+      showOnlyInvalid: "শুধুমাত্র অবৈধ দেখান",
+      noInvalidRows: "কোনও অবৈধ সারি নেই",
+      selectRowsToRemove: "মুছে ফেলার জন্য সারি নির্বাচন করুন",
     },
     settings: {
       title: "সেটিংস",
@@ -37,19 +41,82 @@
       additionalInformationDelimiter: "অতিরিক্ত তথ্য ডিলিমিটার",
       translationDelimiter: "অনুবাদ ডিলিমিটার",
       topicFlag: "বিষয় উপসর্গ",
-      topicDelimiter: "টপিক ডিলিমিটার",
-      rootTopic: "মূল বিষয়"
+      topicDelimiter: "টপিক ডিলিমিটার"
+    },
+    courseHeader: {
+      aria: "কোর্স",
+      courseName: "কোর্সের নাম"
     },
     actions: {
-      addRow: "+ সারি যোগ করুন",
+      addRow: "+ শব্দ যোগ করুন",
       addTopic: "+ বিষয় যোগ করুন"
+    },
+    aiPanel: {
+      title: "AI খসড়া",
+      requestSection: "অনুরোধ",
+      requestMode: "মোড",
+      requestModeAuto: "স্বয়ংক্রিয়",
+      requestModeVocabulary: "সম্পূর্ণ তৈরি",
+      requestModeTranslations: "শুধু অনুবাদ",
+      parsingSection: "পার্সিং",
+      responseSection: "উত্তর",
+      topic: "বিষয়",
+      wordCount: "শব্দ",
+      requestNotes: "নির্দেশনা",
+      request: "অনুরোধ",
+      generateRequest: "অনুরোধ তৈরি করুন",
+      linePrefixPreset: "লাইনের উপসর্গ",
+      patternBuilder: "লাইনের প্যাটার্ন",
+      patternGap: "প্যাটার্ন বিভাজক",
+      patternSeparatorNone: "(কিছু নয়)",
+      patternSeparatorTab: "ট্যাব",
+      addField: "ক্ষেত্র যোগ করুন",
+      moveLeft: "বামে সরান",
+      moveRight: "ডানে সরান",
+      removeField: "ক্ষেত্র সরান",
+      patternPreview: "লাইনের রূপ",
+      parseDelimiterHint: "সেটিংসের “{{delimiter}}” ব্যবহার করে একাধিক অনুবাদ ভাগ করা হয়।",
+      parseDelimiterHintNone: "সেটিংসে অনুবাদ ডিলিমিটার খালি থাকায় একাধিক অনুবাদ ভাগ করা হয় না।",
+      suggestPattern: "প্যাটার্ন প্রস্তাব করুন",
+      patternSuggested: "প্যাটার্ন {{matched}}/{{total}} লাইন মিলেছে",
+      parseResponse: "উত্তর পার্স করুন",
+      response: "সম্পাদনাযোগ্য উত্তর",
+      parseError: "উত্তর পার্স করা যায়নি",
+      parsedRows: "{{count}}টি সারি পার্স হয়েছে",
+      parseResultNotParsedPrefix: "পার্স হয়নি:",
+      parseResultNotParsed: "পার্স হয়নি:\n{{lines}}",
+      parseResultAllParsed: "সব অ-খালি লাইন পার্স হয়েছে।",
+      parseResultEmpty: "উত্তর খালি",
+      parseResultNoMatch: "কোনো লাইন regex প্রিসেটের সাথে মেলেনি",
+      parseResultMatched: "মিলে যাওয়া regex প্রিসেট",
+      parsingConfigurationMissingPattern: "AI পার্সিং কনফিগারেশনে কোনো আইটেম প্যাটার্ন নেই",
+      fillTranslations: "অনুবাদ পূরণ করুন",
+      addRows: "টেবিলে যোগ করুন",
+      moreActions: "আরও কার্যক্রম",
+      replaceRows: "টেবিল প্রতিস্থাপন করুন",
+      replaceConfirm: "বর্তমান টেবিলের সব সারি কি AI উত্তরের সারি দিয়ে প্রতিস্থাপন করবেন?"
+    },
+    aiPrompt: {
+      taskVocabulary: "কাজ: সংক্ষিপ্ত শব্দভাণ্ডার সারি তৈরি করুন।",
+      taskTranslation: "কাজ: তালিকাভুক্ত শব্দগুলো অনুবাদ করুন।",
+      requirementsLine: "প্রয়োজনীয়তা: {{allLanguages}} {{multipleTranslations}} {{notes}} {{articles}}",
+      includeTranslationsForAllTargetLanguages: "সব লক্ষ্য ভাষার অনুবাদ অন্তর্ভুক্ত করুন।",
+      multipleTranslationsAllowed: "প্রতি ভাষায় একাধিক অনুবাদ অনুমোদিত।",
+      addBriefNotes: "শুধু দরকার হলে সংক্ষিপ্ত নোট যোগ করুন, যেমন বহুবচন, রূপান্তর বা ব্যবহার।",
+      includeArticlesWhenNatural: "উৎস ভাষায় article স্বাভাবিক হলে সেগুলো অন্তর্ভুক্ত করুন।",
+      course: "কোর্স: {{course}}",
+      topic: "বিষয়: {{topic}}",
+      entryCount: "এন্ট্রির সংখ্যা: {{count}}",
+      sourceLanguage: "উৎস ভাষা: {{language}}",
+      targetLanguages: "লক্ষ্য ভাষা: {{languages}}",
+      words: "শব্দ:"
     },
     grid: {
       containerAria: "গ্রিড ধারক",
       article: "আর্টিকেল",
       word: "শব্দ",
       additionalInfo: "অতিরিক্ত তথ্য",
-      toLanguage: "প্রতি {{language}}"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "শেষ কাজ: {{action}}",
@@ -65,7 +132,7 @@
       cancel: "বাতিল",
       reapply: "পুনরায় প্রয়োগ",
       export: "রপ্তানি",
-      addRow: "সারি যোগ করুন",
+      addRow: "শব্দ যোগ করুন",
       addTopic: "বিষয় যোগ করুন",
       removeRow: "সারি সরান",
       removeSelectedRows: "নির্বাচিত সারি সরান",
@@ -75,6 +142,10 @@
       copySelected: "কপি নির্বাচিত",
       pasteFailed: "পেস্ট ব্যর্থ হয়েছে",
       pasteInsert: "পেস্ট সন্নিবেশ",
+      addAiRows: "AI সারি যোগ করুন",
+      replaceAiRows: "AI সারি দিয়ে প্রতিস্থাপন করুন",
+      generateAiRequest: "AI অনুরোধ তৈরি করুন",
+      parseAiRegex: "AI প্রতিক্রিয়া পার্স করুন",
       addTranslationColumn: "অনুবাদ কলাম যোগ করুন",
       reorderTranslationColumns: "অনুবাদ কলাম পুনরায় সাজান",
       removeTranslationColumn: "অনুবাদ কলাম সরান",
@@ -133,7 +204,9 @@
       selectAll: "সব নির্বাচন করুন",
       searchOoo: "অনুসন্ধান করুন...",
       blanks: "(ফাঁকা)",
-      noRowsToShow: "দেখানোর জন্য কোন সারি নেই"
+      noRowsToShow: "দেখানোর জন্য কোন সারি নেই",
+      pageSizeSelectorLabel: "পাতার আকার:",
+      ariaPageSizeSelectorLabel: "পাতার আকার"
     }
   }
 } as const;
