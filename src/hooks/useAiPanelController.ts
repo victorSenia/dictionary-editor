@@ -19,12 +19,11 @@ export type UseAiPanelControllerOptions = {
   requestContext: AiRequestContext;
   requestModeChoice: AiRequestModeChoice;
   response: string;
-  lastAppliedAiSignature: string;
   parsingSectionRef: React.RefObject<AiParsingSectionHandle | null>;
   onRequestModeChoiceChange: (choice: AiRequestModeChoice) => void;
   onParseMessageChange: (message: string) => void;
   onParsingConfigurationChange?: (configuration: AiParsingConfiguration | null) => void;
-  onAddRows: (configuration: AiParsingConfiguration, topic: string) => void;
+  onAddRows: (configuration: AiParsingConfiguration, topic: string, wasPatternSuggested?: boolean) => void;
   onResponseParsed: (rows: DraftGridRow[]) => void;
   onRequestGenerated: () => void;
   t: (key: string, values?: Record<string, unknown>) => string;
@@ -39,7 +38,6 @@ export function useAiPanelController({
   config,
   requestContext,
   response,
-  lastAppliedAiSignature,
   parsingSectionRef,
   onParseMessageChange,
   onParsingConfigurationChange,
@@ -80,24 +78,22 @@ export function useAiPanelController({
     onRequestGenerated();
   }, [generatedRequest, onRequestGenerated]);
 
-  const ensureParsingConfiguration = React.useCallback(() => {
+  const ensureParsingConfiguration = React.useCallback((): {
+    configuration: AiParsingConfiguration;
+    wasSuggested: boolean;
+  } | null => {
     if (parsingConfiguration?.itemPattern.trim()) {
-      return parsingConfiguration;
+      return { configuration: parsingConfiguration, wasSuggested: false };
     }
 
     const suggestedConfiguration = parsingSectionRef.current?.suggestPattern() ?? null;
     if (suggestedConfiguration) {
       setParsingConfiguration(suggestedConfiguration);
+      return { configuration: suggestedConfiguration, wasSuggested: true };
     }
-    return suggestedConfiguration;
-  }, [parsingConfiguration, parsingSectionRef]);
 
-  const aiApplySignature = React.useMemo(() => [
-    response,
-    parsingConfiguration?.itemPattern ?? "",
-    parsingConfiguration?.linePrefixPreset ?? "",
-    aiRequest.topic.trim()
-  ].join("\n"), [aiRequest.topic, parsingConfiguration, response]);
+    return null;
+  }, [parsingConfiguration, parsingSectionRef]);
 
   const parseCurrentResponse = React.useCallback(() => {
     const activeParsingConfiguration = ensureParsingConfiguration();
@@ -106,11 +102,11 @@ export function useAiPanelController({
     }
 
     try {
-      const result = parseAiResponse(response, config, activeParsingConfiguration);
+      const result = parseAiResponse(response, config, activeParsingConfiguration.configuration);
       onParseMessageChange(result.unparsedLines.length > 0
         ? t("aiPanel.parseResultNotParsed", { lines: result.unparsedLines.join("\n") })
         : t("aiPanel.parseResultAllParsed"));
-      onResponseParsed(parseAiResponseRows(response, config, activeParsingConfiguration));
+      onResponseParsed(parseAiResponseRows(response, config, activeParsingConfiguration.configuration));
     } catch (error) {
       const message = error instanceof Error ? error.message : "";
       onParseMessageChange(message.startsWith("aiPanel.") ? t(message) : message || t("aiPanel.parseError"));
@@ -120,7 +116,11 @@ export function useAiPanelController({
   const addRows = React.useCallback(() => {
     const activeParsingConfiguration = ensureParsingConfiguration();
     if (activeParsingConfiguration) {
-      onAddRows(activeParsingConfiguration, aiRequest.topic.trim());
+      onAddRows(
+        activeParsingConfiguration.configuration,
+        aiRequest.topic.trim(),
+        activeParsingConfiguration.wasSuggested
+      );
     }
   }, [aiRequest.topic, ensureParsingConfiguration, onAddRows]);
 
@@ -128,7 +128,6 @@ export function useAiPanelController({
     aiRequest,
     aiPrompt,
     generatedRequest,
-    aiApplySignature,
     setAiRequest,
     setAiPrompt,
     handleParsingConfigurationChange,

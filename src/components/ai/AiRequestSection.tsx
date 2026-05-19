@@ -12,6 +12,8 @@ type AiRequestSectionProps = {
   onPromptChange: (prompt: string) => void;
   onRequestModeChoiceChange: (mode: AiRequestModeChoice) => void;
   onUseGeneratedRequest: () => void;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
 export default function AiRequestSection({
@@ -24,10 +26,16 @@ export default function AiRequestSection({
   onRequestChange,
   onPromptChange,
   onRequestModeChoiceChange,
-  onUseGeneratedRequest
+  onUseGeneratedRequest,
+  isOpen,
+  onOpenChange
 }: AiRequestSectionProps) {
   return (
-    <details open className="ai-section">
+    <details
+      open={isOpen}
+      className="ai-section"
+      onToggle={(event) => onOpenChange(event.currentTarget.open)}
+    >
       <summary>{t("aiPanel.requestSection")}</summary>
       <div className="ai-form-grid">
         <label className="compact-field mode-field">
@@ -52,8 +60,12 @@ export default function AiRequestSection({
           </label>
         ) : null}
         <label className="wide-field">
-          {t("aiPanel.request")}
-          <textarea rows={7} value={aiPrompt || generatedRequest} onChange={(event) => onPromptChange(event.target.value)} />
+          <textarea
+            rows={7}
+            value={aiPrompt || generatedRequest}
+            onChange={(event) => onPromptChange(event.target.value)}
+            aria-label={t("aiPanel.requestSection")}
+          />
         </label>
       </div>
       <button type="button" className="secondary-button full-width-button" onClick={onUseGeneratedRequest}>

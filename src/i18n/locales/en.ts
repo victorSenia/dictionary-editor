@@ -13,13 +13,15 @@
       reapply: "Reapply",
       export: "Export",
       import: "Import",
-      showAiPanel: "Show AI",
-      hideAiPanel: "Hide AI",
+      showAiPanel: "Open AI Draft",
+      hideAiPanel: "Close AI Draft",
       showSettings: "Show Settings",
       hideSettings: "Hide Settings",
       removeSelectedRows: "Remove Selected Rows",
       language: "Language",
-      showOnlyInvalid: "Show Only Invalid"
+      showOnlyInvalid: "Show Only Invalid",
+      noInvalidRows: "There are no invalid rows",
+      selectRowsToRemove: "Select rows to remove"
     },
     settings: {
       title: "Settings",
@@ -46,7 +48,7 @@
       courseName: "Course name"
     },
     actions: {
-      addRow: "+ Add Row",
+      addRow: "+ Add Word",
       addTopic: "+ Add Topic"
     },
     aiPanel: {
@@ -93,7 +95,7 @@
       parseResultMatched: "Matched regex presets",
       parsingConfigurationMissingPattern: "AI parsing configuration has no item pattern",
       fillTranslations: "Fill translations",
-      addRows: "Add",
+      addRows: "Add to Table",
       moreActions: "More actions",
       replaceRows: "Replace table",
       replaceConfirm: "Replace all current table rows with AI response rows?",
@@ -119,7 +121,7 @@
       article: "Article",
       word: "Word",
       additionalInfo: "Additional Info",
-      toLanguage: "To {{language}}"
+      toLanguage: "{{language}}"
     },
     status: {
       lastAction: "Last action: {{action}}",
@@ -135,7 +137,7 @@
       cancel: "Cancel",
       reapply: "Reapply",
       export: "Export",
-      addRow: "Add Row",
+      addRow: "Add Word",
       addTopic: "Add Topic",
       removeRow: "Remove Row",
       removeSelectedRows: "Remove Selected Rows",

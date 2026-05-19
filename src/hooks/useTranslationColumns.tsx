@@ -188,9 +188,14 @@ export function useTranslationColumns({
     [addTranslationColumn, config.languagesTo.length]
   );
 
+  const getLanguageLabel = useCallback(
+    (language: string) => t(`languages.${language}`, { defaultValue: language }),
+    [t]
+  );
+
   const translationColumns = useMemo<ColDef<GridRow>[]>(() => {
     return config.languagesTo.map((language) => ({
-      headerName: t("grid.toLanguage", { language }),
+      headerName: t("grid.toLanguage", { language: getLanguageLabel(language) }),
       colId: `${TRANSLATION_COLUMN_PREFIX}${language}`,
       headerComponent: TranslationHeader,
       headerComponentParams: {

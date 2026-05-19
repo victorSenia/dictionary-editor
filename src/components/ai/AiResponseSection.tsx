@@ -1,43 +1,33 @@
-
 type AiResponseSectionProps = {
   t: (key: string) => string;
   response: string;
-  parseMessage: string;
-  parseMessageStatus: string;
-  addRowsLabel: string;
-  addRowsDisabled: boolean;
   onResponseChange: (response: string) => void;
-  onParseCurrentResponse: () => void;
-  onAddRows: () => void;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
 export default function AiResponseSection({
   t,
   response,
-  parseMessage,
-  parseMessageStatus,
-  addRowsLabel,
-  addRowsDisabled,
   onResponseChange,
-  onParseCurrentResponse,
-  onAddRows
+  isOpen,
+  onOpenChange
 }: AiResponseSectionProps) {
   return (
-    <section className="ai-section">
-      <h3>{t("aiPanel.responseSection")}</h3>
-      <label>
-        {t("aiPanel.response")}
-        <textarea rows={10} value={response} onChange={(event) => onResponseChange(event.target.value)} />
+    <details
+      open={isOpen}
+      className="ai-section"
+      onToggle={(event) => onOpenChange(event.currentTarget.open)}
+    >
+      <summary>{t("aiPanel.responseSection")}</summary>
+      <label className="wide-field">
+        <textarea
+          rows={10}
+          value={response}
+          onChange={(event) => onResponseChange(event.target.value)}
+          aria-label={t("aiPanel.responseSection")}
+        />
       </label>
-      <button type="button" className="secondary-button full-width-button" onClick={onParseCurrentResponse}>
-        {t("aiPanel.parseResponse")}
-      </button>
-      {parseMessage ? <pre className={`parse-message ${parseMessageStatus ? `parse-message-${parseMessageStatus}` : ""}`}>{parseMessage}</pre> : null}
-      <div className="ai-actions">
-        <button type="button" className="primary-button" onClick={onAddRows} disabled={addRowsDisabled}>
-          {addRowsLabel}
-        </button>
-      </div>
-    </section>
+    </details>
   );
 }

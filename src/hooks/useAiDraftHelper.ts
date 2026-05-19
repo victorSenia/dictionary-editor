@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, type Dispatch, type SetStateAction } from "react";
+import { useCallback, useMemo, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { insertAiGeneratedRows } from "../ai/aiRowInsertion";
 import {
   parseAiResponse,
@@ -36,7 +36,11 @@ export function useAiDraftHelper({
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
   const [aiResponse, setAiResponse] = useState(t("aiPanel.sampleResponse"));
   const [aiParseMessage, setAiParseMessage] = useState("");
-  const [lastAppliedAiSignature, setLastAppliedAiSignature] = useState("");
+  const [hasUnappliedAiChanges, setHasUnappliedAiChanges] = useState(true);
+  const [isAiRequestOpen, setIsAiRequestOpen] = useState(true);
+  const [isAiResponseOpen, setIsAiResponseOpen] = useState(true);
+  const [isAiParsingOpen, setIsAiParsingOpen] = useState(true);
+  const ignoreNextAiParsingConfigurationChange = useRef(false);
   const [aiRequestModeChoice, setAiRequestModeChoice] = useState<AiRequestModeChoice>("auto");
 
   const aiRequestContext = useMemo(() => buildAiRequestContext({
@@ -48,7 +52,7 @@ export function useAiDraftHelper({
 
   const handleAiResponseChange = useCallback((nextResponse: string) => {
     setAiResponse(nextResponse);
-    setLastAppliedAiSignature("");
+    setHasUnappliedAiChanges(true);
   }, []);
 
   const readParsedAiRows = useCallback((parsingConfiguration: AiParsingConfiguration) => {
@@ -60,18 +64,11 @@ export function useAiDraftHelper({
     return parsedRows;
   }, [aiResponse, config]);
 
-  const handleAddAiRows = useCallback((parsingConfiguration: AiParsingConfiguration, requestedTopic: string) => {
-    const activeApplySignature = [
-      aiResponse,
-      parsingConfiguration.itemPattern,
-      parsingConfiguration.linePrefixPreset,
-      requestedTopic.trim()
-    ].join("\n");
-
-    if (lastAppliedAiSignature === activeApplySignature) {
-      return;
-    }
-
+  const handleAddAiRows = useCallback((
+    parsingConfiguration: AiParsingConfiguration,
+    requestedTopic: string,
+    wasPatternSuggested = false
+  ) => {
     if (aiRequestContext.mode === "translations") {
       const parseResult = parseAiResponse(aiResponse, config, parsingConfiguration);
       if (parseResult.rows.length === 0) {
@@ -84,7 +81,10 @@ export function useAiDraftHelper({
         ? t("aiPanel.parseResultNotParsed", { lines: parseResult.unparsedLines.join("\n") })
         : t("aiPanel.parseResultAllParsed"));
       setLastAction({ key: "action.addAiRows" });
-      setLastAppliedAiSignature(activeApplySignature);
+      if (wasPatternSuggested) {
+        ignoreNextAiParsingConfigurationChange.current = true;
+      }
+      setHasUnappliedAiChanges(false);
       return;
     }
 
@@ -106,12 +106,14 @@ export function useAiDraftHelper({
     );
 
     setLastAction({ key: "action.addAiRows" });
-    setLastAppliedAiSignature(activeApplySignature);
+    if (wasPatternSuggested) {
+      ignoreNextAiParsingConfigurationChange.current = true;
+    }
+    setHasUnappliedAiChanges(false);
   }, [
     aiRequestContext,
     aiResponse,
     config,
-    lastAppliedAiSignature,
     readParsedAiRows,
     setLastAction,
     setRows,
@@ -126,19 +128,41 @@ export function useAiDraftHelper({
     setLastAction({ key: "action.generateAiRequest" });
   }, [setLastAction]);
 
-  const toggleAiPanel = useCallback(() => setIsAiPanelOpen((open) => !open), []);
+  const handleAiParsingConfigurationChange = useCallback(() => {
+    if (ignoreNextAiParsingConfigurationChange.current) {
+      ignoreNextAiParsingConfigurationChange.current = false;
+      return;
+    }
+
+    setHasUnappliedAiChanges(true);
+  }, []);
+
+  const toggleAiPanel = useCallback(() => {
+    if (isAiPanelOpen) {
+      setAiParseMessage("");
+    }
+
+    setIsAiPanelOpen((isOpen) => !isOpen);
+  }, [isAiPanelOpen]);
 
   return {
     isAiPanelOpen,
     aiResponse,
     aiParseMessage,
-    lastAppliedAiSignature,
     aiRequestModeChoice,
     aiRequestContext,
+    hasUnappliedAiChanges,
+    isAiRequestOpen,
+    setIsAiRequestOpen,
+    isAiResponseOpen,
+    setIsAiResponseOpen,
+    isAiParsingOpen,
+    setIsAiParsingOpen,
     setAiRequestModeChoice,
     setAiParseMessage,
     handleAiResponseChange,
     handleAddAiRows,
+    handleAiParsingConfigurationChange,
     handleRegexRowsParsed,
     handleAiRequestGenerated,
     toggleAiPanel

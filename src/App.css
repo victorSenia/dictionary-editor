@@ -191,6 +191,11 @@ body,
   gap: 8px;
 }
 
+.row-end-actions-separator {
+  width: 16px;
+  flex: 0 0 16px;
+}
+
 .bottom-action-button {
   border: 1px solid #cbd5e1;
   background: #ffffff;
@@ -206,6 +211,16 @@ body,
   background: #f1f5f9;
 }
 
+.bottom-action-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: #f8fafc;
+  color: #94a3b8;
+}
+
+.bottom-action-button:disabled:hover {
+  background: #f8fafc;
+}
 .ag-theme-alpine .ag-header-cell.add-col-header {
   text-align: center;
   font-weight: 700;
@@ -861,7 +876,7 @@ body,
 }
 
 .parse-message {
-  margin: 0;
+  margin: 0 0 8px;
   padding: 8px;
   border: 1px solid #d8dee9;
   border-radius: 6px;
@@ -971,3 +986,7 @@ body,
 }
 
 
+
+.ai-parse-actions {
+  justify-content: flex-start;
+}

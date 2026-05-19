@@ -27,6 +27,11 @@ export function useEditorDocumentState({ showOnlyInvalid }: Args) {
     [config, rows, showOnlyInvalid]
   );
 
+  const hasInvalidRows = useMemo<boolean>(
+    () => rows.some((row) => isRowInvalid(row, config)),
+    [config, rows]
+  );
+
   return {
     showArticleColumn,
     setShowArticleColumn,
@@ -37,6 +42,7 @@ export function useEditorDocumentState({ showOnlyInvalid }: Args) {
     rows,
     setRows,
     applyLanguagesTo,
-    displayedRows
+    displayedRows,
+    hasInvalidRows
   };
 }

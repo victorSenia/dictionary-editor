@@ -2,7 +2,7 @@ import { getPatternFieldLabel } from "../../ai/patterns/fieldUtils";
 import type { AiPatternField } from "../../ai/types";
 
 type PatternFieldSelectorProps = {
-  t: (key: string) => string;
+  t: (key: string, options?: Record<string, string>) => string;
   patternFields: AiPatternField[];
   availablePatternFields: AiPatternField[];
   availableTargetLanguages: string[];
@@ -20,6 +20,10 @@ export default function PatternFieldSelector({
     ...availablePatternFields,
     ...availableTargetLanguages.map((language) => `translation:${language}` as AiPatternField)
   ].filter((field) => !patternFields.includes(field));
+
+  if (fields.length === 0) {
+    return null;
+  }
 
   return (
     <label className="compact-field pattern-add-field">

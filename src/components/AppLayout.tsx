@@ -23,6 +23,7 @@ export default function AppLayout({ controller }: Props) {
     isElectronMode,
     isRtl,
     isSettingsOpen,
+    hasInvalidRows,
     rowActions,
     selectionAndDrag,
     setConfig,
@@ -40,13 +41,11 @@ export default function AppLayout({ controller }: Props) {
     <div className={`app-shell ${isRtl ? "rtl" : ""}`} dir={isRtl ? "rtl" : "ltr"}>
       <Toolbar
         isSettingsOpen={isSettingsOpen}
-        showOnlyInvalid={showOnlyInvalid}
         isAiPanelOpen={ai.isAiPanelOpen}
         language={activeLanguage}
         showSaveAs={isElectronMode}
         canCancel={canCancel}
         canReapply={canReapply}
-        deleteSelectedDisabled={!selectionAndDrag.hasSelectedCells}
         onLanguageChange={toolbarActions.handleLanguageChange}
         onNew={toolbarActions.handleNew}
         onOpen={toolbarActions.handleOpen}
@@ -56,22 +55,23 @@ export default function AppLayout({ controller }: Props) {
         onReapply={toolbarActions.handleReapply}
         onToggleSettings={toolbarActions.handleToggleSettings}
         onToggleAiPanel={toolbarActions.handleToggleAiPanel}
-        onToggleShowOnlyInvalid={toolbarActions.handleToggleShowOnlyInvalid}
-        onDeleteSelected={toolbarActions.handleDeleteRowsWithSelectedCells}
       />
       <CourseHeader config={config} setConfig={setConfig} />
 
       <div className={`content ${isSettingsOpen ? "settings-open" : ""} ${ai.isAiPanelOpen ? "ai-open" : ""}`}>
         <main className="grid-area" aria-label={t("grid.containerAria")}>
+          <RowEndActions
+            showOnlyInvalid={showOnlyInvalid}
+            showOnlyInvalidDisabled={!hasInvalidRows}
+            deleteSelectedDisabled={!selectionAndDrag.hasSelectedCells}
+            onAddRow={rowActions.handleAddRow}
+            onAddTopic={rowActions.handleAddTopic}
+            onToggleShowOnlyInvalid={toolbarActions.handleToggleShowOnlyInvalid}
+            onDeleteSelected={toolbarActions.handleDeleteRowsWithSelectedCells}
+          />
           <div className="ag-theme-alpine grid-host">
             <AgGridReact<GridRow> {...gridProps} enableRtl={isRtl} />
           </div>
-          <RowEndActions
-            addRowLabel={t("actions.addRow")}
-            addTopicLabel={t("actions.addTopic")}
-            onAddRow={rowActions.handleAddRow}
-            onAddTopic={rowActions.handleAddTopic}
-          />
           <p className="status">{statusText}</p>
         </main>
 
@@ -84,9 +84,16 @@ export default function AppLayout({ controller }: Props) {
               onRequestModeChoiceChange={ai.setAiRequestModeChoice}
               response={ai.aiResponse}
               parseMessage={ai.aiParseMessage}
+              hasUnappliedAiChanges={ai.hasUnappliedAiChanges}
+              isRequestOpen={ai.isAiRequestOpen}
+              onRequestOpenChange={ai.setIsAiRequestOpen}
+              isResponseOpen={ai.isAiResponseOpen}
+              onResponseOpenChange={ai.setIsAiResponseOpen}
+              isParsingOpen={ai.isAiParsingOpen}
+              onParsingOpenChange={ai.setIsAiParsingOpen}
               onResponseChange={ai.handleAiResponseChange}
               onParseMessageChange={ai.setAiParseMessage}
-              lastAppliedAiSignature={ai.lastAppliedAiSignature}
+              onParsingConfigurationChange={ai.handleAiParsingConfigurationChange}
               onAddRows={ai.handleAddAiRows}
               onResponseParsed={ai.handleRegexRowsParsed}
               onRequestGenerated={ai.handleAiRequestGenerated}

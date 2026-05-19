@@ -3,13 +3,11 @@ import { SUPPORTED_LANGUAGES } from "../i18n";
 
 type ToolbarProps = {
   isSettingsOpen: boolean;
-  showOnlyInvalid: boolean;
   isAiPanelOpen: boolean;
   language: string;
   showSaveAs: boolean;
   canCancel: boolean;
   canReapply: boolean;
-  deleteSelectedDisabled: boolean;
   onLanguageChange: (language: string) => void;
   onNew: () => void;
   onOpen: () => void;
@@ -19,19 +17,15 @@ type ToolbarProps = {
   onReapply: () => void;
   onToggleSettings: () => void;
   onToggleAiPanel: () => void;
-  onToggleShowOnlyInvalid: () => void;
-  onDeleteSelected: () => void;
 };
 
 function Toolbar({
   isSettingsOpen,
-  showOnlyInvalid,
   isAiPanelOpen,
   language,
   showSaveAs,
   canCancel,
   canReapply,
-  deleteSelectedDisabled,
   onLanguageChange,
   onNew,
   onOpen,
@@ -40,9 +34,7 @@ function Toolbar({
   onCancel,
   onReapply,
   onToggleSettings,
-  onToggleAiPanel,
-  onToggleShowOnlyInvalid,
-  onDeleteSelected
+  onToggleAiPanel
 }: ToolbarProps) {
   const { t } = useTranslation();
 
@@ -84,20 +76,10 @@ function Toolbar({
       </button>
       <button
         type="button"
-        className={`toggle-button ${showOnlyInvalid ? "active" : ""}`}
-        onClick={onToggleShowOnlyInvalid}
-        aria-pressed={showOnlyInvalid}
-      >
-        {t("toolbar.showOnlyInvalid")}
-      </button>
-      <button type="button" className="danger-button" onClick={onDeleteSelected} disabled={deleteSelectedDisabled}>
-        {t("toolbar.removeSelectedRows")}
-      </button>
-      <button
-        type="button"
         className={`toggle-button ${isAiPanelOpen ? "active" : ""}`}
         onClick={onToggleAiPanel}
         aria-pressed={isAiPanelOpen}
+        title={isAiPanelOpen ? t("toolbar.hideAiPanel") : t("toolbar.showAiPanel")}
       >
         {isAiPanelOpen ? t("toolbar.hideAiPanel") : t("toolbar.showAiPanel")}
       </button>

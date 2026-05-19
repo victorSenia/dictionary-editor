@@ -57,7 +57,8 @@ export function useAppController() {
     rows,
     setRows,
     applyLanguagesTo,
-    displayedRows
+    displayedRows,
+    hasInvalidRows
   } = documentState;
 
   const history = useEditorHistory({
@@ -189,6 +190,7 @@ export function useAppController() {
     showAdditionalInformationColumn,
     showArticleColumn,
     showOnlyInvalid: uiState.showOnlyInvalid,
+    hasInvalidRows,
     statusText,
     t,
     toolbarActions: {

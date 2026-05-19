@@ -15,6 +15,8 @@ type AiParsingSectionProps = {
   response: string;
   onParseMessageChange: (message: string) => void;
   onParsingConfigurationChange: (configuration: AiParsingConfiguration | null) => void;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
 export type AiParsingSectionHandle = {
@@ -36,7 +38,9 @@ const AiParsingSection = React.forwardRef<AiParsingSectionHandle, AiParsingSecti
   requestContext,
   response,
   onParseMessageChange,
-  onParsingConfigurationChange
+  onParsingConfigurationChange,
+  isOpen,
+  onOpenChange
 }, ref) {
   const { t } = useTranslation();
   const {
@@ -107,7 +111,11 @@ const AiParsingSection = React.forwardRef<AiParsingSectionHandle, AiParsingSecti
   );
 
   return (
-    <details className="ai-section">
+    <details
+      open={isOpen}
+      className="ai-section"
+      onToggle={(event) => onOpenChange(event.currentTarget.open)}
+    >
       <summary>{t("aiPanel.parsingSection")}</summary>
       <PatternBuilder
         t={t}

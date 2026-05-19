@@ -26,9 +26,7 @@ export default function TranslationHeader({
   onDelete
 }: TranslationHeaderProps) {
   const colId = column.getColId();
-  const language = colId.startsWith(columnPrefix)
-    ? colId.slice(columnPrefix.length)
-    : displayName.replace(/^To\s+/, "");
+  const language = colId.slice(columnPrefix.length);
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(language);
   const [error, setError] = useState<string>("");

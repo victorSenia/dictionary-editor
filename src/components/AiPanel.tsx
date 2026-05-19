@@ -37,11 +37,18 @@ type AiPanelProps = {
   requestModeChoice: AiRequestModeChoice;
   response: string;
   parseMessage: string;
-  lastAppliedAiSignature: string;
+  hasUnappliedAiChanges: boolean;
+  isRequestOpen: boolean;
+  onRequestOpenChange: (isOpen: boolean) => void;
+  isResponseOpen: boolean;
+  onResponseOpenChange: (isOpen: boolean) => void;
+  isParsingOpen: boolean;
+  onParsingOpenChange: (isOpen: boolean) => void;
   onRequestModeChoiceChange: (choice: AiRequestModeChoice) => void;
   onResponseChange: (response: string) => void;
   onParseMessageChange: (message: string) => void;
-  onAddRows: (configuration: AiParsingConfiguration, topic: string) => void;
+  onParsingConfigurationChange: () => void;
+  onAddRows: (configuration: AiParsingConfiguration, topic: string, wasPatternSuggested?: boolean) => void;
   onResponseParsed: (rows: DraftGridRow[]) => void;
   onRequestGenerated: () => void;
 };
@@ -52,10 +59,17 @@ export default function AiPanel({
   requestModeChoice,
   response,
   parseMessage,
-  lastAppliedAiSignature,
+  hasUnappliedAiChanges,
+  isRequestOpen,
+  onRequestOpenChange,
+  isResponseOpen,
+  onResponseOpenChange,
+  isParsingOpen,
+  onParsingOpenChange,
   onRequestModeChoiceChange,
   onResponseChange,
   onParseMessageChange,
+  onParsingConfigurationChange,
   onAddRows,
   onResponseParsed,
   onRequestGenerated
@@ -66,7 +80,6 @@ export default function AiPanel({
     aiRequest,
     aiPrompt,
     generatedRequest,
-    aiApplySignature,
     setAiRequest,
     setAiPrompt,
     handleParsingConfigurationChange,
@@ -78,15 +91,21 @@ export default function AiPanel({
     requestContext,
     requestModeChoice,
     response,
-    lastAppliedAiSignature,
     parsingSectionRef,
     onRequestModeChoiceChange,
     onParseMessageChange,
+    onParsingConfigurationChange,
     onAddRows,
     onResponseParsed,
     onRequestGenerated,
     t
   });
+
+  const parseMessageStatus = getParseMessageStatus(
+    parseMessage,
+    t("aiPanel.parseError"),
+    t("aiPanel.parseResultNotParsedPrefix")
+  );
 
   return (
     <aside className="ai-panel" aria-label={t("aiPanel.title")}>
@@ -105,6 +124,16 @@ export default function AiPanel({
         onPromptChange={setAiPrompt}
         onRequestModeChoiceChange={onRequestModeChoiceChange}
         onUseGeneratedRequest={useGeneratedRequest}
+        isOpen={isRequestOpen}
+        onOpenChange={onRequestOpenChange}
+      />
+
+      <AiResponseSection
+        t={t}
+        response={response}
+        onResponseChange={onResponseChange}
+        isOpen={isResponseOpen}
+        onOpenChange={onResponseOpenChange}
       />
 
       <AiParsingSection
@@ -114,23 +143,22 @@ export default function AiPanel({
         response={response}
         onParseMessageChange={onParseMessageChange}
         onParsingConfigurationChange={handleParsingConfigurationChange}
+        isOpen={isParsingOpen}
+        onOpenChange={onParsingOpenChange}
       />
 
-      <AiResponseSection
-        t={t}
-        response={response}
-        parseMessage={parseMessage}
-        parseMessageStatus={getParseMessageStatus(
-          parseMessage,
-          t("aiPanel.parseError"),
-          t("aiPanel.parseResultNotParsedPrefix")
-        )}
-        addRowsLabel={requestContext.mode === "translations" ? t("aiPanel.fillTranslations") : t("aiPanel.addRows")}
-        addRowsDisabled={lastAppliedAiSignature === aiApplySignature}
-        onResponseChange={onResponseChange}
-        onParseCurrentResponse={parseCurrentResponse}
-        onAddRows={addRows}
-      />
+      {parseMessage ? (
+        <pre className={`parse-message ${parseMessageStatus ? `parse-message-${parseMessageStatus}` : ""}`}>{parseMessage}</pre>
+      ) : null}
+
+      <div className="ai-actions ai-parse-actions">
+        <button type="button" className="secondary-button" onClick={parseCurrentResponse}>
+          {t("aiPanel.parseResponse")}
+        </button>
+        <button type="button" className="primary-button" onClick={addRows} disabled={!response.trim() || !hasUnappliedAiChanges}>
+          {requestContext.mode === "translations" ? t("aiPanel.fillTranslations") : t("aiPanel.addRows")}
+        </button>
+      </div>
     </aside>
   );
 }
