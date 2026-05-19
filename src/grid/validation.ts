@@ -1,11 +1,11 @@
 import type { CellClassParams } from "ag-grid-community";
-import { ROW_TYPE_TOPIC, ROW_TYPE_WORD, type DictionaryConfig, type DictionaryRow } from "../models/dictionary.ts";
+import { ROW_TYPE_TOPIC, ROW_TYPE_WORD, type DictionaryConfig, type DictionaryRow } from "../models/dictionary";
 import {
   COLUMN_ID_ADDITIONAL_INFO,
   COLUMN_ID_ARTICLE,
   COLUMN_ID_WORD,
   TRANSLATION_COLUMN_PREFIX
-} from "../constants/grid.ts";
+} from "../constants/grid";
 
 export type CellValidationResult = {
   isValid: boolean;

@@ -1,4 +1,5 @@
 import type { GridApi } from "ag-grid-community";
+import { createCellKey, parseCellKey } from "../../grid/cellKey";
 import type { GridRow } from "../../types/grid";
 import { getCellText, isSelectableGridColId } from "./cellText";
 
@@ -19,11 +20,11 @@ export function buildSelectedCellsCopyText({
     return null;
   }
 
-  const selectableColumns = api
+  const selectableColumns: string[] = api
     .getAllDisplayedColumns()
     .map((column) => column.getColId())
-    .filter((colId) => isSelectableGridColId(colId));
-  const columnOrder = new Map(selectableColumns.map((colId, index) => [colId, index]));
+    .filter((colId): colId is string => isSelectableGridColId(String(colId)));
+  const columnOrder = new Map<string, number>(selectableColumns.map((colId, index) => [colId, index]));
 
   const displayedRowOrder = new Map<string, number>();
   const rowCount = api.getDisplayedRowCount();
@@ -38,24 +39,24 @@ export function buildSelectedCellsCopyText({
   const selectedRowIds = Array.from(
     new Set(
       selectedCellKeys
-        .map((key) => key.split("::")[0])
-        .filter((rowId) => rowId && displayedRowOrder.has(rowId))
+        .map((key) => parseCellKey(key)?.rowId ?? "")
+        .filter((rowId): rowId is string => Boolean(rowId) && displayedRowOrder.has(rowId))
     )
   ).sort(
     (a, b) =>
-      (displayedRowOrder.get(a) ?? Number.MAX_SAFE_INTEGER) -
-      (displayedRowOrder.get(b) ?? Number.MAX_SAFE_INTEGER)
+      Number(displayedRowOrder.get(a) ?? Number.MAX_SAFE_INTEGER) -
+      Number(displayedRowOrder.get(b) ?? Number.MAX_SAFE_INTEGER)
   );
 
   const selectedColIds = Array.from(
     new Set(
       selectedCellKeys
-        .map((key) => key.split("::")[1])
-        .filter((colId) => colId && columnOrder.has(colId))
+        .map((key) => parseCellKey(key)?.colId ?? "")
+        .filter((colId): colId is string => Boolean(colId) && columnOrder.has(colId))
     )
   ).sort(
     (a, b) =>
-      (columnOrder.get(a) ?? Number.MAX_SAFE_INTEGER) - (columnOrder.get(b) ?? Number.MAX_SAFE_INTEGER)
+      Number(columnOrder.get(a) ?? Number.MAX_SAFE_INTEGER) - Number(columnOrder.get(b) ?? Number.MAX_SAFE_INTEGER)
   );
 
   if (selectedRowIds.length === 0 || selectedColIds.length === 0) {
@@ -70,7 +71,7 @@ export function buildSelectedCellsCopyText({
     }
     return selectedColIds
       .map((colId) =>
-        selectedSet.has(`${rowId}::${colId}`) ? getCellText(row, colId, translationDelimiter) : ""
+        selectedSet.has(createCellKey(rowId, colId)) ? getCellText(row, colId, translationDelimiter) : ""
       )
       .join("\t");
   });

@@ -125,5 +125,5 @@ export function buildAiParsingPattern(parsingConfiguration: AiParsingConfigurati
     );
   }
 
-  throw new Error("AI parsing configuration has no item pattern");
+  throw new Error("aiPanel.parsingConfigurationMissingPattern");
 }

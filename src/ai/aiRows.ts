@@ -2,28 +2,20 @@ import {
   ROW_TYPE_WORD,
   type DictionaryConfig,
   type DictionaryRow
-} from "../models/dictionary.ts";
-import { parseTranslationValue } from "../utils/dictionaryHelpers.ts";
-import {
-  buildAiParsingPattern,
-  normalizeAiInputLine,
-  stripMarkdownFence,
-  translationGroupName
-} from "./aiPatterns.ts";
-import type { AiParseResult, AiParsingConfiguration } from "./types.ts";
+} from "../models/dictionary";
+import { parseTranslationValue } from "../utils/dictionaryHelpers";
+import { buildAiParsingPattern, normalizeAiInputLine, stripMarkdownFence } from "./patterns/regexBuilder";
+import { translationGroupName } from "./patterns/fieldUtils";
+import type { AiParseResult, AiParsingConfiguration } from "./types";
 
+export { AI_PATTERN_FIELDS, AI_PATTERN_SEPARATOR_PRESETS } from "./patterns/constants";
 export {
-  AI_PATTERN_FIELDS,
-  AI_PATTERN_SEPARATOR_PRESETS,
-  buildAiParsingPattern,
   buildTargetTranslationFields,
-  buildVisualAiParsingPattern,
   getPatternFieldLabel,
-  getPatternSeparatorLabel,
-  suggestAiParsingPattern
-} from "./aiPatterns.ts";
-
-export type { AiParsingSuggestion } from "./aiPatterns.ts";
+  getPatternSeparatorLabel
+} from "./patterns/fieldUtils";
+export { buildAiParsingPattern, buildVisualAiParsingPattern } from "./patterns/regexBuilder";
+export { suggestAiParsingPattern, type AiParsingSuggestion } from "./patterns/suggestions";
 
 export type DraftGridRow = DictionaryRow;
 
@@ -41,7 +33,7 @@ export function parseAiResponse(
   parsingConfiguration: AiParsingConfiguration
 ): AiParseResult {
   if (!hasText(rawResponse)) {
-    return { rows: [], unparsedLines: [], pattern: "", message: "Response is empty" };
+    return { rows: [], unparsedLines: [], pattern: "", message: "aiPanel.parseResultEmpty" };
   }
 
   const pattern = buildAiParsingPattern(parsingConfiguration, config.articles);
@@ -88,7 +80,7 @@ export function parseAiResponse(
     rows,
     unparsedLines,
     pattern,
-    message: rows.length === 0 ? "No lines matched regex presets" : "Matched regex presets"
+    message: rows.length === 0 ? "aiPanel.parseResultNoMatch" : "aiPanel.parseResultMatched"
   };
 }
 

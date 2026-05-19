@@ -1,4 +1,4 @@
-import type { DictionaryConfig, DictionaryRow } from "../models/dictionary.ts";
+import type { DictionaryConfig, DictionaryRow } from "../models/dictionary";
 
 export type AutosavePayload = {
   config: DictionaryConfig;

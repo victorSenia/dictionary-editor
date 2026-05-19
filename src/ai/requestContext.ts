@@ -1,7 +1,8 @@
-import { ROW_TYPE_TOPIC, ROW_TYPE_WORD, type DictionaryConfig } from "../models/dictionary.ts";
-import type { GridRow } from "../types/grid.ts";
-import type { AiParseResult } from "./types.ts";
-import type { AiRequestContext, AiRequestMode, AiRequestWord } from "./types.ts";
+import { parseCellKey } from "../grid/cellKey";
+import { ROW_TYPE_TOPIC, ROW_TYPE_WORD, type DictionaryConfig } from "../models/dictionary";
+import type { GridRow } from "../types/grid";
+import type { AiParseResult } from "./types";
+import type { AiRequestContext, AiRequestMode, AiRequestWord } from "./types";
 
 export type AiRequestModeChoice = "auto" | AiRequestMode;
 
@@ -65,10 +66,9 @@ export function buildAiRequestContext({
                                         selectedCellKeys,
                                         modeChoice
                                       }: BuildAiRequestContextArgs): AiRequestContext {
-  const selectedCells = selectedCellKeys.map((key) => {
-    const [rowId, colId] = key.split("::");
-    return { rowId: rowId ?? "", colId: colId ?? "" };
-  });
+  const selectedCells = selectedCellKeys
+    .map((key) => parseCellKey(key))
+    .filter((cell): cell is NonNullable<typeof cell> => cell !== null);
 
   const selectedRowId = selectedCells[0]?.rowId ?? "";
   const selectedIndex = selectedRowId ? rows.findIndex((row) => row.rowId === selectedRowId) : -1;

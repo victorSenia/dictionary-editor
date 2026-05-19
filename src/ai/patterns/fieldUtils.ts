@@ -27,12 +27,15 @@ export function getPatternFieldLabel(field: AiPatternField, translate: (key: str
   return language ? `${translate("aiPanel.patternField.translation")} ${language}` : translate(`aiPanel.patternField.${field}`);
 }
 
-export function getPatternSeparatorLabel(separator: AiPatternSeparator): string {
+export function getPatternSeparatorLabel(
+  separator: AiPatternSeparator,
+  translate: (key: string) => string
+): string {
   if (separator === "") {
-    return "(none)";
+    return translate("aiPanel.patternSeparatorNone");
   }
   if (separator === "\t") {
-    return "Tab";
+    return translate("aiPanel.patternSeparatorTab");
   }
   return separator;
 }

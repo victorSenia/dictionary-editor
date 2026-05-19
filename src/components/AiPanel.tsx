@@ -8,7 +8,28 @@ import { useAiPanelController } from "../hooks/useAiPanelController";
 import AiParsingSection, { type AiParsingSectionHandle } from "./AiParsingSection";
 import AiRequestSection from "./ai/AiRequestSection";
 import AiResponseSection from "./ai/AiResponseSection";
-import { getParseMessageStatus } from "./ai/aiPanelStatus";
+
+function getParseMessageStatus(
+  parseMessage: string,
+  fallbackErrorMessage: string,
+  notParsedPrefix: string
+): string {
+  const suggestedPatternMatch = /^.*?(\d+)\/(\d+).*?$/.exec(parseMessage);
+
+  if (parseMessage.startsWith(notParsedPrefix)) {
+    return "warning";
+  }
+
+  if (parseMessage === fallbackErrorMessage) {
+    return "error";
+  }
+
+  if (suggestedPatternMatch && suggestedPatternMatch[1] !== suggestedPatternMatch[2]) {
+    return "warning";
+  }
+
+  return parseMessage ? "ok" : "";
+}
 
 type AiPanelProps = {
   config: DictionaryConfig;
@@ -20,7 +41,6 @@ type AiPanelProps = {
   onRequestModeChoiceChange: (choice: AiRequestModeChoice) => void;
   onResponseChange: (response: string) => void;
   onParseMessageChange: (message: string) => void;
-  onParsingConfigurationChange: (configuration: AiParsingConfiguration | null) => void;
   onAddRows: (configuration: AiParsingConfiguration, topic: string) => void;
   onResponseParsed: (rows: DraftGridRow[]) => void;
   onRequestGenerated: () => void;
@@ -36,7 +56,6 @@ export default function AiPanel({
   onRequestModeChoiceChange,
   onResponseChange,
   onParseMessageChange,
-  onParsingConfigurationChange,
   onAddRows,
   onResponseParsed,
   onRequestGenerated
@@ -63,7 +82,6 @@ export default function AiPanel({
     parsingSectionRef,
     onRequestModeChoiceChange,
     onParseMessageChange,
-    onParsingConfigurationChange,
     onAddRows,
     onResponseParsed,
     onRequestGenerated,
@@ -102,8 +120,12 @@ export default function AiPanel({
         t={t}
         response={response}
         parseMessage={parseMessage}
-        parseMessageStatus={getParseMessageStatus(parseMessage, t("aiPanel.parseError"))}
-        addRowsLabel={requestContext.mode === "translations" ? "Fill translations" : t("aiPanel.addRows")}
+        parseMessageStatus={getParseMessageStatus(
+          parseMessage,
+          t("aiPanel.parseError"),
+          t("aiPanel.parseResultNotParsedPrefix")
+        )}
+        addRowsLabel={requestContext.mode === "translations" ? t("aiPanel.fillTranslations") : t("aiPanel.addRows")}
         addRowsDisabled={lastAppliedAiSignature === aiApplySignature}
         onResponseChange={onResponseChange}
         onParseCurrentResponse={parseCurrentResponse}

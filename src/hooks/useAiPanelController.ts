@@ -23,11 +23,11 @@ export type UseAiPanelControllerOptions = {
   parsingSectionRef: React.RefObject<AiParsingSectionHandle | null>;
   onRequestModeChoiceChange: (choice: AiRequestModeChoice) => void;
   onParseMessageChange: (message: string) => void;
-  onParsingConfigurationChange: (configuration: AiParsingConfiguration | null) => void;
+  onParsingConfigurationChange?: (configuration: AiParsingConfiguration | null) => void;
   onAddRows: (configuration: AiParsingConfiguration, topic: string) => void;
   onResponseParsed: (rows: DraftGridRow[]) => void;
   onRequestGenerated: () => void;
-  t: (key: string) => string;
+  t: (key: string, values?: Record<string, unknown>) => string;
 };
 
 const initialAiRequest: AiRequestState = {
@@ -65,14 +65,14 @@ export function useAiPanelController({
   const handleParsingConfigurationChange = React.useCallback(
     (configuration: AiParsingConfiguration | null) => {
       setParsingConfiguration(configuration);
-      onParsingConfigurationChange(configuration);
+      onParsingConfigurationChange?.(configuration);
     },
     [onParsingConfigurationChange]
   );
 
   const generatedRequest = React.useMemo(
-    () => buildAiRequest(aiRequest, config, requestContext),
-    [aiRequest, config, requestContext]
+    () => buildAiRequest(aiRequest, config, t, requestContext),
+    [aiRequest, config, requestContext, t]
   );
 
   const useGeneratedRequest = React.useCallback(() => {
@@ -108,11 +108,12 @@ export function useAiPanelController({
     try {
       const result = parseAiResponse(response, config, activeParsingConfiguration);
       onParseMessageChange(result.unparsedLines.length > 0
-        ? `Not parsed:\n${result.unparsedLines.join("\n")}`
-        : "All non-empty lines parsed.");
+        ? t("aiPanel.parseResultNotParsed", { lines: result.unparsedLines.join("\n") })
+        : t("aiPanel.parseResultAllParsed"));
       onResponseParsed(parseAiResponseRows(response, config, activeParsingConfiguration));
     } catch (error) {
-      onParseMessageChange(error instanceof Error ? error.message : t("aiPanel.parseError"));
+      const message = error instanceof Error ? error.message : "";
+      onParseMessageChange(message.startsWith("aiPanel.") ? t(message) : message || t("aiPanel.parseError"));
     }
   }, [config, ensureParsingConfiguration, onParseMessageChange, onResponseParsed, response, t]);
 

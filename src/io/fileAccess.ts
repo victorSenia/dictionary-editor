@@ -1,4 +1,5 @@
-import { DEFAULT_DOCUMENT_NAME, TEXT_FILE_MIME_TYPE } from "../constants/files";
+const DEFAULT_DOCUMENT_NAME = "document.txt";
+const TEXT_FILE_MIME_TYPE = "text/plain;charset=utf-8";
 
 export type FileOpenResult = { path: string; content: string } | null;
 export type FileSaveResult = { path: string } | null;

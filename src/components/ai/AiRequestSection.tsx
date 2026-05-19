@@ -2,7 +2,7 @@ import type { AiRequestModeChoice } from "../../ai/requestContext";
 import type { AiRequestContext, AiRequestState } from "../../ai/types";
 
 type AiRequestSectionProps = {
-  t: (key: string) => string;
+  t: (key: string, values?: Record<string, unknown>) => string;
   aiRequest: AiRequestState;
   aiPrompt: string;
   generatedRequest: string;
@@ -31,14 +31,14 @@ export default function AiRequestSection({
       <summary>{t("aiPanel.requestSection")}</summary>
       <div className="ai-form-grid">
         <label className="compact-field mode-field">
-          Mode
+          {t("aiPanel.requestMode")}
           <select
             value={requestModeChoice}
             onChange={(event) => onRequestModeChoiceChange(event.target.value as AiRequestModeChoice)}
           >
-            <option value="auto">Auto</option>
-            <option value="vocabulary">Full generation</option>
-            <option value="translations">Translations only</option>
+            <option value="auto">{t("aiPanel.requestModeAuto")}</option>
+            <option value="vocabulary">{t("aiPanel.requestModeVocabulary")}</option>
+            <option value="translations">{t("aiPanel.requestModeTranslations")}</option>
           </select>
         </label>
         <label className="compact-field topic-field">

@@ -1,46 +1,42 @@
-import type { DictionaryConfig } from "../models/dictionary.ts";
-import { en } from "../i18n/locales/en.ts";
-import type { AiRequestContext, AiRequestState, AiRequestWord } from "./types.ts";
+import type { DictionaryConfig } from "../models/dictionary";
+import type { AiRequestContext, AiRequestState, AiRequestWord } from "./types";
 
-const PROMPT_LANGUAGE_NAMES: Record<string, string> = en.translation.languages;
+type Translate = (key: string, values?: Record<string, unknown>) => string;
 
-export function buildVocabularyInstructions(config: DictionaryConfig): string {
+export function buildVocabularyInstructions(config: DictionaryConfig, translate: Translate): string {
   return [
-    "Task: Create concise vocabulary rows.",
-    [
-      "Requirements:",
-      config.languagesTo.length > 1
-          ? "Include translations for all target languages."
-          : "",
-      "Multiple translations per language are allowed.",
-      "Add brief notes only when useful, such as plural forms, inflection, or usage.",
-      config.articles.length > 0
-          ? "If articles are natural in the source language, include them."
-          : "",
-    ]
-        .filter(Boolean)
-        .join(" "),
+    translate("aiPrompt.taskVocabulary"),
+    translate("aiPrompt.requirementsLine", {
+      allLanguages: config.languagesTo.length > 1
+        ? translate("aiPrompt.includeTranslationsForAllTargetLanguages")
+        : "",
+      multipleTranslations: translate("aiPrompt.multipleTranslationsAllowed"),
+      notes: translate("aiPrompt.addBriefNotes"),
+      articles: config.articles.length > 0
+        ? translate("aiPrompt.includeArticlesWhenNatural")
+        : ""
+    })
   ].join("\n");
 }
 
-export function buildTranslationInstructions(config: DictionaryConfig): string {
+export function buildTranslationInstructions(config: DictionaryConfig, translate: Translate): string {
   return [
-    "Task: Translate the listed words.",
-    [
-      "Requirements:",
-      config.languagesTo.length > 1
-          ? "Include translations for all target languages."
-          : "",
-      "Multiple translations per language are allowed.",
-    ]
-        .filter(Boolean)
-        .join(" "),
+    translate("aiPrompt.taskTranslation"),
+    translate("aiPrompt.requirementsLine", {
+      allLanguages: config.languagesTo.length > 1
+        ? translate("aiPrompt.includeTranslationsForAllTargetLanguages")
+        : "",
+      multipleTranslations: translate("aiPrompt.multipleTranslationsAllowed"),
+      notes: "",
+      articles: ""
+    })
   ].join("\n");
 }
 
 export function buildAiRequest(
   aiRequest: AiRequestState,
   config: DictionaryConfig,
+  translate: Translate,
   requestContext?: AiRequestContext
 ): string {
   const topic = aiRequest.topic || requestContext?.topic || "";
@@ -50,28 +46,29 @@ export function buildAiRequest(
   const isTranslationOnly = requestContext?.mode === "translations";
 
   return [
-    isTranslationOnly ? buildTranslationInstructions(config) : buildVocabularyInstructions(config),
-    config.rootTopic ? `Course: ${config.rootTopic}` : "",
-    topic ? `Topic: ${topic}` : "",
-    !isTranslationOnly && aiRequest.wordCount ? `Entry count: ${aiRequest.wordCount}` : "",
-    `Source language: ${formatPromptLanguage(config.languageFrom)}`,
-    `Target languages: ${targetLanguages.map(formatPromptLanguage).join(", ")}`,
-    buildContextWords(requestContext)
+    isTranslationOnly ? buildTranslationInstructions(config, translate) : buildVocabularyInstructions(config, translate),
+    config.rootTopic ? translate("aiPrompt.course", { course: config.rootTopic }) : "",
+    topic ? translate("aiPrompt.topic", { topic }) : "",
+    !isTranslationOnly && aiRequest.wordCount ? translate("aiPrompt.entryCount", { count: aiRequest.wordCount }) : "",
+    translate("aiPrompt.sourceLanguage", { language: formatPromptLanguage(config.languageFrom, translate) }),
+    translate("aiPrompt.targetLanguages", { languages: targetLanguages.map((language) => formatPromptLanguage(language, translate)).join(", ") }),
+    buildContextWords(requestContext, translate)
   ].filter(Boolean).join("\n");
 }
 
-export function formatPromptLanguage(language: string): string {
+export function formatPromptLanguage(language: string, translate: Translate): string {
   const key = language.trim();
-  return PROMPT_LANGUAGE_NAMES[key] ?? key;
+  const translated = translate(`languages.${key}`, { defaultValue: key });
+  return translated === `languages.${key}` ? key : translated;
 }
 
-function buildContextWords(requestContext: AiRequestContext | undefined): string {
+function buildContextWords(requestContext: AiRequestContext | undefined, translate: Translate): string {
   if (!requestContext || requestContext.mode !== "translations" || requestContext.words.length === 0) {
     return "";
   }
 
   return [
-    "Words:",
+    translate("aiPrompt.words"),
     ...requestContext.words.map(formatRequestWord)
   ].join("\n");
 }

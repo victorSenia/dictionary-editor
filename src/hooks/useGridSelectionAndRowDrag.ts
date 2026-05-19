@@ -1,27 +1,10 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type Dispatch,
-  type RefObject,
-  type SetStateAction
-} from "react";
-import type {
-  CellMouseDownEvent,
-  CellMouseOverEvent,
-  RowDragEndEvent,
-  RowDragMoveEvent
-} from "ag-grid-community";
+import { useCallback, type Dispatch, type RefObject, type SetStateAction } from "react";
 import type { AgGridReact } from "ag-grid-react";
+import { parseCellKey } from "../grid/cellKey";
 import type { GridRow } from "../types/grid";
 import type { LastActionState } from "../types/lastAction";
-import {
-  COLUMN_ID_ADDITIONAL_INFO,
-  COLUMN_ID_ARTICLE,
-  COLUMN_ID_WORD,
-  TRANSLATION_COLUMN_PREFIX
-} from "../constants/grid";
+import { useGridCellSelection } from "./useGridCellSelection";
+import { useRowDragReorder } from "./useRowDragReorder";
 
 type Args = {
   gridRef: RefObject<AgGridReact<GridRow>>;
@@ -31,265 +14,13 @@ type Args = {
 };
 
 export function useGridSelectionAndRowDrag({ gridRef, rows, setRows, setLastAction }: Args) {
-  const DRAG_SELECTION_THRESHOLD_PX = 4;
-  const [selectedCellKeys, setSelectedCellKeys] = useState<string[]>([]);
-  const dragSelectingRef = useRef<boolean>(false);
-  const dragAnchorRef = useRef<{ rowId: string; colId: string } | null>(null);
-  const dragStartPointRef = useRef<{ x: number; y: number } | null>(null);
-  const lastDragTargetRef = useRef<string>("");
-  const selectedCellSetRef = useRef<Set<string>>(new Set());
+  const cellSelection = useGridCellSelection({ gridRef, rows });
+  const rowDrag = useRowDragReorder({ setRows });
 
-  const isSelectableColId = useCallback((colId: string): boolean => {
-    return (
-      colId === COLUMN_ID_ARTICLE ||
-      colId === COLUMN_ID_WORD ||
-      colId === COLUMN_ID_ADDITIONAL_INFO ||
-      colId.startsWith(TRANSLATION_COLUMN_PREFIX)
-    );
-  }, []);
-
-  const getDisplayedRowIndexById = useCallback(
-    (rowId: string): number => {
-      const api = gridRef.current?.api;
-      if (!api) {
-        return -1;
-      }
-      const count = api.getDisplayedRowCount();
-      for (let i = 0; i < count; i += 1) {
-        if (api.getDisplayedRowAtIndex(i)?.data?.rowId === rowId) {
-          return i;
-        }
-      }
-      return -1;
-    },
-    [gridRef]
-  );
-
-  const updateDraggedCellSelection = useCallback(
-    (anchorRowId: string, anchorColId: string, currentRowId: string, currentColId: string) => {
-      const api = gridRef.current?.api;
-      if (!api) {
-        return;
-      }
-
-      const displayedDataColumns = api
-        .getAllDisplayedColumns()
-        .map((col) => col.getColId())
-        .filter((colId) => isSelectableColId(colId));
-      const anchorColumnIndex = displayedDataColumns.indexOf(anchorColId);
-      const currentColumnIndex = displayedDataColumns.indexOf(currentColId);
-      if (anchorColumnIndex < 0 || currentColumnIndex < 0) {
-        return;
-      }
-
-      const anchorRowIndex = getDisplayedRowIndexById(anchorRowId);
-      const currentRowIndex = getDisplayedRowIndexById(currentRowId);
-      if (anchorRowIndex < 0 || currentRowIndex < 0) {
-        return;
-      }
-
-      const rowStart = Math.min(anchorRowIndex, currentRowIndex);
-      const rowEnd = Math.max(anchorRowIndex, currentRowIndex);
-      const colStart = Math.min(anchorColumnIndex, currentColumnIndex);
-      const colEnd = Math.max(anchorColumnIndex, currentColumnIndex);
-
-      const nextKeys: string[] = [];
-      for (let rowIndex = rowStart; rowIndex <= rowEnd; rowIndex += 1) {
-        const node = api.getDisplayedRowAtIndex(rowIndex);
-        const rowId = node?.data?.rowId;
-        if (!rowId) {
-          continue;
-        }
-        for (let colIndex = colStart; colIndex <= colEnd; colIndex += 1) {
-          nextKeys.push(`${rowId}::${displayedDataColumns[colIndex]}`);
-        }
-      }
-      setSelectedCellKeys((prev) => {
-        if (prev.length === nextKeys.length && prev.every((key, index) => key === nextKeys[index])) {
-          return prev;
-        }
-        return nextKeys;
-      });
-    },
-    [getDisplayedRowIndexById, gridRef, isSelectableColId]
-  );
-
-  const onCellMouseDown = useCallback(
-    (event: CellMouseDownEvent<GridRow>) => {
-      if (!event.data || !event.event) {
-        return;
-      }
-      const mouseEvent = event.event as MouseEvent;
-      if (mouseEvent.button !== 0) {
-        return;
-      }
-      const colId = event.column.getColId();
-      if (!isSelectableColId(colId)) {
-        return;
-      }
-
-      const target = mouseEvent.target as HTMLElement | null;
-      if (target?.closest("button,a")) {
-        return;
-      }
-
-      dragAnchorRef.current = { rowId: event.data.rowId, colId };
-      dragStartPointRef.current = { x: mouseEvent.clientX, y: mouseEvent.clientY };
-      dragSelectingRef.current = false;
-      updateDraggedCellSelection(event.data.rowId, colId, event.data.rowId, colId);
-    },
-    [isSelectableColId, updateDraggedCellSelection]
-  );
-
-  const onCellMouseOver = useCallback(
-    (event: CellMouseOverEvent<GridRow>) => {
-      if (!dragAnchorRef.current || !event.data) {
-        return;
-      }
-
-      const mouseEvent = event.event as MouseEvent | undefined;
-      if (!mouseEvent || mouseEvent.buttons !== 1) {
-        return;
-      }
-
-      if (!dragSelectingRef.current) {
-        const start = dragStartPointRef.current;
-        if (!start) {
-          return;
-        }
-        const movedX = Math.abs(mouseEvent.clientX - start.x);
-        const movedY = Math.abs(mouseEvent.clientY - start.y);
-        if (Math.max(movedX, movedY) < DRAG_SELECTION_THRESHOLD_PX) {
-          return;
-        }
-        dragSelectingRef.current = true;
-      }
-
-      const colId = event.column.getColId();
-      if (!isSelectableColId(colId)) {
-        return;
-      }
-
-      updateDraggedCellSelection(
-        dragAnchorRef.current.rowId,
-        dragAnchorRef.current.colId,
-        event.data.rowId,
-        colId
-      );
-    },
-    [isSelectableColId, updateDraggedCellSelection]
-  );
-
-  const moveDraggedRow = useCallback(
-    (movingId: string, overId: string | undefined, overIndex: number | null | undefined) => {
-      if (!movingId) {
-        return;
-      }
-
-      setRows((prev) => {
-        const fromIndex = prev.findIndex((row) => row.rowId === movingId);
-        if (fromIndex < 0) {
-          return prev;
-        }
-
-        let toIndex = overId ? prev.findIndex((row) => row.rowId === overId) : -1;
-        if (toIndex < 0 && overIndex != null) {
-          toIndex = overIndex;
-        }
-        if (toIndex < 0) {
-          return prev;
-        }
-        toIndex = Math.min(toIndex, prev.length - 1);
-
-        if (fromIndex === toIndex) {
-          return prev;
-        }
-
-        const next = [...prev];
-        const [moved] = next.splice(fromIndex, 1);
-        next.splice(toIndex, 0, moved);
-        return next;
-      });
-    },
-    [setRows]
-  );
-
-  const onRowDragMove = useCallback(
-    (event: RowDragMoveEvent<GridRow>) => {
-      const movingId = event.node.data?.rowId;
-      if (!movingId) {
-        return;
-      }
-
-      const target = `${movingId}|${event.overNode?.data?.rowId ?? ""}|${event.overIndex ?? -1}`;
-      if (lastDragTargetRef.current === target) {
-        return;
-      }
-      lastDragTargetRef.current = target;
-
-      moveDraggedRow(movingId, event.overNode?.data?.rowId, event.overIndex);
-    },
-    [moveDraggedRow]
-  );
-
-  const onRowDragEnd = useCallback(
-    (event: RowDragEndEvent<GridRow>) => {
-      const movingId = event.node.data?.rowId;
-      if (!movingId) {
-        return;
-      }
-
-      moveDraggedRow(movingId, event.overNode?.data?.rowId, event.overIndex);
-      lastDragTargetRef.current = "";
-    },
-    [moveDraggedRow]
-  );
-
-  useEffect(() => {
-    const stopDragSelection = () => {
-      dragSelectingRef.current = false;
-      dragAnchorRef.current = null;
-      dragStartPointRef.current = null;
-    };
-
-    window.addEventListener("mouseup", stopDragSelection);
-    return () => window.removeEventListener("mouseup", stopDragSelection);
-  }, []);
-
-  useEffect(() => {
-    const existingRowIds = new Set(rows.map((row) => row.rowId));
-    setSelectedCellKeys((prev) => {
-      const next = prev.filter((key) => {
-        const [rowId] = key.split("::");
-        return rowId !== undefined && existingRowIds.has(rowId);
-      });
-      return next.length === prev.length ? prev : next;
-    });
-  }, [rows]);
-
-  useEffect(() => {
-    selectedCellSetRef.current = new Set(selectedCellKeys);
-    gridRef.current?.api?.refreshCells({ force: false });
-  }, [gridRef, selectedCellKeys]);
-
-  const isCellSelected = useCallback(
-    (rowId: string | undefined, colId: string | undefined): boolean => {
-      if (!rowId || !colId) {
-        return false;
-      }
-      return selectedCellSetRef.current.has(`${rowId}::${colId}`);
-    },
-    []
-  );
-
-  const clearCellSelection = useCallback(() => {
-    setSelectedCellKeys([]);
-  }, []);
-  const hasSelectedCells = selectedCellKeys.length > 0;
   const deleteRowsWithSelectedCells = useCallback(() => {
     const selectedRowIds = new Set(
-      selectedCellKeys
-        .map((cellKey) => cellKey.split("::")[0])
+      cellSelection.selectedCellKeys
+        .map((cellKey) => parseCellKey(cellKey)?.rowId ?? "")
         .filter((rowId) => rowId !== "")
     );
     if (selectedRowIds.size === 0) {
@@ -297,19 +28,13 @@ export function useGridSelectionAndRowDrag({ gridRef, rows, setRows, setLastActi
     }
 
     setRows((prev) => prev.filter((row) => !selectedRowIds.has(row.rowId)));
-    clearCellSelection();
+    cellSelection.clearCellSelection();
     setLastAction({ key: "action.removeSelectedRows" });
-  }, [clearCellSelection, selectedCellKeys, setLastAction, setRows]);
+  }, [cellSelection, setLastAction, setRows]);
 
   return {
-    onCellMouseDown,
-    onCellMouseOver,
-    onRowDragMove,
-    onRowDragEnd,
-    selectedCellKeys,
-    isCellSelected,
-    clearCellSelection,
-    hasSelectedCells,
+    ...cellSelection,
+    ...rowDrag,
     deleteRowsWithSelectedCells
   };
 }

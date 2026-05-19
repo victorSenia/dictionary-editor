@@ -1,11 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import {
-  AI_PATTERN_FIELDS,
-  getPatternFieldLabel,
-  hasConfiguredArticles,
-  suggestAiParsingPattern,
-} from "../ai/aiPatterns";
+import { AI_PATTERN_FIELDS } from "../ai/patterns/constants";
+import { getPatternFieldLabel, hasConfiguredArticles } from "../ai/patterns/fieldUtils";
+import { suggestAiParsingPattern } from "../ai/patterns/suggestions";
 import type { AiParsingConfiguration, AiPatternField, AiRequestContext } from "../ai/types";
 import { createVisualParsingConfiguration, useAiParsingPattern } from "../hooks/useAiParsingPattern";
 import type { DictionaryConfig } from "../models/dictionary";

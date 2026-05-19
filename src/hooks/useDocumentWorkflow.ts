@@ -4,7 +4,8 @@ import { attachGridRowIds, stripGridRowIds } from "../utils/dictionaryHelpers";
 import type { LastActionState } from "../types/lastAction";
 import { DEFAULT_CONFIG, type DictionaryConfig } from "../models/dictionary";
 import type { GridRow } from "../types/grid";
-import { exportFile, parseFile } from "../io/dictionaryFormat";
+import { parseFile } from "../io/dictionaryParser";
+import { exportFile } from "../io/dictionarySerializer";
 import {
   openFileUniversal,
   readAutosaveUniversal,

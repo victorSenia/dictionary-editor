@@ -1,5 +1,5 @@
 import React from "react";
-import { getPatternFieldLabel } from "../../ai/aiPatterns";
+import { getPatternFieldLabel } from "../../ai/patterns/fieldUtils";
 import type { AiPatternField, AiPatternSeparator } from "../../ai/types";
 
 type PatternBuilderProps = {

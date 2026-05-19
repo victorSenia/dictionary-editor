@@ -1,9 +1,6 @@
 import React from "react";
-import {
-  buildTargetTranslationFields,
-  buildVisualAiParsingPattern,
-  hasConfiguredArticles
-} from "../ai/aiPatterns";
+import { buildTargetTranslationFields, hasConfiguredArticles } from "../ai/patterns/fieldUtils";
+import { buildVisualAiParsingPattern } from "../ai/patterns/regexBuilder";
 import type {
   AiParsingConfiguration,
   AiPatternField,

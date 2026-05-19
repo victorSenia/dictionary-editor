@@ -22,7 +22,7 @@ type UseAiDraftHelperOptions = {
   selectedCellKeys: string[];
   setRows: Dispatch<SetStateAction<GridRow[]>>;
   setLastAction: Dispatch<SetStateAction<LastActionState>>;
-  t: (key: string) => string;
+  t: (key: string, values?: Record<string, unknown>) => string;
 };
 
 export function useAiDraftHelper({
@@ -55,8 +55,8 @@ export function useAiDraftHelper({
     const parseResult = parseAiResponse(aiResponse, config, parsingConfiguration);
     const parsedRows = parseAiResponseRows(aiResponse, config, parsingConfiguration);
     setAiParseMessage(parseResult.unparsedLines.length > 0
-      ? `Not parsed:\n${parseResult.unparsedLines.join("\n")}`
-      : "All non-empty lines parsed.");
+      ? t("aiPanel.parseResultNotParsed", { lines: parseResult.unparsedLines.join("\n") })
+      : t("aiPanel.parseResultAllParsed"));
     return parsedRows;
   }, [aiResponse, config]);
 
@@ -81,8 +81,8 @@ export function useAiDraftHelper({
 
       setRows((current) => applyTranslationParseResult(current, aiRequestContext, parseResult));
       setAiParseMessage(parseResult.unparsedLines.length > 0
-        ? `Not parsed:\n${parseResult.unparsedLines.join("\n")}`
-        : "All non-empty lines parsed.");
+        ? t("aiPanel.parseResultNotParsed", { lines: parseResult.unparsedLines.join("\n") })
+        : t("aiPanel.parseResultAllParsed"));
       setLastAction({ key: "action.addAiRows" });
       setLastAppliedAiSignature(activeApplySignature);
       return;

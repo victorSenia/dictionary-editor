@@ -1,4 +1,4 @@
-import { getPatternFieldLabel } from "../../ai/aiPatterns";
+import { getPatternFieldLabel } from "../../ai/patterns/fieldUtils";
 import type { AiPatternField } from "../../ai/types";
 
 type PatternFieldSelectorProps = {
