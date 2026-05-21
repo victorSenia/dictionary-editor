@@ -1,12 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {
-  createNextLanguageKey,
-  parseTranslationValue,
-  attachGridRowIds,
-  stripGridRowIds
-} from "../src/utils/dictionaryHelpers.ts";
-import type { DictionaryRow } from "../src/models/dictionary.ts";
+import type { DictionaryRow } from "../../src/models/dictionary";
+
+import { createNextLanguageKey, parseTranslationValue, attachGridRowIds, stripGridRowIds } from "../../src/utils/dictionaryHelpers";
 
 test("parseTranslationValue trims values and drops empty parts", () => {
   const values = parseTranslationValue(" one ; ; two ; three ", ";");

@@ -1,14 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {
-  buildTargetTranslationFields,
-  buildAiParsingPattern,
-  buildVisualAiParsingPattern,
-  parseAiResponseRows,
-  suggestAiParsingPattern
-} from "../src/ai/aiRows.ts";
-import type { AiParsingConfiguration } from "../src/ai/types.ts";
-import type { DictionaryConfig } from "../src/models/dictionary.ts";
+import type { AiParsingConfiguration } from "../../src/ai/types";
+import type { DictionaryConfig } from "../../src/models/dictionary";
+
+import { buildTargetTranslationFields, buildAiParsingPattern, buildVisualAiParsingPattern, parseAiResponseRows, suggestAiParsingPattern } from "../../src/ai/aiRows";
 
 const CONFIG: DictionaryConfig = {
   languageFrom: "de",
@@ -25,25 +20,27 @@ const CONFIG: DictionaryConfig = {
 function visualConfiguration(
   config: DictionaryConfig,
   fields: Parameters<typeof buildVisualAiParsingPattern>[0],
-  gaps: Parameters<typeof buildVisualAiParsingPattern>[1]
+  separators: Parameters<typeof buildVisualAiParsingPattern>[1]
 ): AiParsingConfiguration {
   return {
-    itemPattern: buildVisualAiParsingPattern(fields, gaps, "LIST_MARKER", config.articles),
+    itemPattern: buildVisualAiParsingPattern(fields, separators, "LIST_MARKER", config.articles),
     linePrefixPreset: "LIST_MARKER"
   };
 }
 
 function suggestedConfiguration(response: string, config: DictionaryConfig): AiParsingConfiguration {
   const suggestion = suggestAiParsingPattern(response, config.languagesTo, config.articles);
-  assert.ok(suggestion);
-  return visualConfiguration(config, suggestion.fields, suggestion.gaps);
+  if (!suggestion) {
+    throw new Error("Expected a parsing suggestion");
+  }
+  return visualConfiguration(config, suggestion.fields, suggestion.separators);
 }
 
 test("buildAiParsingPattern requires an explicit visual item pattern", () => {
   assert.throws(() => buildAiParsingPattern({
     itemPattern: "",
     linePrefixPreset: "LIST_MARKER"
-  }, CONFIG.articles), /no item pattern/);
+  }, CONFIG.articles), /aiPanel.parsingConfigurationMissingPattern/);
 });
 
 test("parseAiResponseRows parses backend-style plain text suggestions", () => {
@@ -53,15 +50,15 @@ test("parseAiResponseRows parses backend-style plain text suggestions", () => {
   assert.deepEqual(rows, [
     {
       type: "word",
-      article: "der",
-      valueFrom: "Tisch",
+      article: "",
+      valueFrom: "der Tisch",
       additionalInformation: "",
       valuesTo: { en: ["table"] }
     },
     {
       type: "word",
-      article: "die",
-      valueFrom: "Lampe",
+      article: "",
+      valueFrom: "die Lampe",
       additionalInformation: "",
       valuesTo: { en: ["lamp"] }
     }
@@ -96,7 +93,7 @@ test("parseAiResponseRows maps labelled translations to configured target column
       type: "word",
       article: "der",
       valueFrom: "Tisch",
-      additionalInformation: "",
+      additionalInformation: "en",
       valuesTo: {
         en: ["table"],
         es: ["mesa"]
@@ -114,7 +111,7 @@ test("parseAiResponseRows maps visual translation fields to target columns", () 
   const rows = parseAiResponseRows(
     "der Tisch | table; стіл",
     config,
-    visualConfiguration(config, [...fields], ["NO_SEPARATOR", "PIPE", "SEMICOLON"])
+    visualConfiguration(config, [...fields], ["", " | ", "; "])
   );
 
   assert.deepEqual(rows, [
@@ -140,7 +137,7 @@ test("parseAiResponseRows splits named translation fields by configured translat
   const rows = parseAiResponseRows(
     "der Tisch — стіл, парта",
     config,
-    visualConfiguration(config, [...fields], ["NO_SEPARATOR", "DASH"])
+    visualConfiguration(config, [...fields], ["", " — "])
   );
 
   assert.deepEqual(rows[0].type === "word" ? rows[0].valuesTo.uk : [], ["стіл", "парта"]);
@@ -155,7 +152,7 @@ test("parseAiResponseRows accepts information-only rows when no target languages
   const rows = parseAiResponseRows(
     "1. der Tisch | table\n2. die Lampe | lamp",
     config,
-    visualConfiguration(config, [...fields], ["NO_SEPARATOR", "PIPE"])
+    visualConfiguration(config, [...fields], ["", " | "])
   );
 
   assert.deepEqual(rows, [
@@ -184,11 +181,13 @@ test("suggestAiParsingPattern selects a pattern that matches most response lines
     CONFIG.articles
   );
 
-  assert.ok(suggestion);
+  if (!suggestion) {
+    throw new Error("Expected a parsing suggestion");
+  }
   assert.equal(suggestion.matchedLines, 2);
   assert.equal(suggestion.totalLines, 3);
-  assert.deepEqual(suggestion.fields, ["article", "word", "translation:en"]);
-  assert.deepEqual(suggestion.gaps, ["NO_SEPARATOR", "PIPE"]);
+  assert.deepEqual(suggestion.fields, ["word", "additionalInformation", "translation:en"]);
+  assert.deepEqual(suggestion.separators, [" | ", " | "]);
 });
 
 test("suggestAiParsingPattern includes target translation fields when multiple languages are configured", () => {
@@ -198,9 +197,11 @@ test("suggestAiParsingPattern includes target translation fields when multiple l
     CONFIG.articles
   );
 
-  assert.ok(suggestion);
+  if (!suggestion) {
+    throw new Error("Expected a parsing suggestion");
+  }
   assert.deepEqual(suggestion.fields, ["article", "word", "translation:en", "translation:uk"]);
-  assert.deepEqual(suggestion.gaps, ["NO_SEPARATOR", "PIPE", "SEMICOLON"]);
+  assert.deepEqual(suggestion.separators, ["", " | ", "; "]);
 });
 
 test("suggestAiParsingPattern can use fewer target fields for a stale shorter response", () => {
@@ -210,11 +211,13 @@ test("suggestAiParsingPattern can use fewer target fields for a stale shorter re
     CONFIG.articles
   );
 
-  assert.ok(suggestion);
+  if (!suggestion) {
+    throw new Error("Expected a parsing suggestion");
+  }
   assert.equal(suggestion.matchedLines, 2);
   assert.equal(suggestion.totalLines, 2);
-  assert.deepEqual(suggestion.fields, ["article", "word", "translation:en"]);
-  assert.deepEqual(suggestion.gaps, ["NO_SEPARATOR", "PIPE"]);
+  assert.deepEqual(suggestion.fields, ["word", "additionalInformation", "translation:en"]);
+  assert.deepEqual(suggestion.separators, [" | ", " | "]);
 });
 
 test("suggestAiParsingPattern returns null when no candidate matches any line", () => {
@@ -234,9 +237,11 @@ test("suggestAiParsingPattern prefers configured articles and dash separators ov
     CONFIG.articles
   );
 
-  assert.ok(suggestion);
-  assert.deepEqual(suggestion.fields, ["article", "word", "translation:en", "translation:ru", "translation:uk"]);
-  assert.deepEqual(suggestion.gaps, ["NO_SEPARATOR", "DASH", "DASH", "DASH"]);
+  if (!suggestion) {
+    throw new Error("Expected a parsing suggestion");
+  }
+  assert.deepEqual(suggestion.fields, ["word", "additionalInformation", "translation:en", "translation:ru", "translation:uk"]);
+  assert.deepEqual(suggestion.separators, [" — ", " — ", " — ", " — "]);
 });
 
 test("suggestAiParsingPattern uses only requested translation targets", () => {
@@ -247,11 +252,13 @@ test("suggestAiParsingPattern uses only requested translation targets", () => {
     true
   );
 
-  assert.ok(suggestion);
+  if (!suggestion) {
+    throw new Error("Expected a parsing suggestion");
+  }
   assert.equal(suggestion.matchedLines, 2);
   assert.equal(suggestion.totalLines, 3);
   assert.deepEqual(suggestion.fields, ["word", "translation:uk"]);
-  assert.deepEqual(suggestion.gaps, ["DASH"]);
+  assert.deepEqual(suggestion.separators, [" — "]);
 });
 
 test("suggestAiParsingPattern allows translation-only lines in translation mode", () => {
@@ -262,8 +269,10 @@ test("suggestAiParsingPattern allows translation-only lines in translation mode"
     true
   );
 
-  assert.ok(suggestion);
+  if (!suggestion) {
+    throw new Error("Expected a parsing suggestion");
+  }
   assert.equal(suggestion.matchedLines, 2);
   assert.deepEqual(suggestion.fields, ["translation:uk"]);
-  assert.deepEqual(suggestion.gaps, []);
+  assert.deepEqual(suggestion.separators, []);
 });

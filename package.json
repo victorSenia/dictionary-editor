@@ -16,7 +16,9 @@
     "build:renderer:all": "npm run build:renderer && npm run build:renderer:single-file",
     "build:electron": "npx --no-install tsc -p tsconfig.electron.json",
     "test": "npm run test:unit",
-    "test:unit": "node --test \"tests/**/*.test.ts\"",
+    "test:unit": "npm run clean:test && npm run build:test && node --test \".tmp-test/tests/**/*.test.js\"",
+    "build:test": "tsc -p tsconfig.test-run.json",
+    "clean:test": "node -e \"require('fs').rmSync('.tmp-test', { recursive: true, force: true })\"",
     "dist": "npm run build && npx --no-install cross-env ELECTRON_BUILDER_CACHE=.cache/electron-builder ELECTRON_CACHE=.cache/electron npx --no-install electron-builder"
   },
   "build": {

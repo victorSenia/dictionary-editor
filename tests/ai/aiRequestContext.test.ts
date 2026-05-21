@@ -1,9 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { TRANSLATION_COLUMN_PREFIX } from "../src/constants/grid.ts";
-import { buildAiRequestContext } from "../src/ai/requestContext.ts";
-import type { DictionaryConfig } from "../src/models/dictionary.ts";
-import type { GridRow } from "../src/types/grid.ts";
+import type { DictionaryConfig } from "../../src/models/dictionary";
+import type { GridRow } from "../../src/types/grid";
+
+import { TRANSLATION_COLUMN_PREFIX } from "../../src/constants/grid";
+import { buildAiRequestContext } from "../../src/ai/requestContext";
 
 const CONFIG: DictionaryConfig = {
   languageFrom: "de",

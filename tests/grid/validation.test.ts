@@ -1,12 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { isRowInvalid, validateCell } from "../src/grid/validation.ts";
-import type { DictionaryConfig, DictionaryRow } from "../src/models/dictionary.ts";
-import {
-  COLUMN_ID_ARTICLE,
-  COLUMN_ID_WORD,
-  TRANSLATION_COLUMN_PREFIX
-} from "../src/constants/grid.ts";
+import type { DictionaryConfig, DictionaryRow } from "../../src/models/dictionary";
+
+import { isRowInvalid, validateCell } from "../../src/grid/validation";
+import { COLUMN_ID_ARTICLE, COLUMN_ID_WORD, TRANSLATION_COLUMN_PREFIX } from "../../src/constants/grid";
 
 const CONFIG: DictionaryConfig = {
   languageFrom: "de",

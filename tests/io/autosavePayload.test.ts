@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parseAutosavePayload } from "../src/io/autosavePayload.ts";
+
+import { parseAutosavePayload } from "../../src/io/autosavePayload";
 
 test("parseAutosavePayload returns payload for valid content", () => {
   const content = JSON.stringify({

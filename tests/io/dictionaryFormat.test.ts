@@ -1,8 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { exportFile, parseFile } from "../src/io/dictionaryFormat.ts";
-import type { DictionaryConfig, DictionaryRow } from "../src/models/dictionary.ts";
+import type { DictionaryConfig, DictionaryRow } from "../../src/models/dictionary";
+
+import { parseFile } from "../../src/io/dictionaryParser";
+import { exportFile } from "../../src/io/dictionarySerializer";
 
 const FALLBACK_CONFIG: DictionaryConfig = {
   languageFrom: "de",
@@ -99,7 +101,7 @@ function normalizeText(value: string): string {
 }
 
 test("fixture file round-trips through parse and export", () => {
-  const fixturePath = "tests/Einfach_gut_A1.1.txt";
+  const fixturePath = "tests/fixtures/Einfach_gut_A1.1.txt";
   const input = readFileSync(fixturePath, "utf8");
 
   const parsed = parseFile(input, FALLBACK_CONFIG);
