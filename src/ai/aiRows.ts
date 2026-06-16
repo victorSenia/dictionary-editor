@@ -20,7 +20,10 @@ export { suggestAiParsingPattern, type AiParsingSuggestion } from "./patterns/su
 export type DraftGridRow = DictionaryRow;
 
 function clean(value: string | undefined): string {
-  return value?.trim() ?? "";
+  return (value ?? "")
+    .replace(/\*\*(.+?)\*\*/gu, "$1")
+    .replace(/__(.+?)__/gu, "$1")
+    .trim();
 }
 
 function hasText(value: string | undefined): boolean {

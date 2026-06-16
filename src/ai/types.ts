@@ -23,7 +23,6 @@ export type AiRequestContext = {
 
 export type AiParsingConfiguration = {
   itemPattern: string;
-  linePrefixPreset: "NONE" | "NUMBERED" | "BULLET" | "LIST_MARKER";
   fields?: AiPatternField[];
   separators?: string[];
 };

@@ -12,6 +12,9 @@ type AiRequestSectionProps = {
   onPromptChange: (prompt: string) => void;
   onRequestModeChoiceChange: (mode: AiRequestModeChoice) => void;
   onUseGeneratedRequest: () => void;
+  onSendRequest: () => void;
+  isSendingRequest: boolean;
+  canSendRequest: boolean;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 };
@@ -27,6 +30,9 @@ export default function AiRequestSection({
   onPromptChange,
   onRequestModeChoiceChange,
   onUseGeneratedRequest,
+  onSendRequest,
+  isSendingRequest,
+  canSendRequest,
   isOpen,
   onOpenChange
 }: AiRequestSectionProps) {
@@ -68,9 +74,27 @@ export default function AiRequestSection({
           />
         </label>
       </div>
-      <button type="button" className="secondary-button full-width-button" onClick={onUseGeneratedRequest}>
-        {t("aiPanel.generateRequest")}
-      </button>
+      <div className="ai-actions">
+        <button
+            type="button"
+            className="secondary-button"
+            onClick={onUseGeneratedRequest}
+            disabled={isSendingRequest}
+        >
+          {t("aiPanel.generateRequest")}
+        </button>
+
+        <button
+            type="button"
+            className="primary-button"
+            onClick={onSendRequest}
+            disabled={!canSendRequest}
+        >
+          {isSendingRequest
+              ? t("aiPanel.sendingRequest")
+              : t("aiPanel.sendRequest")}
+        </button>
+      </div>
     </details>
   );
 }

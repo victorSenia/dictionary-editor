@@ -34,6 +34,7 @@ export function stripMarkdownFence(rawResponse: string): string {
 
 export function normalizeAiInputLine(rawLine: string): string {
   const line = rawLine.trim();
+
   if (!line) {
     return "";
   }
@@ -42,17 +43,8 @@ export function normalizeAiInputLine(rawLine: string): string {
   return tableWrapperMatch ? tableWrapperMatch[1].trim() : line;
 }
 
-function prefixPattern(preset: AiParsingConfiguration["linePrefixPreset"]): string {
-  switch (preset) {
-    case "NONE":
-      return "";
-    case "NUMBERED":
-      return "(?:\\d+[.)]\\s*)?";
-    case "BULLET":
-      return "(?:[-*]\\s*)?";
-    default:
-      return "(?:(?:\\d+[.)]|[-*])\\s*)?";
-  }
+function prefixPattern(): string {
+  return "(?:(?:\\d+[.)]|[-*])\\s*)?";
 }
 
 function configuredArticlePattern(articles: string[]): string {
@@ -87,12 +79,11 @@ function visualFieldPattern(field: AiPatternField, articles: string[] = []): str
 export function buildVisualAiParsingPattern(
   fields: AiPatternField[],
   separators: AiPatternSeparator[],
-  linePrefixPreset: AiParsingConfiguration["linePrefixPreset"] = "LIST_MARKER",
   articles: string[] = []
 ): string {
   return [
     "^\\s*",
-    prefixPattern(linePrefixPreset),
+    prefixPattern(),
     fields.map((field, index) => {
       const fieldPattern = visualFieldPattern(field, articles);
 
@@ -120,7 +111,6 @@ export function buildAiParsingPattern(parsingConfiguration: AiParsingConfigurati
     return buildVisualAiParsingPattern(
       parsingConfiguration.fields,
       parsingConfiguration.separators,
-      parsingConfiguration.linePrefixPreset,
       articles
     );
   }

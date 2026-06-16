@@ -2,9 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { AI_PATTERN_FIELDS } from "../ai/patterns/constants";
 import { getPatternFieldLabel, hasConfiguredArticles } from "../ai/patterns/fieldUtils";
-import { suggestAiParsingPattern } from "../ai/patterns/suggestions";
 import type { AiParsingConfiguration, AiPatternField, AiRequestContext } from "../ai/types";
-import { createVisualParsingConfiguration, useAiParsingPattern } from "../hooks/useAiParsingPattern";
+import { useAiParsingPattern } from "../hooks/useAiParsingPattern";
 import type { DictionaryConfig } from "../models/dictionary";
 import PatternBuilder from "./ai/PatternBuilder";
 import PatternFieldSelector from "./ai/PatternFieldSelector";
@@ -12,15 +11,11 @@ import PatternFieldSelector from "./ai/PatternFieldSelector";
 type AiParsingSectionProps = {
   config: DictionaryConfig;
   requestContext: AiRequestContext;
-  response: string;
-  onParseMessageChange: (message: string) => void;
-  onParsingConfigurationChange: (configuration: AiParsingConfiguration | null) => void;
+  onSuggestPattern: () => void;
+  parsingConfiguration: AiParsingConfiguration | null;
+  setParsingConfiguration: (configuration: AiParsingConfiguration | null) => void;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-};
-
-export type AiParsingSectionHandle = {
-  suggestPattern: () => AiParsingConfiguration | null;
 };
 
 function formatPatternSeparator(separator: string | undefined): string {
@@ -33,66 +28,26 @@ function getAvailablePatternFields(requestContext: AiRequestContext, includeArti
     : AI_PATTERN_FIELDS.filter((field) => field !== "article" || includeArticleField);
 }
 
-const AiParsingSection = React.forwardRef<AiParsingSectionHandle, AiParsingSectionProps>(function AiParsingSection({
+export default function AiParsingSection({
   config,
   requestContext,
-  response,
-  onParseMessageChange,
-  onParsingConfigurationChange,
+  onSuggestPattern,
+  parsingConfiguration,
+  setParsingConfiguration,
   isOpen,
   onOpenChange
-}, ref) {
+}: AiParsingSectionProps) {
   const { t } = useTranslation();
   const {
     patternFields,
     patternSeparators,
     draggedFieldIndex,
     setDraggedFieldIndex,
-    updateVisualPattern,
     moveFieldTo,
     removeField,
     addField,
     updateSeparator
-  } = useAiParsingPattern({ config, requestContext, onParsingConfigurationChange });
-
-  const suggestPattern = React.useCallback((): AiParsingConfiguration | null => {
-    const targetLanguages = requestContext.mode === "translations"
-      ? requestContext.targetLanguages
-      : config.languagesTo;
-    const suggestion = suggestAiParsingPattern(
-      response,
-      targetLanguages,
-      config.articles,
-      requestContext.mode === "translations"
-    );
-    if (!suggestion) {
-      onParseMessageChange(t("aiPanel.parseError"));
-      return null;
-    }
-    updateVisualPattern(suggestion.fields, suggestion.separators);
-    const configuration = createVisualParsingConfiguration(
-      suggestion.fields,
-      suggestion.separators,
-      "LIST_MARKER",
-      config.articles
-    );
-    onParseMessageChange(t("aiPanel.patternSuggested", {
-      matched: suggestion.matchedLines,
-      total: suggestion.totalLines
-    }));
-    return configuration;
-  }, [
-    config.articles,
-    config.languagesTo,
-    onParseMessageChange,
-    requestContext.mode,
-    requestContext.targetLanguages,
-    response,
-    t,
-    updateVisualPattern
-  ]);
-
-  React.useImperativeHandle(ref, () => ({ suggestPattern }), [suggestPattern]);
+  } = useAiParsingPattern({ config, parsingConfiguration, setParsingConfiguration });
 
   const patternExample = React.useMemo(
     () => patternFields.map((field, index) => {
@@ -141,11 +96,10 @@ const AiParsingSection = React.forwardRef<AiParsingSectionHandle, AiParsingSecti
         <p className="pattern-preview">{t("aiPanel.patternPreview")}: {patternExample}</p>
       ) : null}
       <p className="pattern-preview">{translationDelimiterHint}</p>
-      <button type="button" className="secondary-button full-width-button" onClick={suggestPattern}>
+      <button type="button" className="secondary-button full-width-button" onClick={onSuggestPattern}>
         {t("aiPanel.suggestPattern")}
       </button>
     </details>
   );
-});
+}
 
-export default AiParsingSection;

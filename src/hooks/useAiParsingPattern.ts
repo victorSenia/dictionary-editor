@@ -4,15 +4,14 @@ import { buildVisualAiParsingPattern } from "../ai/patterns/regexBuilder";
 import type {
   AiParsingConfiguration,
   AiPatternField,
-  AiPatternSeparator,
-  AiRequestContext
+  AiPatternSeparator
 } from "../ai/types";
 import type { DictionaryConfig } from "../models/dictionary";
 
 type UseAiParsingPatternOptions = {
   config: DictionaryConfig;
-  requestContext: AiRequestContext;
-  onParsingConfigurationChange: (configuration: AiParsingConfiguration | null) => void;
+  parsingConfiguration: AiParsingConfiguration | null;
+  setParsingConfiguration: (configuration: AiParsingConfiguration | null) => void;
 };
 
 export function buildInitialPatternFields(
@@ -39,12 +38,10 @@ export function buildInitialPatternSeparators(fields: AiPatternField[]): AiPatte
 export function createVisualParsingConfiguration(
   fields: AiPatternField[],
   separators: AiPatternSeparator[],
-  linePrefixPreset: AiParsingConfiguration["linePrefixPreset"],
   articles: string[]
 ): AiParsingConfiguration {
   return {
-    itemPattern: buildVisualAiParsingPattern(fields, separators, linePrefixPreset, articles),
-    linePrefixPreset,
+    itemPattern: buildVisualAiParsingPattern(fields, separators, articles),
     fields,
     separators: separators.slice(0, Math.max(0, fields.length - 1))
   };
@@ -59,45 +56,28 @@ function removeFieldSeparator(
 
 export function useAiParsingPattern({
   config,
-  onParsingConfigurationChange
+  parsingConfiguration,
+  setParsingConfiguration
 }: UseAiParsingPatternOptions) {
-  const [parsingConfiguration, setParsingConfiguration] = React.useState<AiParsingConfiguration | null>(null);
-  const [patternFields, setPatternFields] = React.useState<AiPatternField[]>([]);
-  const [patternSeparators, setPatternSeparators] = React.useState<AiPatternSeparator[]>([]);
+  const patternFields = parsingConfiguration?.fields ?? [];
+  const patternSeparators = parsingConfiguration?.separators ?? [];
   const [draggedFieldIndex, setDraggedFieldIndex] = React.useState<number | null>(null);
-
-  React.useEffect(() => {
-    onParsingConfigurationChange(parsingConfiguration);
-  }, [onParsingConfigurationChange, parsingConfiguration]);
-
-  const commitParsingConfiguration = React.useCallback((patch: Partial<AiParsingConfiguration>) => {
-    setParsingConfiguration((current) => ({
-      itemPattern: "",
-      linePrefixPreset: "LIST_MARKER",
-      ...current,
-      ...patch
-    }));
-  }, []);
 
   const updateVisualPattern = React.useCallback(
     (
       nextFields: AiPatternField[],
-      nextSeparators: AiPatternSeparator[],
-      linePrefixPreset = parsingConfiguration?.linePrefixPreset ?? "LIST_MARKER"
+      nextSeparators: AiPatternSeparator[]
     ) => {
-      setPatternFields(nextFields);
-      setPatternSeparators(nextSeparators.slice(0, Math.max(0, nextFields.length - 1)));
-
       if (nextFields.length === 0) {
         setParsingConfiguration(null);
         return;
       }
 
-      commitParsingConfiguration(
-        createVisualParsingConfiguration(nextFields, nextSeparators, linePrefixPreset, config.articles)
+      setParsingConfiguration(
+        createVisualParsingConfiguration(nextFields, nextSeparators, config.articles)
       );
     },
-    [commitParsingConfiguration, config.articles, parsingConfiguration?.linePrefixPreset]
+    [config.articles, setParsingConfiguration]
   );
 
   const moveFieldTo = React.useCallback(
@@ -143,12 +123,10 @@ export function useAiParsingPattern({
   );
 
   return {
-    parsingConfiguration,
     patternFields,
     patternSeparators,
     draggedFieldIndex,
     setDraggedFieldIndex,
-    updateVisualPattern,
     moveFieldTo,
     removeField,
     addField,

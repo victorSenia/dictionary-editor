@@ -4,25 +4,24 @@ import {
   parseAiResponseRows,
   type DraftGridRow
 } from "../ai/aiRows";
+import { suggestAiParsingConfiguration } from "../ai/patterns/suggestions";
 import { buildAiRequest } from "../ai/requestBuilder";
-import type { AiRequestModeChoice } from "../ai/requestContext";
+import { sendAiDraftRequest } from "../ai/remoteAiRequest";
 import type {
   AiParsingConfiguration,
   AiRequestContext,
   AiRequestState
 } from "../ai/types";
-import type { AiParsingSectionHandle } from "../components/AiParsingSection";
 import type { DictionaryConfig } from "../models/dictionary";
 
 export type UseAiPanelControllerOptions = {
   config: DictionaryConfig;
   requestContext: AiRequestContext;
-  requestModeChoice: AiRequestModeChoice;
   response: string;
-  parsingSectionRef: React.RefObject<AiParsingSectionHandle | null>;
-  onRequestModeChoiceChange: (choice: AiRequestModeChoice) => void;
+  parsingConfiguration: AiParsingConfiguration | null;
+  setParsingConfiguration: (configuration: AiParsingConfiguration | null) => void;
+  onResponseChange: (response: string) => void;
   onParseMessageChange: (message: string) => void;
-  onParsingConfigurationChange?: (configuration: AiParsingConfiguration | null) => void;
   onAddRows: (configuration: AiParsingConfiguration, topic: string, wasPatternSuggested?: boolean) => void;
   onResponseParsed: (rows: DraftGridRow[]) => void;
   onRequestGenerated: () => void;
@@ -38,17 +37,19 @@ export function useAiPanelController({
   config,
   requestContext,
   response,
-  parsingSectionRef,
+  parsingConfiguration,
+  setParsingConfiguration,
   onParseMessageChange,
-  onParsingConfigurationChange,
+  onResponseChange,
   onAddRows,
   onResponseParsed,
   onRequestGenerated,
   t
 }: UseAiPanelControllerOptions) {
   const [aiRequest, setAiRequest] = React.useState<AiRequestState>(initialAiRequest);
-  const [parsingConfiguration, setParsingConfiguration] = React.useState<AiParsingConfiguration | null>(null);
   const [aiPrompt, setAiPrompt] = React.useState("");
+  const [isSendingRequest, setIsSendingRequest] = React.useState(false);
+  const [requestError, setRequestError] = React.useState("");
 
   React.useEffect(() => {
     if (!requestContext.topic) {
@@ -60,23 +61,90 @@ export function useAiPanelController({
     ));
   }, [requestContext.topic]);
 
-  const handleParsingConfigurationChange = React.useCallback(
-    (configuration: AiParsingConfiguration | null) => {
-      setParsingConfiguration(configuration);
-      onParsingConfigurationChange?.(configuration);
-    },
-    [onParsingConfigurationChange]
-  );
-
   const generatedRequest = React.useMemo(
     () => buildAiRequest(aiRequest, config, t, requestContext),
     [aiRequest, config, requestContext, t]
   );
 
+  const effectiveRequest = aiPrompt || generatedRequest;
+  const normalizedRequest = effectiveRequest.trim();
+  const canSendRequest = normalizedRequest.length > 0 && !isSendingRequest;
+
   const useGeneratedRequest = React.useCallback(() => {
     setAiPrompt(generatedRequest);
     onRequestGenerated();
   }, [generatedRequest, onRequestGenerated]);
+
+  const suggestAndApplyPattern = React.useCallback((responseText: string) => {
+    const targetLanguages = requestContext.mode === "translations"
+      ? requestContext.targetLanguages
+      : config.languagesTo;
+    const suggestion = suggestAiParsingConfiguration(
+      responseText,
+      targetLanguages,
+      config.articles,
+      requestContext.mode === "translations"
+    );
+
+    if (!suggestion) {
+      onParseMessageChange(t("aiPanel.parseError"));
+      return null;
+    }
+
+    setParsingConfiguration(suggestion.configuration);
+    onParseMessageChange(t("aiPanel.patternSuggested", {
+      matched: suggestion.matchedLines,
+      total: suggestion.totalLines
+    }));
+    return suggestion;
+  }, [
+    config.articles,
+    config.languagesTo,
+    onParseMessageChange,
+    requestContext.mode,
+    requestContext.targetLanguages,
+    setParsingConfiguration,
+    t
+  ]);
+
+  const suggestPattern = React.useCallback(() => {
+    suggestAndApplyPattern(response);
+  }, [response, suggestAndApplyPattern]);
+
+  const sendRequest = React.useCallback(async () => {
+    const requestToSend = effectiveRequest.trim();
+
+    if (!requestToSend || isSendingRequest) {
+      return;
+    }
+
+    setIsSendingRequest(true);
+    setRequestError("");
+
+    try {
+      const responseText = await sendAiDraftRequest(requestToSend);
+
+      onResponseChange(responseText);
+      suggestAndApplyPattern(responseText);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "";
+
+      setRequestError(
+        message.startsWith("aiPanel.")
+          ? t(message)
+          : message || t("aiPanel.requestFailed")
+      );
+    } finally {
+      setIsSendingRequest(false);
+    }
+  }, [
+    effectiveRequest,
+    isSendingRequest,
+    onParseMessageChange,
+    onResponseChange,
+    suggestAndApplyPattern,
+    t
+  ]);
 
   const ensureParsingConfiguration = React.useCallback((): {
     configuration: AiParsingConfiguration;
@@ -86,14 +154,11 @@ export function useAiPanelController({
       return { configuration: parsingConfiguration, wasSuggested: false };
     }
 
-    const suggestedConfiguration = parsingSectionRef.current?.suggestPattern() ?? null;
-    if (suggestedConfiguration) {
-      setParsingConfiguration(suggestedConfiguration);
-      return { configuration: suggestedConfiguration, wasSuggested: true };
-    }
-
-    return null;
-  }, [parsingConfiguration, parsingSectionRef]);
+    const suggestion = suggestAndApplyPattern(response);
+    return suggestion
+      ? { configuration: suggestion.configuration, wasSuggested: true }
+      : null;
+  }, [parsingConfiguration, response, suggestAndApplyPattern]);
 
   const parseCurrentResponse = React.useCallback(() => {
     const activeParsingConfiguration = ensureParsingConfiguration();
@@ -128,11 +193,15 @@ export function useAiPanelController({
     aiRequest,
     aiPrompt,
     generatedRequest,
+    isSendingRequest,
+    requestError,
+    canSendRequest,
     setAiRequest,
     setAiPrompt,
-    handleParsingConfigurationChange,
     parseCurrentResponse,
     addRows,
-    useGeneratedRequest
+    useGeneratedRequest,
+    suggestPattern,
+    sendRequest
   };
 }

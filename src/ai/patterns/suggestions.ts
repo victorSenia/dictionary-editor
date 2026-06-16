@@ -11,6 +11,16 @@ export type AiParsingSuggestion = {
   totalLines: number;
 };
 
+type CompleteAiParsingConfiguration = {
+  itemPattern: string;
+  fields: AiPatternField[];
+  separators: AiPatternSeparator[];
+};
+
+export type AiParsingConfigurationSuggestion = AiParsingSuggestion & {
+  configuration: CompleteAiParsingConfiguration;
+};
+
 function hasExplicitSeparator(separators: AiPatternSeparator[]): boolean {
   return separators.some((separator) => separator !== "");
 }
@@ -159,7 +169,7 @@ export function suggestAiParsingPattern(
       if (!isAllowedSuggestionSeparators(fields, separators)) {
         continue;
       }
-      const pattern = buildVisualAiParsingPattern(fields, separators, "LIST_MARKER", articles);
+      const pattern = buildVisualAiParsingPattern(fields, separators, articles);
       const expression = new RegExp(pattern, "iu");
       const matchedLines = lines.filter((line) => expression.test(line)).length;
       const candidate = { fields, separators, pattern, matchedLines, totalLines: lines.length };
@@ -170,4 +180,31 @@ export function suggestAiParsingPattern(
   }
 
   return best && best.matchedLines > 0 ? best : null;
+}
+
+export function suggestAiParsingConfiguration(
+  rawResponse: string,
+  targetLanguages: string[] = [],
+  articles: string[] = [],
+  translationsOnly = false
+): AiParsingConfigurationSuggestion | null {
+  const suggestion = suggestAiParsingPattern(
+    rawResponse,
+    targetLanguages,
+    articles,
+    translationsOnly
+  );
+
+  if (!suggestion) {
+    return null;
+  }
+
+  return {
+    ...suggestion,
+    configuration: {
+      itemPattern: suggestion.pattern,
+      fields: suggestion.fields,
+      separators: suggestion.separators
+    }
+  };
 }

@@ -5,7 +5,7 @@ import type { DraftGridRow } from "../ai/aiRows";
 import type { AiParsingConfiguration, AiRequestContext } from "../ai/types";
 import type { DictionaryConfig } from "../models/dictionary";
 import { useAiPanelController } from "../hooks/useAiPanelController";
-import AiParsingSection, { type AiParsingSectionHandle } from "./AiParsingSection";
+import AiParsingSection from "./AiParsingSection";
 import AiRequestSection from "./ai/AiRequestSection";
 import AiResponseSection from "./ai/AiResponseSection";
 
@@ -75,26 +75,37 @@ export default function AiPanel({
   onRequestGenerated
 }: AiPanelProps) {
   const { t } = useTranslation();
-  const parsingSectionRef = React.useRef<AiParsingSectionHandle>(null);
+  const [parsingConfiguration, setParsingConfigurationState] =
+    React.useState<AiParsingConfiguration | null>(null);
+  const setParsingConfiguration = React.useCallback(
+    (configuration: AiParsingConfiguration | null) => {
+      setParsingConfigurationState(configuration);
+      onParsingConfigurationChange();
+    },
+    [onParsingConfigurationChange]
+  );
   const {
     aiRequest,
     aiPrompt,
     generatedRequest,
+    isSendingRequest,
+    requestError,
+    canSendRequest,
     setAiRequest,
     setAiPrompt,
-    handleParsingConfigurationChange,
     parseCurrentResponse,
     addRows,
-    useGeneratedRequest
+    useGeneratedRequest,
+    suggestPattern,
+    sendRequest
   } = useAiPanelController({
     config,
     requestContext,
-    requestModeChoice,
     response,
-    parsingSectionRef,
-    onRequestModeChoiceChange,
+    parsingConfiguration,
+    setParsingConfiguration,
+    onResponseChange,
     onParseMessageChange,
-    onParsingConfigurationChange,
     onAddRows,
     onResponseParsed,
     onRequestGenerated,
@@ -124,9 +135,16 @@ export default function AiPanel({
         onPromptChange={setAiPrompt}
         onRequestModeChoiceChange={onRequestModeChoiceChange}
         onUseGeneratedRequest={useGeneratedRequest}
+        onSendRequest={sendRequest}
+        isSendingRequest={isSendingRequest}
+        canSendRequest={canSendRequest}
         isOpen={isRequestOpen}
         onOpenChange={onRequestOpenChange}
       />
+
+      {requestError ? (
+        <pre className="parse-message parse-message-error">{requestError}</pre>
+      ) : null}
 
       <AiResponseSection
         t={t}
@@ -137,12 +155,11 @@ export default function AiPanel({
       />
 
       <AiParsingSection
-        ref={parsingSectionRef}
         config={config}
         requestContext={requestContext}
-        response={response}
-        onParseMessageChange={onParseMessageChange}
-        onParsingConfigurationChange={handleParsingConfigurationChange}
+        onSuggestPattern={suggestPattern}
+        parsingConfiguration={parsingConfiguration}
+        setParsingConfiguration={setParsingConfiguration}
         isOpen={isParsingOpen}
         onOpenChange={onParsingOpenChange}
       />
