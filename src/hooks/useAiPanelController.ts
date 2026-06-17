@@ -140,7 +140,6 @@ export function useAiPanelController({
   }, [
     effectiveRequest,
     isSendingRequest,
-    onParseMessageChange,
     onResponseChange,
     suggestAndApplyPattern,
     t
@@ -150,7 +149,7 @@ export function useAiPanelController({
     configuration: AiParsingConfiguration;
     wasSuggested: boolean;
   } | null => {
-    if (parsingConfiguration?.itemPattern.trim()) {
+    if (parsingConfiguration?.entries.length) {
       return { configuration: parsingConfiguration, wasSuggested: false };
     }
 

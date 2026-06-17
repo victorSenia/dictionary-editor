@@ -21,12 +21,6 @@ export type AiRequestContext = {
   targetLanguages: string[];
 };
 
-export type AiParsingConfiguration = {
-  itemPattern: string;
-  fields?: AiPatternField[];
-  separators?: string[];
-};
-
 export type AiPatternField =
   | "article"
   | "word"
@@ -34,7 +28,18 @@ export type AiPatternField =
   | "translation"
   | `translation:${string}`;
 
+export type AiPatternEntry = {
+  field: AiPatternField;
+  prefix: string;
+  suffix: string;
+};
+
 export type AiPatternSeparator = string;
+
+export type AiParsingConfiguration = {
+  entries: AiPatternEntry[];
+  separators: AiPatternSeparator[];
+};
 
 export type AiParseResult = {
   rows: Array<{

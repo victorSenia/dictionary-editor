@@ -801,8 +801,10 @@ body,
 }
 
 .pattern-gap-custom {
-  width: 96px !important;
+  width: auto !important;
   min-width: 72px;
+  max-width: 100%;
+  field-sizing: content;
   padding: 5px 7px !important;
   font-size: 12px !important;
   font-family: Consolas, "Courier New", monospace !important;
@@ -820,7 +822,7 @@ body,
 .ai-actions {
   display: flex;
   align-items: start;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 8px;
 }
 
@@ -969,4 +971,28 @@ body,
 
 .ai-parse-actions {
   justify-content: flex-start;
+}
+
+/* Keep each pattern field as one horizontal unit: prefix, field, suffix. */
+.pattern-entry {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pattern-affix-field,
+.pattern-separator-field {
+  width: max-content;
+  min-width: 0;
+}
+
+.pattern-builder {
+  align-items: flex-end;
+}
+
+@media (max-width: 760px) {
+  .pattern-entry {
+    flex-wrap: wrap;
+  }
 }

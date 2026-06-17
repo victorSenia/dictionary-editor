@@ -1,8 +1,8 @@
 import React from "react";
 import { buildTargetTranslationFields, hasConfiguredArticles } from "../ai/patterns/fieldUtils";
-import { buildVisualAiParsingPattern } from "../ai/patterns/regexBuilder";
 import type {
   AiParsingConfiguration,
+  AiPatternEntry,
   AiPatternField,
   AiPatternSeparator
 } from "../ai/types";
@@ -14,44 +14,28 @@ type UseAiParsingPatternOptions = {
   setParsingConfiguration: (configuration: AiParsingConfiguration | null) => void;
 };
 
-export function buildInitialPatternFields(
+export function buildInitialPatternEntries(
   targetLanguages: string[],
   articles: string[] = []
-): AiPatternField[] {
-  return [
+): AiPatternEntry[] {
+  const fields: AiPatternField[] = [
     ...(hasConfiguredArticles(articles) ? (["article"] as const) : []),
     "word",
     ...buildTargetTranslationFields(targetLanguages)
   ];
-}
 
-export function buildInitialPatternSeparators(fields: AiPatternField[]): AiPatternSeparator[] {
-  return fields.slice(1).map((field, index) => {
-    if (index === 0 && fields[0] === "article" && field === "word") {
-      return "";
-    }
-
-    return field.startsWith("translation:") && index > 1 ? "; " : " | ";
-  });
+  return fields.map((field) => ({ field, prefix: "", suffix: "" }));
 }
 
 export function createVisualParsingConfiguration(
-  fields: AiPatternField[],
+  entries: AiPatternEntry[],
   separators: AiPatternSeparator[],
   articles: string[]
 ): AiParsingConfiguration {
   return {
-    itemPattern: buildVisualAiParsingPattern(fields, separators, articles),
-    fields,
-    separators: separators.slice(0, Math.max(0, fields.length - 1))
+    entries,
+    separators
   };
-}
-
-function removeFieldSeparator(
-  separators: AiPatternSeparator[],
-  fieldIndex: number
-): AiPatternSeparator[] {
-  return separators.filter((_separator, index) => index !== Math.max(0, fieldIndex - 1));
 }
 
 export function useAiParsingPattern({
@@ -59,77 +43,66 @@ export function useAiParsingPattern({
   parsingConfiguration,
   setParsingConfiguration
 }: UseAiParsingPatternOptions) {
-  const patternFields = parsingConfiguration?.fields ?? [];
+  const patternEntries = parsingConfiguration?.entries ?? [];
   const patternSeparators = parsingConfiguration?.separators ?? [];
   const [draggedFieldIndex, setDraggedFieldIndex] = React.useState<number | null>(null);
 
-  const updateVisualPattern = React.useCallback(
-    (
-      nextFields: AiPatternField[],
-      nextSeparators: AiPatternSeparator[]
-    ) => {
-      if (nextFields.length === 0) {
-        setParsingConfiguration(null);
-        return;
-      }
-
-      setParsingConfiguration(
-        createVisualParsingConfiguration(nextFields, nextSeparators, config.articles)
-      );
+  const updatePattern = React.useCallback(
+    (entries: AiPatternEntry[], separators: AiPatternSeparator[]) => {
+      setParsingConfiguration(entries.length
+        ? createVisualParsingConfiguration(entries, separators, config.articles)
+        : null);
     },
     [config.articles, setParsingConfiguration]
   );
 
-  const moveFieldTo = React.useCallback(
-    (index: number, target: number) => {
-      if (target < 0 || target >= patternFields.length) {
-        return;
-      }
+  const moveFieldTo = React.useCallback((index: number, target: number) => {
+    if (target < 0 || target >= patternEntries.length) return;
+    const nextEntries = [...patternEntries];
+    const [entry] = nextEntries.splice(index, 1);
+    nextEntries.splice(target, 0, entry);
 
-      const nextFields = [...patternFields];
-      const [field] = nextFields.splice(index, 1);
-      nextFields.splice(target, 0, field);
-      updateVisualPattern(nextFields, patternSeparators);
-    },
-    [patternFields, patternSeparators, updateVisualPattern]
-  );
+    const nextSeparators = nextEntries.slice(1).map((_unused, separatorIndex) =>
+      patternSeparators[separatorIndex] ?? " | "
+    );
+    updatePattern(nextEntries, nextSeparators);
+  }, [patternEntries, patternSeparators, updatePattern]);
 
-  const removeField = React.useCallback(
-    (index: number) => {
-      const nextFields = patternFields.filter((_field, current) => current !== index);
-      updateVisualPattern(nextFields, removeFieldSeparator(patternSeparators, index));
-    },
-    [patternFields, patternSeparators, updateVisualPattern]
-  );
+  const removeField = React.useCallback((index: number) => {
+    const nextEntries = patternEntries.filter((_entry, current) => current !== index);
+    const nextSeparators = nextEntries.slice(1).map((_unused, separatorIndex) =>
+      patternSeparators[separatorIndex] ?? " | "
+    );
+    updatePattern(nextEntries, nextSeparators);
+  }, [patternEntries, patternSeparators, updatePattern]);
 
-  const addField = React.useCallback(
-    (field: AiPatternField) => {
-      if (patternFields.includes(field)) {
-        return;
-      }
+  const addField = React.useCallback((field: AiPatternField) => {
+    if (patternEntries.some((entry) => entry.field === field)) return;
+    updatePattern(
+      [...patternEntries, { field, prefix: "", suffix: "" }],
+      [...patternSeparators, " | "]
+    );
+  }, [patternEntries, patternSeparators, updatePattern]);
 
-      updateVisualPattern([...patternFields, field], [...patternSeparators, " | "]);
-    },
-    [patternFields, patternSeparators, updateVisualPattern]
-  );
+  const updateEntry = React.useCallback((index: number, patch: Partial<AiPatternEntry>) => {
+    const next = patternEntries.map((entry, current) => current === index ? { ...entry, ...patch } : entry);
+    updatePattern(next, patternSeparators);
+  }, [patternEntries, patternSeparators, updatePattern]);
 
-  const updateSeparator = React.useCallback(
-    (index: number, separator: AiPatternSeparator) => {
-      const nextSeparators = [...patternSeparators];
-      nextSeparators[index] = separator;
-      updateVisualPattern(patternFields, nextSeparators);
-    },
-    [patternFields, patternSeparators, updateVisualPattern]
-  );
+  const updateSeparator = React.useCallback((index: number, separator: AiPatternSeparator) => {
+    const next = patternSeparators.map((current, currentIndex) => currentIndex === index ? separator : current);
+    updatePattern(patternEntries, next);
+  }, [patternEntries, patternSeparators, updatePattern]);
 
   return {
-    patternFields,
+    patternEntries,
     patternSeparators,
     draggedFieldIndex,
     setDraggedFieldIndex,
     moveFieldTo,
     removeField,
     addField,
+    updateEntry,
     updateSeparator
   };
 }

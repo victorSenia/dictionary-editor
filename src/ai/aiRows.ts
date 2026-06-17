@@ -4,7 +4,7 @@ import {
   type DictionaryRow
 } from "../models/dictionary";
 import { parseTranslationValue } from "../utils/dictionaryHelpers";
-import { buildAiParsingPattern, normalizeAiInputLine, stripMarkdownFence } from "./patterns/regexBuilder";
+import { buildAiParsingPattern, normalizeAiInputText } from "./patterns/regexBuilder";
 import { translationGroupName } from "./patterns/fieldUtils";
 import type { AiParseResult, AiParsingConfiguration } from "./types";
 
@@ -40,19 +40,12 @@ export function parseAiResponse(
   }
 
   const pattern = buildAiParsingPattern(parsingConfiguration, config.articles);
-  const expression = new RegExp(pattern, "iu");
+  const expression = new RegExp(pattern, "gimu");
+  const normalizedResponse = normalizeAiInputText(rawResponse);
   const rows: AiParseResult["rows"] = [];
-  const unparsedLines: string[] = [];
 
-  for (const line of stripMarkdownFence(rawResponse).split(/\r?\n/)) {
-    const cleanLine = normalizeAiInputLine(line);
-    if (!cleanLine) {
-      continue;
-    }
-
-    const match = expression.exec(cleanLine);
-    if (!match?.groups) {
-      unparsedLines.push(cleanLine);
+  for (const match of normalizedResponse.matchAll(expression)) {
+    if (!match.groups || match.index === undefined) {
       continue;
     }
 
@@ -65,7 +58,6 @@ export function parseAiResponse(
       translationText = clean(inlineLanguageMatch[2]);
     }
     if (!translationText && !hasTranslationValues(translationValues) && config.languagesTo.length > 0) {
-      unparsedLines.push(cleanLine);
       continue;
     }
 
@@ -78,6 +70,14 @@ export function parseAiResponse(
       translationValues
     });
   }
+
+  const unparsedLines = normalizedResponse
+    .split(/\r?\n/u)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !rows.some((row) =>
+      line.includes(row.word) || line.includes(row.translationText)
+    ));
 
   return {
     rows,
