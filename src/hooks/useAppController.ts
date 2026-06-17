@@ -61,6 +61,12 @@ export function useAppController() {
     hasInvalidRows
   } = documentState;
 
+  useEffect(() => {
+    if (uiState.showOnlyInvalid && !hasInvalidRows) {
+      uiState.setShowOnlyInvalid(false);
+    }
+  }, [hasInvalidRows, uiState.showOnlyInvalid, uiState.setShowOnlyInvalid]);
+
   const history = useEditorHistory({
     rows,
     config,
